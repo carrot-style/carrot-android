@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import style.carrot.android.R
 
-private val DefaultFontFamily = FontFamily(Font(R.font.nanumbarunpen_b))
+private val DefaultFontFamily = FontFamily(Font(R.font.fredokaone))
 
 val CarrotStyleTypography = Typography(
     displayLarge = TextStyle(
