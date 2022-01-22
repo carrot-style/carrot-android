@@ -51,7 +51,4 @@ dependencies {
     Dependencies.Ui.forEach(::implementation)
     Dependencies.Compose.forEach(::implementation)
     Dependencies.Essential.forEach(::implementation)
-
-    implementation("com.google.accompanist:accompanist-insets:0.24.0-alpha")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.24.0-alpha")
 }

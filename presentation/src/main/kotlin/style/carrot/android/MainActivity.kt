@@ -29,19 +29,19 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.systemBarsPadding
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import style.carrot.android.theme.CarrotStyleTheme
+import style.carrot.android.theme.SystemUiController
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
+
+    private val systemUiController by lazy { SystemUiController(window) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            val systemUiController = rememberSystemUiController()
-
             CarrotStyleTheme {
                 ProvideWindowInsets {
                     val containerColor = MaterialTheme.colorScheme.background
@@ -63,10 +63,10 @@ class MainActivity : ComponentActivity() {
                             }
                         },
                         containerColor = containerColor
-                    ) {
+                    ) { padding ->
                         Column(
                             modifier = Modifier
-                                .padding(it)
+                                .padding(padding)
                                 .padding(
                                     top = 60.dp,
                                     bottom = 16.dp,
