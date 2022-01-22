@@ -12,6 +12,7 @@ package style.carrot.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,11 +21,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.insets.systemBarsPadding
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import style.carrot.android.theme.CarrotStyleTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,29 +40,46 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
+            val systemUiController = rememberSystemUiController()
+
             CarrotStyleTheme {
-                Scaffold(
-                    modifier = Modifier
-                        .padding(
-                            top = 60.dp,
-                            bottom = 16.dp,
-                            start = 16.dp,
-                            end = 16.dp
-                        )
-                        .fillMaxSize(),
-                    floatingActionButton = {
-                        FloatingActionButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_round_add_24),
-                                contentDescription = null
+                ProvideWindowInsets {
+                    val containerColor = MaterialTheme.colorScheme.background
+
+                    SideEffect {
+                        systemUiController.setSystemBarsColor(containerColor)
+                    }
+
+                    Scaffold(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .systemBarsPadding(),
+                        floatingActionButton = {
+                            FloatingActionButton(onClick = { /*TODO*/ }) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_round_add_24),
+                                    contentDescription = null
+                                )
+                            }
+                        },
+                        containerColor = containerColor
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(it)
+                                .padding(
+                                    top = 60.dp,
+                                    bottom = 16.dp,
+                                    start = 16.dp,
+                                    end = 16.dp
+                                )
+                        ) {
+                            Text(
+                                text = stringResource(R.string.app_name),
+                                style = MaterialTheme.typography.headlineLarge
                             )
                         }
                     }
-                ) {
-                    Text(
-                        text = stringResource(R.string.app_name),
-                        style = MaterialTheme.typography.headlineLarge
-                    )
                 }
             }
         }
