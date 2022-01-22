@@ -1,2 +1,2 @@
-rootProject.name = "ComposeTemplate"
+rootProject.name = "carrot-android"
 include(":data", ":domain", ":presentation")

@@ -1,4 +1,4 @@
-package io.github.jisungbin.composetemplate
+package style.carrot.android
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
