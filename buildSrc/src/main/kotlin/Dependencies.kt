@@ -22,6 +22,7 @@ object Versions {
 
     object Compose {
         const val Master = "1.2.0-alpha01"
+        const val Material = "1.0.0-alpha03"
         const val Activity = "1.4.0"
         const val Lifecycle = "2.4.0"
     }
@@ -41,8 +42,8 @@ object Dependencies {
         "androidx.compose.ui:ui:${Versions.Compose.Master}",
         "androidx.compose.ui:ui-tooling:${Versions.Compose.Master}",
         "androidx.compose.compiler:compiler:${Versions.Compose.Master}",
-        "androidx.compose.material:material:${Versions.Compose.Master}",
         "androidx.activity:activity-compose:${Versions.Compose.Activity}",
+        "androidx.compose.material3:material3:${Versions.Compose.Material}",
         "androidx.compose.runtime:runtime-livedata:${Versions.Compose.Master}",
         "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.Compose.Lifecycle}"
     )
