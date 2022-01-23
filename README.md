@@ -28,9 +28,6 @@ carrot-style with android.
 ### TODO
 
 - [ ] firestore connect
-
 - [ ] edit/delete shorten link
-
 - [ ] check duplicate link when shorten
-
 - [ ] auto add `http://`
