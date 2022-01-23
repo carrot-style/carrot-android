@@ -9,6 +9,7 @@
 
 package style.carrot.android.activity.main
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.ViewTreeObserver
@@ -37,8 +38,11 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.systemBarsPadding
 import dagger.hilt.android.AndroidEntryPoint
 import style.carrot.android.R
+import style.carrot.android.activity.error.ErrorActivity
 import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.theme.SystemUiController
+import style.carrot.android.util.NetworkUtil
+import style.carrot.android.util.constant.IntentConstant
 
 @AndroidEntryPoint
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,6 +55,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        if (!NetworkUtil.isNetworkAvailable(applicationContext)) {
+            finish()
+            startActivity(
+                Intent(this, ErrorActivity::class.java).apply {
+                    putExtra(IntentConstant.Error, IntentConstant.NoInternet)
+                }
+            )
+            return
+        }
+
+        listOf<String>()[2]
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
