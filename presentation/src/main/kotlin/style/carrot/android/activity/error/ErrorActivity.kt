@@ -82,7 +82,7 @@ class ErrorActivity : ErratumExceptionActivity() {
             else -> {
                 lottieRaw = R.raw.rabbit
                 message = when (BuildConfig.DEBUG) {
-                    true -> stringResource(R.string.activity_error_exception)
+                    true -> exceptionString!!
                     else -> stringResource(R.string.activity_error_exception)
                 }
             }
