@@ -13,6 +13,12 @@ import kotlinx.coroutines.CoroutineScope
 import style.carrot.android.domain.model.CarrotUrl
 
 interface CarrotRepository {
-    suspend fun styling(update: Boolean = false, coroutineScope: CoroutineScope)
+    suspend fun styling(
+        path: String,
+        url: String,
+        update: Boolean,
+        coroutineScope: CoroutineScope
+    )
+
     suspend fun loadUrls(): List<CarrotUrl>
 }

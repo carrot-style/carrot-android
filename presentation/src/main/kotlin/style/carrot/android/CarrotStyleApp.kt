@@ -11,6 +11,17 @@ package style.carrot.android
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
+import io.github.jisungbin.erratum.Erratum
+import io.github.jisungbin.logeukes.Logeukes
 
 @HiltAndroidApp
-class CarrotStyleApp : Application()
+class CarrotStyleApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
+
+        Erratum.setup(this)
+        if (BuildConfig.DEBUG) {
+            Logeukes.setup()
+        }
+    }
+}

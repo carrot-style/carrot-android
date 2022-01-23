@@ -17,22 +17,43 @@ import style.carrot.android.data.api.GithubRepoService
 import style.carrot.android.data.model.FileContentResponse
 import style.carrot.android.data.model.GithubFile
 import style.carrot.android.data.util.isValid
+import style.carrot.android.data.util.toBase64
 import style.carrot.android.data.util.toException
+import style.carrot.android.data.util.toRedirectContent
 import style.carrot.android.domain.model.CarrotUrl
 import style.carrot.android.domain.repository.CarrotRepository
 import kotlin.coroutines.resume
 
-class CarrotRepositoryImpl(retrofit: Retrofit) : CarrotRepository {
-    private val api = retrofit.create(GithubRepoService::class.java)
+class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
+    private val api = signedRetrofit.create(GithubRepoService::class.java)
 
     override suspend fun loadUrls(): List<CarrotUrl> {
         // TODO
         return emptyList()
     }
 
-    override suspend fun styling(update: Boolean, coroutineScope: CoroutineScope): Unit =
-        suspendCancellableCoroutine { continuation ->
+    override suspend fun styling(
+        path: String,
+        url: String,
+        update: Boolean,
+        coroutineScope: CoroutineScope
+    ): Unit = suspendCancellableCoroutine { continuation ->
+        coroutineScope.launch {
+            var sha = ""
+            if (update) {
+                sha = getFileContent(path = path, coroutineScope = coroutineScope).sha
+                    ?: throw Exception("sha value is null.")
+            }
+            continuation.resume(
+                updateFile(
+                    path = path,
+                    url = url,
+                    sha = sha,
+                    coroutineScope = coroutineScope
+                )
+            )
         }
+    }
 
     private suspend fun getFileContent(
         path: String,
@@ -50,10 +71,12 @@ class CarrotRepositoryImpl(retrofit: Retrofit) : CarrotRepository {
 
     private suspend fun updateFile(
         path: String,
-        githubFile: GithubFile,
+        url: String,
+        sha: String = "",
         coroutineScope: CoroutineScope
     ): Unit = suspendCancellableCoroutine { continuation ->
         coroutineScope.launch {
+            val githubFile = GithubFile(content = url.toRedirectContent().toBase64(), sha = sha)
             val request = api.updateFile(path = path, githubFile = githubFile)
             if (request.isValid()) {
                 continuation.resume(Unit)
