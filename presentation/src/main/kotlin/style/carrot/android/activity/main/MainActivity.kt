@@ -17,9 +17,13 @@ import android.view.animation.AnticipateInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -39,13 +43,15 @@ import com.google.accompanist.insets.systemBarsPadding
 import dagger.hilt.android.AndroidEntryPoint
 import style.carrot.android.R
 import style.carrot.android.activity.error.ErrorActivity
+import style.carrot.android.domain.model.CarrotUrl
 import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.theme.SystemUiController
+import style.carrot.android.ui.StyledCard
 import style.carrot.android.util.NetworkUtil
 import style.carrot.android.util.constant.IntentConstant
 
 @AndroidEntryPoint
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 class MainActivity : ComponentActivity() {
 
     private var isReady = false
@@ -65,8 +71,6 @@ class MainActivity : ComponentActivity() {
             )
             return
         }
-
-        listOf<String>()[2]
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -143,6 +147,17 @@ class MainActivity : ComponentActivity() {
                                 text = stringResource(R.string.app_name),
                                 style = MaterialTheme.typography.headlineLarge
                             )
+                            LazyColumn(
+                                modifier = Modifier.padding(top = 15.dp),
+                                verticalArrangement = Arrangement.spacedBy(15.dp)
+                            ) {
+                                items(List(100) { CarrotUrl("AAA", "BBB", "CCC") }) { carrotUrl ->
+                                    StyledCard(
+                                        modifier = Modifier.animateItemPlacement(),
+                                        carrotUrl = carrotUrl
+                                    )
+                                }
+                            }
                         }
                     }
                 }
