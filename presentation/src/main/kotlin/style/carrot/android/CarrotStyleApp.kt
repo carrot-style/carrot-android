@@ -19,7 +19,7 @@ class CarrotStyleApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        Erratum.setup(this)
+        // Erratum.setup(this)
         if (BuildConfig.DEBUG) {
             Logeukes.setup()
         }
