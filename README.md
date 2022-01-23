@@ -23,6 +23,14 @@ carrot-style with android.
 ### App Content
 
 - link shorten with carrot-style (custom support)
-- edit shorten link
-- delete shorten link
+- edit/delete shorten link
 
+### TODO
+
+- [ ] firestore connect
+
+- [ ] edit/delete shorten link
+
+- [ ] check duplicate link when shorten
+
+- [ ] auto add `http://`
