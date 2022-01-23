@@ -11,45 +11,67 @@ package style.carrot.android.activity.error
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.view.WindowCompat
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.insets.statusBarsPadding
 import io.github.jisungbin.erratum.ErratumExceptionActivity
 import style.carrot.android.BuildConfig
 import style.carrot.android.R
 import style.carrot.android.theme.CarrotStyleTheme
+import style.carrot.android.theme.SystemUiController
 import style.carrot.android.util.constant.IntentConstant
 
 class ErrorActivity : ErratumExceptionActivity() {
+
+    private val systemUiController by lazy { SystemUiController(window) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        actionBar?.hide()
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             CarrotStyleTheme {
-                Exception()
+                ProvideWindowInsets {
+                    val containerColor = MaterialTheme.colorScheme.background
+
+                    SideEffect {
+                        systemUiController.setStatusBarColor(containerColor)
+                        systemUiController.setNavigationBarColor(Color.Transparent)
+                    }
+
+                    Exception(containerColor)
+                }
             }
         }
     }
 
-    @Preview(showBackground = true)
     @Composable
-    fun Exception() {
+    fun Exception(containerColor: Color) {
         val message: String
         val lottieRaw: Int
         when (intent.getStringExtra(IntentConstant.Error)) {
@@ -60,14 +82,19 @@ class ErrorActivity : ErratumExceptionActivity() {
             else -> {
                 lottieRaw = R.raw.rabbit
                 message = when (BuildConfig.DEBUG) {
-                    true -> exceptionString!!
+                    true -> stringResource(R.string.activity_error_exception)
                     else -> stringResource(R.string.activity_error_exception)
                 }
             }
         }
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(lottieRaw))
 
-        ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = containerColor)
+                .statusBarsPadding()
+        ) {
             val (content, footer) = createRefs()
 
             Column(
@@ -85,7 +112,11 @@ class ErrorActivity : ErratumExceptionActivity() {
                     text = stringResource(R.string.activity_error_oops),
                     style = MaterialTheme.typography.displaySmall
                 )
-                Text(text = message)
+                Text(
+                    modifier = Modifier.padding(horizontal = 30.dp),
+                    text = message,
+                    textAlign = TextAlign.Center
+                )
                 Button(onClick = { openLastActivity() }) {
                     Text(text = stringResource(R.string.activity_error_btn_retry))
                 }
