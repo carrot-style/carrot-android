@@ -15,7 +15,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import retrofit2.Retrofit
-import style.carrot.android.data.repo.CarrotRepositoryImpl
+import style.carrot.android.data.repository.CarrotRepositoryImpl
 import style.carrot.android.di.qualifier.SignedRetrofit
 import style.carrot.android.domain.repository.CarrotRepository
 

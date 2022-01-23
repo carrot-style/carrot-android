@@ -7,7 +7,7 @@
  * Please see: https://github.com/carrot-style/carrot-android/blob/main/LICENSE.
  */
 
-package style.carrot.android.data.repo
+package style.carrot.android.data.repository
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
