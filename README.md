@@ -31,3 +31,4 @@ carrot-style with android.
 - [ ] edit/delete shorten link
 - [ ] check duplicate link when shorten
 - [ ] auto add `http://`
+- [ ] apply MVI pattern
