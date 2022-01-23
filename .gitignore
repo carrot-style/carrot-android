@@ -5,6 +5,7 @@ local.properties
 /buildSrc/.gradle/
 /buildSrc/build/
 /data/build
+/data/google-services.json
 /domain/build
 /presentation/build
 /presentation/release

@@ -14,25 +14,53 @@ object Application {
 
 object Versions {
     object Essential {
+        const val Ktx = "1.7.0"
         const val Kotlin = "1.6.10"
         const val Coroutines = "1.6.0"
         const val Gradle = "7.1.0-rc01"
-        const val Ktx = "1.7.0"
+        const val GoogleService = "4.3.3"
     }
 
     object Compose {
-        const val Master = "1.2.0-alpha01"
-        const val Material = "1.0.0-alpha03"
         const val Activity = "1.4.0"
         const val Insets = "0.24.0-alpha"
+        const val Master = "1.2.0-alpha01"
+        const val Material = "1.0.0-alpha03"
     }
 
     object Ui {
         const val Material = "1.5.0"
+        const val Splash = "1.0.0-beta01"
+    }
+
+    object Util {
+        const val Erratum = "1.0.1"
+        const val Logeukes = "1.0.1"
+        const val LeakCanary = "2.8.1"
+        const val FirebaseBom = "29.0.3"
+        const val CheckDependencyUpdates = "1.5.0"
+    }
+
+    object Jetpack {
+        const val Hilt = "2.40.5"
+    }
+
+    object OssLicense {
+        const val Master = "17.0.0"
+        const val Classpath = "0.10.4"
     }
 }
 
 object Dependencies {
+    const val Hilt = "com.google.dagger:hilt-android:${Versions.Jetpack.Hilt}"
+    const val FirebaseBom = "com.google.firebase:firebase-bom:${Versions.Util.FirebaseBom}"
+
+    object Compiler {
+        const val Hilt = "com.google.dagger:hilt-android-compiler:${Versions.Jetpack.Hilt}"
+    }
+
+    val Firebase = listOf("com.google.firebase:firebase-firestore-ktx")
+
     val Essential = listOf(
         "androidx.core:core-ktx:${Versions.Essential.Ktx}",
         "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.Essential.Coroutines}"
@@ -47,6 +75,17 @@ object Dependencies {
     )
 
     val Ui = listOf(
-        "com.google.android.material:material:${Versions.Ui.Material}"
+        "androidx.core:core-splashscreen:${Versions.Ui.Splash}",
+        "com.google.android.material:material:${Versions.Ui.Material}",
+        "com.google.android.gms:play-services-oss-licenses:${Versions.OssLicense.Master}"
+    )
+
+    val Util = listOf(
+        "io.github.jisungbin:erratum:${Versions.Util.Erratum}",
+        "io.github.jisungbin:logeukes:${Versions.Util.Logeukes}",
+    )
+
+    val Debug = listOf(
+        "com.squareup.leakcanary:leakcanary-android:${Versions.Util.LeakCanary}"
     )
 }
