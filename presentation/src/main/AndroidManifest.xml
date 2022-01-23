@@ -3,15 +3,16 @@
     package="style.carrot.android">
 
     <application
+        android:name=".CarrotStyleApp"
         android:allowBackup="true"
         android:fullBackupOnly="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CarrotStyle" >
+        android:theme="@style/Theme.CarrotStyle.Splash">
 
         <activity
-            android:name="style.carrot.android.MainActivity"
+            android:name="style.carrot.android.activity.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -7,11 +7,15 @@
  * Please see: https://github.com/carrot-style/carrot-android/blob/main/LICENSE.
  */
 
-package style.carrot.android
+package style.carrot.android.activity.main
 
+import android.os.Build
 import android.os.Bundle
+import android.view.ViewTreeObserver
+import android.view.animation.AnticipateInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -23,25 +27,68 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.systemBarsPadding
+import dagger.hilt.android.AndroidEntryPoint
+import style.carrot.android.R
 import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.theme.SystemUiController
 
+@AndroidEntryPoint
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
 
+    private var isReady = false
+    private val vm: MainViewModel by viewModels()
     private val systemUiController by lazy { SystemUiController(window) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        vm.loadUrlsWithDoneAction {
+            isReady = true
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            splashScreen.setOnExitAnimationListener { splashScreenView ->
+                splashScreenView.animate().run {
+                    alpha(0f)
+                    scaleX(0f)
+                    scaleY(0f)
+                    interpolator = AnticipateInterpolator()
+                    duration = 200L
+                    withEndAction { splashScreenView.remove() }
+                    withLayer()
+                    start()
+                }
+            }
+        }
+
         setContent {
+            val localView = LocalView.current
+
+            localView.viewTreeObserver.addOnPreDrawListener(
+                object : ViewTreeObserver.OnPreDrawListener {
+                    override fun onPreDraw(): Boolean {
+                        return if (isReady) {
+                            localView.viewTreeObserver.removeOnPreDrawListener(this)
+                            true
+                        } else {
+                            false
+                        }
+                    }
+                }
+            )
+
             CarrotStyleTheme {
                 ProvideWindowInsets {
                     val containerColor = MaterialTheme.colorScheme.background

@@ -33,6 +33,11 @@ object Versions {
         const val Splash = "1.0.0-beta01"
     }
 
+    object Network {
+        const val OkHttp = "4.9.3"
+        const val Retrofit = "2.9.0"
+    }
+
     object Util {
         const val Erratum = "1.0.1"
         const val Logeukes = "1.0.1"
@@ -78,6 +83,11 @@ object Dependencies {
         "androidx.core:core-splashscreen:${Versions.Ui.Splash}",
         "com.google.android.material:material:${Versions.Ui.Material}",
         "com.google.android.gms:play-services-oss-licenses:${Versions.OssLicense.Master}"
+    )
+
+    val Retrofit = listOf(
+        "com.squareup.retrofit2:retrofit:${Versions.Network.Retrofit}",
+        "com.squareup.okhttp3:logging-interceptor:${Versions.Network.OkHttp}"
     )
 
     val Util = listOf(

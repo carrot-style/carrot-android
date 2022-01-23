@@ -34,5 +34,6 @@ dependencies {
     implementation(platform(Dependencies.FirebaseBom))
 
     Dependencies.Firebase.forEach(::implementation)
+    Dependencies.Retrofit.forEach(::implementation)
     Dependencies.Essential.forEach(::implementation)
 }
