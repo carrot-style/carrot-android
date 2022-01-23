@@ -15,6 +15,7 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import io.github.jisungbin.logeukes.logeukes
 import okhttp3.Interceptor
@@ -27,7 +28,7 @@ import style.carrot.android.di.qualifier.SignedRetrofit
 import style.carrot.android.secret.SecretConfig
 
 @Module
-@InstallIn(ViewModelScoped::class)
+@InstallIn(ViewModelComponent::class)
 object RetrofitModule {
     private const val BaseApiUrl = "https://api.github.com"
 
