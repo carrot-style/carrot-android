@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
             isReady = true
         }
 
-        vm.styling("test.html", "https://sungb.in", update = true)
+        // vm.styling("test.html", "https://sungb.in", update = true)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             splashScreen.setOnExitAnimationListener { splashScreenView ->

@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.airbnb.lottie.compose.LottieAnimation
@@ -39,7 +40,6 @@ import style.carrot.android.util.constant.IntentConstant
 class ErrorActivity : ErratumExceptionActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             CarrotStyleTheme {
                 Exception()
@@ -95,7 +95,7 @@ class ErrorActivity : ErratumExceptionActivity() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .constrainAs(footer) {
-                        height = Dimension.wrapContent
+                        height = Dimension.value(300.dp)
                         bottom.linkTo(parent.bottom)
                     },
                 iterations = LottieConstants.IterateForever,
