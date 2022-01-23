@@ -12,3 +12,5 @@ package style.carrot.android.data.util
 import retrofit2.Response
 
 fun <T> Response<T>.isValid() = isSuccessful && body() != null
+
+fun <T> Response<T>.toException() = Exception(errorBody()?.use { it.string() })

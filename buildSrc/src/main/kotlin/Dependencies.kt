@@ -41,6 +41,7 @@ object Versions {
     object Util {
         const val Erratum = "1.0.1"
         const val Logeukes = "1.0.1"
+        const val Jackson = "2.13.1"
         const val LeakCanary = "2.8.1"
         const val FirebaseBom = "29.0.3"
         const val CheckDependencyUpdates = "1.5.0"
@@ -85,9 +86,17 @@ object Dependencies {
         "com.google.android.gms:play-services-oss-licenses:${Versions.OssLicense.Master}"
     )
 
+    val Jackson = listOf(
+        "com.fasterxml.jackson.core:jackson-core:${Versions.Util.Jackson}",
+        "com.fasterxml.jackson.core:jackson-databind:${Versions.Util.Jackson}",
+        "com.fasterxml.jackson.core:jackson-annotations:${Versions.Util.Jackson}",
+        "com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.Util.Jackson}"
+    )
+
     val Retrofit = listOf(
         "com.squareup.retrofit2:retrofit:${Versions.Network.Retrofit}",
-        "com.squareup.okhttp3:logging-interceptor:${Versions.Network.OkHttp}"
+        "com.squareup.okhttp3:logging-interceptor:${Versions.Network.OkHttp}",
+        "com.squareup.retrofit2:converter-jackson:${Versions.Network.Retrofit}"
     )
 
     val Util = listOf(

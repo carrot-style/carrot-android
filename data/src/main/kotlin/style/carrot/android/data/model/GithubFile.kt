@@ -9,9 +9,11 @@
 
 package style.carrot.android.data.model
 
+import style.carrot.android.data.util.CarrotBranch
+
 data class GithubFile(
     val message: String,
     val content: String,
-    val sha: String,
-    val branch: String,
+    val sha: String = "", // 최초 커밋시에는 빈 값
+    val branch: String = CarrotBranch,
 )

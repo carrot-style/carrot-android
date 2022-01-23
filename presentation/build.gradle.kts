@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection")
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -51,7 +53,7 @@ android {
 }
 
 dependencies {
-    val kapts = listOf(Dependencies.Compiler.Hilt,)
+    val kapts = listOf(Dependencies.Compiler.Hilt)
 
     implementation(projects.data)
     implementation(projects.domain)
@@ -60,6 +62,8 @@ dependencies {
     Dependencies.Ui.forEach(::implementation)
     Dependencies.Util.forEach(::implementation)
     Dependencies.Compose.forEach(::implementation)
+    Dependencies.Jackson.forEach(::implementation)
+    Dependencies.Retrofit.forEach(::implementation)
     Dependencies.Essential.forEach(::implementation)
 
     Dependencies.Debug.forEach(::debugImplementation)

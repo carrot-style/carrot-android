@@ -9,8 +9,6 @@
 
 package style.carrot.android.data.api
 
-import style.carrot.android.data.model.repo.FileContentResponse
-import io.github.jisungbin.gitmessengerbot.domain.github.model.repo.GithubFile
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -18,7 +16,9 @@ import retrofit2.http.GET
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import style.carrot.android.data.model.FileContentResponse
 import style.carrot.android.data.model.GithubFile
+import style.carrot.android.data.util.CarrotBranch
 import style.carrot.android.data.util.CarrotStyle
 import style.carrot.android.data.util.CarrotStyleRepo
 
@@ -36,6 +36,6 @@ interface GithubRepoService {
         @Path("owner") owner: String = CarrotStyle,
         @Path("repoName") repoName: String = CarrotStyleRepo,
         @Path("path") path: String,
-        @Query("ref") branch: String,
+        @Query("ref") branch: String = CarrotBranch,
     ): Response<FileContentResponse>
 }

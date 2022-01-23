@@ -11,10 +11,5 @@ package style.carrot.android.data.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class FileContentResponse(
-    @field:JsonProperty("download_url")
-    val downloadUrl: String? = null,
-
-    @field:JsonProperty("sha")
-    val sha: String? = null,
-)
+@JvmInline
+value class FileContentResponse(@field:JsonProperty("sha") val sha: String? = null)

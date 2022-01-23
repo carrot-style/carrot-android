@@ -33,6 +33,7 @@ dependencies {
     implementation(projects.domain)
     implementation(platform(Dependencies.FirebaseBom))
 
+    Dependencies.Jackson.forEach(::implementation)
     Dependencies.Firebase.forEach(::implementation)
     Dependencies.Retrofit.forEach(::implementation)
     Dependencies.Essential.forEach(::implementation)

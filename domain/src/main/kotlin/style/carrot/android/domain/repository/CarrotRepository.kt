@@ -9,8 +9,10 @@
 
 package style.carrot.android.domain.repository
 
+import kotlinx.coroutines.CoroutineScope
 import style.carrot.android.domain.model.CarrotUrl
 
 interface CarrotRepository {
+    suspend fun styling(update: Boolean = false, coroutineScope: CoroutineScope)
     suspend fun loadUrls(): List<CarrotUrl>
 }
