@@ -13,7 +13,7 @@ import style.carrot.android.domain.model.CarrotUrl
 
 data class MainState(
     val type: EventType = EventType.None,
-    val exception: Exception? = null,
+    val exception: Throwable? = null,
     val sha: String? = null,
     val carrotUrls: List<CarrotUrl> = emptyList()
 ) {

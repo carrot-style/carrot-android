@@ -50,13 +50,13 @@ class MainViewModel @Inject constructor(
     }
 
     fun loadCarrotUrls() = viewModelScope.launch {
-        var state = state.copy(type = EventType.LoadCarrotUrls)
+        var state = state.copy(type = EventType.LoadCarrotUrls, exception = null)
         loadMyStyledUrlsUseCase(uuid = uuid)
             .onSuccess { carrotUrls ->
                 state = state.copy(carrotUrls = carrotUrls)
             }
-            .onFailure { exception ->
-                state = state.copy(exception = Exception(exception))
+            .onFailure { throwable ->
+                state = state.copy(exception = throwable)
             }
         _event.emit(state)
     }
@@ -65,31 +65,34 @@ class MainViewModel @Inject constructor(
         carrotUrl: CarrotUrl,
         sha: String = ""
     ) = viewModelScope.launch {
-        var state = state.copy(type = EventType.Styled)
+        var state = state.copy(type = EventType.Styled, exception = null)
         stylingCarrotUrlUseCase(
             path = carrotUrl.styled,
             url = carrotUrl.origin,
             sha = sha
         ).onSuccess {
             addMyStyledUrl(carrotUrl)
-        }.onFailure { exception ->
-            state = state.copy(exception = Exception(exception))
+        }.onFailure { throwable ->
+            state = state.copy(exception = throwable)
         }
         _event.emit(state)
     }
 
     fun getStyeldSha(path: String) = viewModelScope.launch {
-        var state = state.copy(type = EventType.CheckStyled)
+        var state = state.copy(type = EventType.CheckStyled, exception = null)
         getStyledShaUseCase(path)
             .onSuccess { nullableSha ->
                 state = state.copy(sha = nullableSha)
-            }.onFailure { exception ->
-                state = state.copy(exception = Exception(exception))
+            }.onFailure { throwable ->
+                state = state.copy(exception = throwable)
             }
         _event.emit(state)
     }
 
-    private fun addMyStyledUrl(carrotUrl: CarrotUrl) {
+    private suspend fun addMyStyledUrl(carrotUrl: CarrotUrl) {
         addMyStyledUrlUseCase(uuid = uuid, carrotUrl = carrotUrl)
+            .onFailure { throwable ->
+                _event.emit(state.copy(exception = throwable))
+            }
     }
 }
