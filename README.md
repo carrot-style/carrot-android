@@ -1,6 +1,6 @@
-# carrot-android
+# carrot-android 🥕
 
-carrot-style with android.
+Carrot-style with android.
 
 ---
 
@@ -16,18 +16,20 @@ carrot-style with android.
 
 ### Design Preview
 
-- [error screen](https://youtu.be/q3Hqfr9-cYw)
-- main screen (todo)
+> ⚠️ `Card` component is [not implemented](https://m3.material.io/components/cards/implementation) in Material You yet. Therefore, the `Card` design is not pretty.
+
+- [Error screen](https://youtu.be/q3Hqfr9-cYw)
+- Main screen (todo, not perfect yet)
+- Dark mode (todo, not perfect yet)
 
 ### App Content
 
-- link shorten with carrot-style (custom support)
-- edit/delete shorten link
+- Link shorten with carrot-style (custom support)
+- Edit/delete shorten link
 
 ### TODO
 
-- [x] firestore connect
-- [ ] edit/delete shorten link
-- [x] check duplicate link when shorten
-- [x] auto add `http://`
-- [ ] apply MVI pattern
+- [x] Firestore connect
+- [ ] Edit/delete shorten link
+- [x] Check duplicate link when shorten
+- [x] Auto add `http://`
