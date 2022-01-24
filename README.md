@@ -17,7 +17,7 @@ carrot-style with android.
 ### Design Preview
 
 - [error screen](https://youtu.be/q3Hqfr9-cYw)
-- main screen (todo)
+- main screen (`Card` component is not implemented in Material You yet, Therefore, the `Card` design is not pretty)
 
 ### App Content
 
@@ -30,4 +30,3 @@ carrot-style with android.
 - [ ] edit/delete shorten link
 - [x] check duplicate link when shorten
 - [x] auto add `http://`
-- [ ] apply MVI pattern
