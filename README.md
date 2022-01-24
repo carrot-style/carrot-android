@@ -17,10 +17,11 @@ Carrot-style with android.
 ### Design Preview
 
 > ⚠️ `Card` component is [not implemented](https://m3.material.io/components/cards/implementation) in Material You yet. Therefore, the `Card` design is not pretty.
+> 
+> ⚠️ The icon picture I obtained is a png, not a vector, so the [icon](https://github.com/carrot-style/carrot-android/blob/main/presentation/src/main/res/drawable/ic_splash_logo.png) quality is bad in the splash screen.
 
 - [Error screen](https://youtu.be/q3Hqfr9-cYw)
 - Main screen (todo, not perfect yet)
-- Dark mode (todo, not perfect yet)
 
 ### App Content
 
