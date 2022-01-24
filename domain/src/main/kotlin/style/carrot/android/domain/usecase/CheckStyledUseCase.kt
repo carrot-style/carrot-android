@@ -9,11 +9,10 @@
 
 package style.carrot.android.domain.usecase
 
-import kotlinx.coroutines.CoroutineScope
 import style.carrot.android.domain.repository.CarrotRepository
 
 class CheckStyledUseCase(private val repository: CarrotRepository) {
-    suspend operator fun invoke(path: String, coroutineScope: CoroutineScope) = runCatching {
-        repository.checkStyled(path = path, coroutineScope = coroutineScope)
+    suspend operator fun invoke(path: String) = runCatching {
+        repository.checkStyled(path = path)
     }
 }

@@ -9,16 +9,10 @@
 
 package style.carrot.android.domain.usecase
 
-import kotlinx.coroutines.CoroutineScope
 import style.carrot.android.domain.repository.CarrotRepository
 
 class StylingCarrotUrlUseCase(private val repository: CarrotRepository) {
-    suspend operator fun invoke(
-        path: String,
-        url: String,
-        sha: String,
-        coroutineScope: CoroutineScope
-    ) = runCatching {
-        repository.styling(path = path, url = url, sha = sha, coroutineScope = coroutineScope)
+    suspend operator fun invoke(path: String, url: String, sha: String) = runCatching {
+        repository.styling(path = path, url = url, sha = sha)
     }
 }
