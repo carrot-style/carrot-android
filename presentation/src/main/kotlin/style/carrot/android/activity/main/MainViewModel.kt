@@ -13,9 +13,10 @@ import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
-import style.carrot.android.di.qualifier.IoDispatcher
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.viewmodel.container
+import style.carrot.android.activity.main.mvi.MainState
 import style.carrot.android.domain.model.CarrotUrl
 import style.carrot.android.domain.usecase.CheckStyledUseCase
 import style.carrot.android.domain.usecase.LoadCarrotUrlsUseCase
@@ -25,15 +26,15 @@ import style.carrot.android.util.extension.get
 import style.carrot.android.util.extension.set
 import java.util.UUID
 import javax.inject.Inject
+import org.orbitmvi.orbit.syntax.simple.intent
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val checkStyledUseCase: CheckStyledUseCase,
     private val loadCarrotUrlsUseCase: LoadCarrotUrlsUseCase,
     private val stylingCarrotUrlUseCase: StylingCarrotUrlUseCase,
-    private val sharedPreferences: SharedPreferences,
-    @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher
-) : ViewModel() {
+    private val sharedPreferences: SharedPreferences
+) : ContainerHost<MainState, Unit>, ViewModel() {
 
     init {
         if (sharedPreferences[Key.Uuid] == null) {
@@ -41,17 +42,17 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    // TODO: apply MVI
-    fun loadUrlsWithDoneAction(action: (Result<List<CarrotUrl>>) -> Unit) =
-        viewModelScope.launch(coroutineDispatcher) {
-            action(loadCarrotUrlsUseCase())
+    override val container = container<MainState, Unit>(MainState())
+
+    fun loadCarrotUrls() = intent {
+
         }
 
     fun styling(
         path: String,
         url: String,
         sha: String = "" // 업데이트에만 sha 값이 필요함
-    ) = viewModelScope.launch(coroutineDispatcher) {
+    ) = viewModelScope.launch {
         stylingCarrotUrlUseCase(
             path = path,
             url = url,
@@ -61,9 +62,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun checkStyled(path: String) = viewModelScope.launch(coroutineDispatcher) {
+    fun checkStyled(path: String) = viewModelScope.launch {
         checkStyledUseCase(path)
             .onSuccess {
+                return@launch it!!
             }.onFailure {
             }
     }

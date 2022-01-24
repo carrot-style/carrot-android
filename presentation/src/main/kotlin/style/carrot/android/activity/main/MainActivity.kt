@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        vm.loadUrlsWithDoneAction {
+        vm.loadCarrotUrls {
             isReady = true
         }
 

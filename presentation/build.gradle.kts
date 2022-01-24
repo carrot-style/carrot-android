@@ -58,7 +58,6 @@ dependencies {
     implementation(projects.data)
     implementation(projects.domain)
     implementation(Dependencies.Hilt)
-    implementation(Dependencies.Orbit)
 
     Dependencies.Ui.forEach(::implementation)
     Dependencies.Util.forEach(::implementation)

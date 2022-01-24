@@ -13,8 +13,6 @@ object Application {
 }
 
 object Versions {
-    const val Orbit = "4.3.0"
-
     object Essential {
         const val Ktx = "1.7.0"
         const val Kotlin = "1.6.10"
@@ -62,7 +60,6 @@ object Versions {
 }
 
 object Dependencies {
-    const val Orbit = "org.orbit-mvi:orbit-viewmodel:${Versions.Orbit}"
     const val Hilt = "com.google.dagger:hilt-android:${Versions.Jetpack.Hilt}"
     const val FirebaseBom = "com.google.firebase:firebase-bom:${Versions.Util.FirebaseBom}"
 
