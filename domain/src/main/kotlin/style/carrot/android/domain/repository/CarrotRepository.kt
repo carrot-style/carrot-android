@@ -9,15 +9,18 @@
 
 package style.carrot.android.domain.repository
 
-import kotlinx.coroutines.CoroutineScope
 import style.carrot.android.domain.model.CarrotUrl
 
 interface CarrotRepository {
+    /**
+     * @return 만약 파일이 있다면 해당 파일의 sha값을 리턴하고, 파일이 없다면 null을 리턴함
+     */
+    suspend fun checkStyled(path: String): String?
+
     suspend fun styling(
-        path: String,
-        url: String,
-        update: Boolean,
-        coroutineScope: CoroutineScope
+        path: String, // 커스텀 단축 링크 (carrot.style/${path}.html)
+        url: String, // 단축될 링크
+        sha: String, // 업데이트하는 값이라면 sha가 필요함
     )
 
     suspend fun loadUrls(): List<CarrotUrl>

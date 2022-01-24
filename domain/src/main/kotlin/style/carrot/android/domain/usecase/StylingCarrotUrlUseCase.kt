@@ -16,9 +16,9 @@ class StylingCarrotUrlUseCase(private val repository: CarrotRepository) {
     suspend operator fun invoke(
         path: String,
         url: String,
-        update: Boolean,
+        sha: String,
         coroutineScope: CoroutineScope
     ) = runCatching {
-        repository.styling(path = path, url = url, update = update, coroutineScope = coroutineScope)
+        repository.styling(path = path, url = url, sha = sha, coroutineScope = coroutineScope)
     }
 }

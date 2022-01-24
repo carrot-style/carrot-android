@@ -13,5 +13,7 @@ import android.util.Base64
 
 fun String.toBase64() = Base64.encodeToString(toByteArray(), Base64.NO_WRAP)!!
 
+fun String.checkHttpAndAutoInsert() = if (contains("://")) this else "http://$this"
+
 fun String.toRedirectContent() =
     """<script type="text/javascript"> location.href = "$this"; </script>"""
