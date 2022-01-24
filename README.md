@@ -27,7 +27,7 @@ Carrot-style with android.
 
 - Link shorten with carrot-style (custom support)
 - Edit/delete shorten link
-- Supported Dark mode.
+- Support dark mode
 
 ### TODO
 
