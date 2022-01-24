@@ -8,6 +8,7 @@ Carrot-style with android.
 
 - Jetpack Compose
 - Material You
+- Splash API (Android 12)
 - Retrofit, OkHttp
 - Github API
 - Clean architecture
