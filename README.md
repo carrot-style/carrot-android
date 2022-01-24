@@ -19,8 +19,8 @@ Carrot-style with android.
 > ⚠️ `Card` component is [not implemented](https://m3.material.io/components/cards/implementation) in Material You yet. Therefore, the `Card` design is not pretty.
 
 - [Error screen](https://youtu.be/q3Hqfr9-cYw)
-- Main screen 
-- Dark mode
+- Main screen (todo, not perfect yet)
+- Dark mode (todo, not perfect yet)
 
 ### App Content
 
