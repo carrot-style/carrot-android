@@ -27,8 +27,8 @@ carrot-style with android.
 
 ### TODO
 
-- [ ] firestore connect
+- [x] firestore connect
 - [ ] edit/delete shorten link
-- [ ] check duplicate link when shorten
-- [ ] auto add `http://`
+- [x] check duplicate link when shorten
+- [x] auto add `http://`
 - [ ] apply MVI pattern
