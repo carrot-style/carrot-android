@@ -12,7 +12,6 @@ carrot-style with android.
 - Github API
 - Clean architecture
 - Hilt
-- MVI Pattern
 - Firestore
 
 ### Design Preview
