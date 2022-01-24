@@ -10,9 +10,10 @@
 package style.carrot.android.domain.usecase
 
 import style.carrot.android.domain.repository.CarrotRepository
+import style.carrot.android.domain.util.checkHttpAndAutoInsert
 
-class CheckStyledUseCase(private val repository: CarrotRepository) {
+class GetStyledShaUseCase(private val repository: CarrotRepository) {
     suspend operator fun invoke(path: String) = runCatching {
-        repository.checkStyled(path = path)
+        repository.getStyledSha(path = path.checkHttpAndAutoInsert())
     }
 }

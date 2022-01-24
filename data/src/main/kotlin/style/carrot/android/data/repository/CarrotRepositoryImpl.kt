@@ -9,32 +9,43 @@
 
 package style.carrot.android.data.repository
 
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Retrofit
 import style.carrot.android.data.api.GithubRepoService
 import style.carrot.android.data.model.GithubFile
-import style.carrot.android.data.util.checkHttpAndAutoInsert
-import style.carrot.android.data.util.isValid
+import style.carrot.android.data.util.CarrotFirestore
+import style.carrot.android.data.util.extension.isValid
 import style.carrot.android.data.util.toBase64
-import style.carrot.android.data.util.toException
+import style.carrot.android.data.util.extension.toException
 import style.carrot.android.data.util.toRedirectContent
 import style.carrot.android.domain.model.CarrotUrl
 import style.carrot.android.domain.repository.CarrotRepository
 
 class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
+
+    private val firestore by lazy { Firebase.firestore }
     private val api = signedRetrofit.create(GithubRepoService::class.java)
 
-    override suspend fun loadUrls(): List<CarrotUrl> {
-        // TODO
-        return emptyList()
-    }
+    override suspend fun loadMyStyledUrls(uuid: String): List<CarrotUrl> =
+        suspendCancellableCoroutine { continuation ->
+            Firebase.firestore
+                .document(CarrotFirestore)
+                .collection(uuid)
+                .get()
+                .addOnFailureListener { exception ->
+                    throw exception
+                }
+        }
 
     override suspend fun styling(path: String, url: String, sha: String) {
         val githubFile = GithubFile(
-            content = url.checkHttpAndAutoInsert().toRedirectContent().toBase64(),
+            content = url.toRedirectContent().toBase64(),
             sha = sha
         )
         val request = api.updateFile(
-            path = path.checkHttpAndAutoInsert(),
+            path = path,
             githubFile = githubFile
         )
         if (!request.isValid()) {
@@ -42,12 +53,21 @@ class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
         }
     }
 
-    override suspend fun checkStyled(path: String): String? {
+    override suspend fun getStyledSha(path: String): String? {
         val request = api.getFileContent(path = path)
         if (request.isValid()) {
             return request.body()!!.sha
         } else {
             throw request.toException()
         }
+    }
+
+    override fun addMyStyledUrl(uuid: String, carrotUrl: CarrotUrl) {
+        firestore.collection(uuid)
+            .document(carrotUrl.styled)
+            .set(carrotUrl)
+            .addOnFailureListener { exception ->
+                throw exception
+            }
     }
 }

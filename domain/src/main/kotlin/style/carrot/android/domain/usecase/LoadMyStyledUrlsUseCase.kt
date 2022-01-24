@@ -11,8 +11,8 @@ package style.carrot.android.domain.usecase
 
 import style.carrot.android.domain.repository.CarrotRepository
 
-class LoadCarrotUrlsUseCase(private val repository: CarrotRepository) {
-    suspend operator fun invoke() = runCatching {
-        repository.loadUrls()
+class LoadMyStyledUrlsUseCase(private val repository: CarrotRepository) {
+    suspend operator fun invoke(uuid: String) = runCatching {
+        repository.loadMyStyledUrls(uuid)
     }
 }

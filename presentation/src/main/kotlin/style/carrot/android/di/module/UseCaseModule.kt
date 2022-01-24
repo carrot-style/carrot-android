@@ -15,8 +15,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import style.carrot.android.domain.repository.CarrotRepository
-import style.carrot.android.domain.usecase.CheckStyledUseCase
-import style.carrot.android.domain.usecase.LoadCarrotUrlsUseCase
+import style.carrot.android.domain.usecase.GetStyledShaUseCase
+import style.carrot.android.domain.usecase.LoadMyStyledUrlsUseCase
 import style.carrot.android.domain.usecase.StylingCarrotUrlUseCase
 
 @Module
@@ -29,11 +29,11 @@ object UseCaseModule {
 
     @Provides
     @ViewModelScoped
-    fun provideLoadCarrotUrlsUseCase(repository: CarrotRepository): LoadCarrotUrlsUseCase =
-        LoadCarrotUrlsUseCase(repository)
+    fun provideLoadCarrotUrlsUseCase(repository: CarrotRepository): LoadMyStyledUrlsUseCase =
+        LoadMyStyledUrlsUseCase(repository)
 
     @Provides
     @ViewModelScoped
-    fun provideCheckStyledUseCase(repository: CarrotRepository): CheckStyledUseCase =
-        CheckStyledUseCase(repository)
+    fun provideGetStyledShaUseCase(repository: CarrotRepository): GetStyledShaUseCase =
+        GetStyledShaUseCase(repository)
 }

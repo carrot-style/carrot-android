@@ -13,28 +13,32 @@ import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.viewmodel.container
+import style.carrot.android.activity.main.mvi.EventType
 import style.carrot.android.activity.main.mvi.MainState
 import style.carrot.android.domain.model.CarrotUrl
-import style.carrot.android.domain.usecase.CheckStyledUseCase
-import style.carrot.android.domain.usecase.LoadCarrotUrlsUseCase
+import style.carrot.android.domain.usecase.GetStyledShaUseCase
+import style.carrot.android.domain.usecase.LoadMyStyledUrlsUseCase
 import style.carrot.android.domain.usecase.StylingCarrotUrlUseCase
 import style.carrot.android.util.constant.Key
 import style.carrot.android.util.extension.get
 import style.carrot.android.util.extension.set
 import java.util.UUID
 import javax.inject.Inject
-import org.orbitmvi.orbit.syntax.simple.intent
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val checkStyledUseCase: CheckStyledUseCase,
-    private val loadCarrotUrlsUseCase: LoadCarrotUrlsUseCase,
+    private val getStyledShaUseCase: GetStyledShaUseCase,
+    private val loadMyStyledUrlsUseCase: LoadMyStyledUrlsUseCase,
     private val stylingCarrotUrlUseCase: StylingCarrotUrlUseCase,
     private val sharedPreferences: SharedPreferences
-) : ContainerHost<MainState, Unit>, ViewModel() {
+) : ViewModel() {
+
+    private val _event = MutableStateFlow(MainState())
+    private val state get() = _event.value
+    val event = _event.asStateFlow()
 
     init {
         if (sharedPreferences[Key.Uuid] == null) {
@@ -42,31 +46,46 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    override val container = container<MainState, Unit>(MainState())
-
-    fun loadCarrotUrls() = intent {
-
-        }
-
-    fun styling(
-        path: String,
-        url: String,
-        sha: String = "" // 업데이트에만 sha 값이 필요함
-    ) = viewModelScope.launch {
-        stylingCarrotUrlUseCase(
-            path = path,
-            url = url,
-            sha = sha
-        ).onSuccess {
-        }.onFailure {
-        }
+    fun loadCarrotUrls() = viewModelScope.launch {
+        var state = state.copy(type = EventType.LoadCarrotUrls)
+        loadMyStyledUrlsUseCase()
+            .onSuccess { carrotUrls ->
+                state = state.copy(carrotUrls = carrotUrls)
+            }
+            .onFailure { exception ->
+                state = state.copy(exception = Exception(exception))
+            }
+        _event.emit(state)
     }
 
-    fun checkStyled(path: String) = viewModelScope.launch {
-        checkStyledUseCase(path)
-            .onSuccess {
-                return@launch it!!
-            }.onFailure {
+    fun styling(
+        carrotUrl: CarrotUrl,
+        sha: String = ""
+    ) = viewModelScope.launch {
+        var state = state.copy(type = EventType.Styled)
+        stylingCarrotUrlUseCase(
+            path = carrotUrl.styled,
+            url = carrotUrl.origin,
+            sha = sha
+        ).onSuccess {
+            addMyStyledUrl(carrotUrl)
+        }.onFailure { exception ->
+            state = state.copy(exception = Exception(exception))
+        }
+        _event.emit(state)
+    }
+
+    fun getStyeldSha(path: String) = viewModelScope.launch {
+        var state = state.copy(type = EventType.CheckStyled)
+        getStyledShaUseCase(path)
+            .onSuccess { nullableSha ->
+                state = state.copy(sha = nullableSha)
+            }.onFailure { exception ->
+                state = state.copy(exception = Exception(exception))
             }
+        _event.emit(state)
+    }
+
+    private fun addMyStyledUrl(carrotUrl: CarrotUrl) {
     }
 }

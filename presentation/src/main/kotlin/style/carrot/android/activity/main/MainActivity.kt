@@ -74,10 +74,6 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        vm.loadCarrotUrls {
-            isReady = true
-        }
-
         // vm.styling("test.html", "https://sungb.in", update = true)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

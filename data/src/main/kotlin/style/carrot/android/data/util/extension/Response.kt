@@ -7,7 +7,7 @@
  * Please see: https://github.com/GitMessengerBot/GitMessengerBot-Android/blob/master/LICENSE.
  */
 
-package style.carrot.android.data.util
+package style.carrot.android.data.util.extension
 
 import retrofit2.Response
 

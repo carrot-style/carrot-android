@@ -12,4 +12,6 @@ package style.carrot.android.data.util
 const val CarrotStyle = "carrotstyle"
 const val CarrotStyleRepo = "carrot.style"
 const val CarrotBranch = "main"
-const val CarrotMessage = "new styling"
+const val CarrotMessage = "new styling!"
+
+const val CarrotFirestore = "styled"
