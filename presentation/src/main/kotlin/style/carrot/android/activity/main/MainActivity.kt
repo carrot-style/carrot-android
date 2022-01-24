@@ -144,7 +144,7 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.padding(top = 15.dp),
                                 verticalArrangement = Arrangement.spacedBy(15.dp)
                             ) {
-                                items(List(100) { CarrotUrl("AAA", "BBB", "안녕 방가방가") }) { carrotUrl ->
+                                items(List(100) { CarrotUrl("carrot.style/test", "BBB", "안녕하세요. 반갑습니다.") }) { carrotUrl ->
                                     StyledCard(
                                         modifier = Modifier.animateItemPlacement(),
                                         carrotUrl = carrotUrl

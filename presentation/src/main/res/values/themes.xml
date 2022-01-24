@@ -7,17 +7,13 @@
   ~ Please see: https://github.com/carrot-style/carrot-android/blob/main/LICENSE.
   -->
 
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
-    <style name="Theme.CarrotStyle" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="android:statusBarColor" tools:targetApi="l">@color/white</item>
-        <item name="android:navigationBarColor">@color/white</item>
-        <item name="android:windowLightStatusBar">true</item>
-    </style>
+    <style name="Theme.CarrotStyle" parent="Theme.MaterialComponents.DayNight.DarkActionBar" />
 
     <style name="Theme.CarrotStyle.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/test4</item>
         <item name="postSplashScreenTheme">@style/Theme.CarrotStyle</item>
 
         <item name="android:statusBarColor">@color/white</item>
