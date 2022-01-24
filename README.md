@@ -1,4 +1,4 @@
-# 🥕 carrot-android 
+# carrot-android 🥕
 
 Carrot-style with android.
 
