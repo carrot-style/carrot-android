@@ -17,7 +17,7 @@ carrot-style with android.
 ### Design Preview
 
 - [error screen](https://youtu.be/q3Hqfr9-cYw)
-- main screen ([`Card` component is not implemented in Material You yet](https://m3.material.io/components/cards/implementation), Therefore, the `Card` design is not pretty)
+- main screen (`Card` component is [not implemented](https://m3.material.io/components/cards/implementation) in Material You yet, Therefore, the `Card` design is not pretty)
 
 ### App Content
 
