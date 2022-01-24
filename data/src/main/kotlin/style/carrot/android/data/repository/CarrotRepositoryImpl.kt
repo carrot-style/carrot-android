@@ -9,19 +9,21 @@
 
 package style.carrot.android.data.repository
 
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Retrofit
 import style.carrot.android.data.api.GithubRepoService
 import style.carrot.android.data.model.GithubFile
-import style.carrot.android.data.util.CarrotFirestore
 import style.carrot.android.data.util.extension.isValid
-import style.carrot.android.data.util.toBase64
+import style.carrot.android.data.util.extension.toBase64
 import style.carrot.android.data.util.extension.toException
-import style.carrot.android.data.util.toRedirectContent
+import style.carrot.android.data.util.extension.toObjectNonNull
+import style.carrot.android.data.util.extension.toRedirectContent
 import style.carrot.android.domain.model.CarrotUrl
 import style.carrot.android.domain.repository.CarrotRepository
+import kotlin.coroutines.resume
 
 class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
 
@@ -30,10 +32,11 @@ class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
 
     override suspend fun loadMyStyledUrls(uuid: String): List<CarrotUrl> =
         suspendCancellableCoroutine { continuation ->
-            Firebase.firestore
-                .document(CarrotFirestore)
-                .collection(uuid)
+            firestore.collection(uuid)
                 .get()
+                .addOnSuccessListener { result ->
+                    continuation.resume(result.documents.map(DocumentSnapshot::toObjectNonNull))
+                }
                 .addOnFailureListener { exception ->
                     throw exception
                 }

@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import style.carrot.android.activity.main.mvi.EventType
 import style.carrot.android.activity.main.mvi.MainState
 import style.carrot.android.domain.model.CarrotUrl
+import style.carrot.android.domain.usecase.AddMyStyledUrlUseCase
 import style.carrot.android.domain.usecase.GetStyledShaUseCase
 import style.carrot.android.domain.usecase.LoadMyStyledUrlsUseCase
 import style.carrot.android.domain.usecase.StylingCarrotUrlUseCase
@@ -33,11 +34,13 @@ class MainViewModel @Inject constructor(
     private val getStyledShaUseCase: GetStyledShaUseCase,
     private val loadMyStyledUrlsUseCase: LoadMyStyledUrlsUseCase,
     private val stylingCarrotUrlUseCase: StylingCarrotUrlUseCase,
+    private val addMyStyledUrlUseCase: AddMyStyledUrlUseCase,
     private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
     private val _event = MutableStateFlow(MainState())
     private val state get() = _event.value
+    private val uuid by lazy { sharedPreferences[Key.Uuid]!! }
     val event = _event.asStateFlow()
 
     init {
@@ -48,7 +51,7 @@ class MainViewModel @Inject constructor(
 
     fun loadCarrotUrls() = viewModelScope.launch {
         var state = state.copy(type = EventType.LoadCarrotUrls)
-        loadMyStyledUrlsUseCase()
+        loadMyStyledUrlsUseCase(uuid = uuid)
             .onSuccess { carrotUrls ->
                 state = state.copy(carrotUrls = carrotUrls)
             }
@@ -87,5 +90,6 @@ class MainViewModel @Inject constructor(
     }
 
     private fun addMyStyledUrl(carrotUrl: CarrotUrl) {
+        addMyStyledUrlUseCase(uuid = uuid, carrotUrl = carrotUrl)
     }
 }
