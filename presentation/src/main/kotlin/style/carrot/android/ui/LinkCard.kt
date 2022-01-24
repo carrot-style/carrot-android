@@ -36,7 +36,7 @@ fun StyledCard(modifier: Modifier, carrotUrl: CarrotUrl) {
                 color = Color(242, 240, 240),
                 shape = RoundedCornerShape(30.dp)
             )
-            .padding(horizontal = 15.dp),
+            .padding(horizontal = 30.dp),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         Text(text = carrotUrl.styled, style = MaterialTheme.typography.bodyLarge)

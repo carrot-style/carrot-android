@@ -54,7 +54,7 @@ import style.carrot.android.util.constant.IntentConstant
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 class MainActivity : ComponentActivity() {
 
-    private var isReady = false
+    private var isReady = true
     private val vm: MainViewModel by viewModels()
     private val systemUiController by lazy { SystemUiController(window) }
 
@@ -144,7 +144,7 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.padding(top = 15.dp),
                                 verticalArrangement = Arrangement.spacedBy(15.dp)
                             ) {
-                                items(List(100) { CarrotUrl("AAA", "BBB", "CCC") }) { carrotUrl ->
+                                items(List(100) { CarrotUrl("AAA", "BBB", "안녕 방가방가") }) { carrotUrl ->
                                     StyledCard(
                                         modifier = Modifier.animateItemPlacement(),
                                         carrotUrl = carrotUrl
