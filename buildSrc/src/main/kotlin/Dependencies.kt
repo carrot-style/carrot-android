@@ -32,6 +32,7 @@ object Versions {
         const val Master = "1.2.0-alpha01"
         const val Material = "1.2.0-alpha01"
         const val ConstraintLayout = "1.0.0"
+        const val LifecycleViewModel = "2.4.0"
     }
 
     object Ui {
@@ -73,7 +74,8 @@ object Dependencies {
 
     val Firebase = listOf("com.google.firebase:firebase-firestore-ktx")
 
-    val Essential = listOf("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.Essential.Coroutines}")
+    val Essential =
+        listOf("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.Essential.Coroutines}")
 
     val Ktx = listOf(
         "androidx.core:core-ktx:${Versions.Ktx.Core}",
@@ -86,6 +88,7 @@ object Dependencies {
         "androidx.activity:activity-compose:${Versions.Compose.Activity}",
         "androidx.compose.material:material:${Versions.Compose.Material}",
         "com.google.accompanist:accompanist-insets:${Versions.Compose.Insets}",
+        "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.Compose.LifecycleViewModel}",
         "androidx.constraintlayout:constraintlayout-compose:${Versions.Compose.ConstraintLayout}"
     )
 

@@ -39,7 +39,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import style.carrot.android.R
+import style.carrot.android.activity.main.MainViewModel
 import style.carrot.android.theme.CarrotStyleTheme
 
 private const val DefaultStyle = "carrot.style/"
@@ -51,6 +53,8 @@ private val DefaultStyleTextFieldValue = TextFieldValue(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CreateStyle(modifier: Modifier = Modifier) {
+    val vm: MainViewModel = viewModel()
+
     var fullAddressField by remember { mutableStateOf(TextFieldValue()) }
     var styledAddressField by remember { mutableStateOf(DefaultStyleTextFieldValue) }
     var memoField by remember { mutableStateOf(TextFieldValue()) }
@@ -94,7 +98,7 @@ fun CreateStyle(modifier: Modifier = Modifier) {
                 onValueChange = { styledAddressFieldValue ->
                     if (styledAddressFieldValue.text.isEmpty()) {
                         styledAddressField = DefaultStyleTextFieldValue
-                    } else if (styledAddressFieldValue.text.startsWith(DefaultStyle)) {
+                    } else if (styledAddressFieldValue.text.run { startsWith(DefaultStyle) && length <= 15 }) {
                         styledAddressField = styledAddressFieldValue
                     }
                 }

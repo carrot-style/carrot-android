@@ -21,7 +21,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +39,8 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.statusBarsPadding
 import io.github.jisungbin.erratum.ErratumExceptionActivity
+import io.github.jisungbin.logeukes.LoggerType
+import io.github.jisungbin.logeukes.logeukes
 import style.carrot.android.BuildConfig
 import style.carrot.android.R
 import style.carrot.android.theme.CarrotStyleTheme
@@ -59,21 +61,22 @@ class ErrorActivity : ErratumExceptionActivity() {
                 ProvideWindowInsets {
                     val backgroundColor = MaterialTheme.colors.background
 
-                    SideEffect {
+                    LaunchedEffect(Unit) {
                         systemUiController.setStatusBarColor(backgroundColor)
                         systemUiController.setNavigationBarColor(Color.Transparent)
                     }
 
-                    Exception(backgroundColor)
+                    ExceptionScreen(backgroundColor = backgroundColor)
                 }
             }
         }
     }
 
     @Composable
-    fun Exception(backgroundColor: Color) {
+    private fun ExceptionScreen(backgroundColor: Color) {
         val message: String
         val lottieRaw: Int
+        logeukes(type = LoggerType.E) { exceptionString }
         when (intent.getStringExtra(IntentConstant.Error)) {
             IntentConstant.NoInternet -> {
                 message = stringResource(R.string.activity_error_internet)

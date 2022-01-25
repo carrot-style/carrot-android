@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.view.ViewTreeObserver
 import android.view.animation.AnticipateInterpolator
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.Crossfade
@@ -34,7 +35,7 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,7 +47,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.systemBarsPadding
 import dagger.hilt.android.AndroidEntryPoint
@@ -132,8 +132,14 @@ class MainActivity : ComponentActivity() {
                         rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
                     val coroutineScope = rememberCoroutineScope()
 
-                    SideEffect {
+                    LaunchedEffect(Unit) {
                         systemUiController.setSystemBarsColor(backgroundColor)
+                    }
+
+                    BackHandler(enabled = modalBottomSheetState.isVisible) {
+                        coroutineScope.launch {
+                            modalBottomSheetState.hide()
+                        }
                     }
 
                     ModalBottomSheetLayout(
