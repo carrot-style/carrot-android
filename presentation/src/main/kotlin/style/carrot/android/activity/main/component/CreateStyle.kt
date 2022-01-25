@@ -44,7 +44,7 @@ import style.carrot.android.theme.CarrotStyleTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CreateStyle(modifier: Modifier) {
+fun CreateStyle(modifier: Modifier = Modifier) {
     var fullAddressField by remember { mutableStateOf(TextFieldValue()) }
     var styledAddressField by remember { mutableStateOf(TextFieldValue()) }
     var memoField by remember { mutableStateOf(TextFieldValue()) }
