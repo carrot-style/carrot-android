@@ -6,5 +6,7 @@
     <string name="activity_error_exception">The carrot was eaten by the rabbit! Please try again later.</string>
     <string name="activity_error_btn_retry">Retry</string>
 
+    <string name="activity_main_toast_error">An error has occurred 😢. Please try again later.</string>
+
     <string name="ui_linkcard_toast_copied">Copied.</string>
 </resources>

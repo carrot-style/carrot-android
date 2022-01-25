@@ -22,6 +22,7 @@ import style.carrot.android.data.util.extension.toBase64
 import style.carrot.android.data.util.extension.toException
 import style.carrot.android.data.util.extension.toObjectNonNull
 import style.carrot.android.data.util.extension.toRedirectContent
+import style.carrot.android.domain.model.FileSha
 import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.domain.repository.CarrotRepository
 import kotlin.coroutines.resume
@@ -57,17 +58,17 @@ class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
         }
     }
 
-    override suspend fun getStyledSha(path: String): String? {
+    override suspend fun getStyledSha(path: String): FileSha {
         val request = api.getFileContent(path = path)
         if (request.isValid()) {
-            return request.body()!!.sha
+            return FileSha(request.body()!!.sha)
         } else {
             throw request.toException()
         }
     }
 
     override suspend fun deleteStyledUrl(uuid: String, styledUrl: StyledUrl) {
-        val sha = getStyledSha(path = styledUrl.styled)!!
+        val sha = getStyledSha(path = styledUrl.styled).sha!!
         val githubFile = GithubFile(message = DeleteStyledMessage, sha = sha)
         val request = api.deleteFile(
             path = styledUrl.styled,

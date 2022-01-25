@@ -43,16 +43,18 @@ import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.systemBarsPadding
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.jisungbin.logeukes.LoggerType
 import io.github.jisungbin.logeukes.logeukes
+import style.carrot.android.BuildConfig
 import style.carrot.android.R
 import style.carrot.android.activity.error.ErrorActivity
-import style.carrot.android.activity.main.mvi.MainState
 import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.theme.SystemUiController
 import style.carrot.android.ui.StyledCard
 import style.carrot.android.util.NetworkUtil
 import style.carrot.android.util.constant.IntentConstant
 import style.carrot.android.util.extension.collectWithLifecycle
+import style.carrot.android.util.extension.toast
 
 @ExperimentalFoundationApi
 @AndroidEntryPoint
@@ -76,8 +78,12 @@ class MainActivity : ComponentActivity() {
             return
         }
 
-        vm.event.collectWithLifecycle(lifecycleOwner = this, action = ::handleState)
+        vm.loadStyledUrlsWithDoneAction {
+            isReady = true
+        }
+        vm.exceptionFlow.collectWithLifecycle(lifecycleOwner = this, action = ::handleException)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             splashScreen.setOnExitAnimationListener { splashScreenView ->
                 splashScreenView.animate().run {
@@ -165,9 +171,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun handleState(state: MainState) {
-        if (state.isException) {
-        } else {
+    private fun handleException(exception: Throwable?) {
+        if (exception != null) {
+            val message = when (BuildConfig.DEBUG) {
+                true -> {
+                    logeukes(type = LoggerType.E) { exception }
+                    exception.message.toString()
+                }
+                else -> getString(R.string.activity_main_toast_error)
+            }
+            toast(message)
         }
     }
 }

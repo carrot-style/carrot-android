@@ -9,7 +9,6 @@
 
 package style.carrot.android.ui
 
-import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -46,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import style.carrot.android.R
 import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.util.Util
+import style.carrot.android.util.extension.toast
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -133,17 +133,13 @@ fun StyledCard(
 private fun CarrotUrlCard(styledUrl: StyledUrl, backgroundColor: Color, shape: Shape) {
     val context = LocalContext.current
 
-    fun toast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
-
     Card(
         modifier = Modifier.fillMaxSize(),
         shape = shape,
         backgroundColor = backgroundColor,
         onClick = {
             Util.copy(context, styledUrl.styled)
-            toast(context.getString(R.string.ui_linkcard_toast_copied))
+            toast(context, context.getString(R.string.ui_linkcard_toast_copied))
         }
     ) {
         Column(

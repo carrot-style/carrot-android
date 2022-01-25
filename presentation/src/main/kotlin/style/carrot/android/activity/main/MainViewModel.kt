@@ -18,8 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import style.carrot.android.activity.main.mvi.EventType
-import style.carrot.android.activity.main.mvi.MainState
+import style.carrot.android.domain.model.FileSha
 import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.domain.usecase.AddStyledUrlUseCase
 import style.carrot.android.domain.usecase.DeleteStyledUrlUseCase
@@ -43,12 +42,8 @@ class MainViewModel @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
-    /**
-     * MVI Event
-     */
-    private val _event = MutableStateFlow(MainState())
-    private val eventValue get() = _event.value
-    val event = _event.asStateFlow()
+    private val _exceptionEvent = MutableStateFlow<Throwable?>(null)
+    val exceptionFlow = _exceptionEvent.asStateFlow()
 
     /**
      * `StateFlow<T>.collectAsState` 로 받아서 처리해야 함 -> [Flow]로 작성
@@ -67,20 +62,17 @@ class MainViewModel @Inject constructor(
 
     /**
      * [StyledUrl] 리스트 firestore에서 조회
-     *
-     * 요청중 excepion 발생시 [event]에 exception 넘겨줌
      * 요청 성공시 [StyledUrl] 리스트를 [styledUrls]에 넘겨줌
      */
-    fun loadStyledUrls() = viewModelScope.launch {
-        var state = eventValue.copy(type = EventType.LoadStyledUrls, exception = null)
+    fun loadStyledUrlsWithDoneAction(doneAction: () -> Unit) = viewModelScope.launch {
         loadStyledUrlsUseCase(uuid = uuid)
             .onSuccess { styledUrls ->
                 _styledUrls.emit(styledUrls.toMutableList())
+                doneAction()
             }
             .onFailure { throwable ->
-                state = state.copy(exception = throwable)
+                throwable.emit()
             }
-        _event.emit(state)
     }
 
     /**
@@ -98,48 +90,44 @@ class MainViewModel @Inject constructor(
      * [sha] 인자에 `""`(공백) 들어감
      */
     fun styling(styledUrl: StyledUrl, sha: String = "") = viewModelScope.launch {
-        var state = eventValue.copy(type = EventType.Styling, exception = null)
         stylingUrlUseCase(
             path = styledUrl.styled,
             url = styledUrl.origin,
             sha = sha
         ).onSuccess {
-            addStyledUrl(styledUrl)?.let { throwable ->
-                state = state.copy(exception = throwable)
-            }
+            // addStyledUrl(styledUrl): firestore에 등록 요청
+            // 요청 실패 - return throwable
+            // 요청 성공 - return null
+            addStyledUrl(styledUrl)?.emit()
         }.onFailure { throwable ->
-            state = state.copy(exception = throwable)
+            throwable.emit()
         }
-        _event.emit(state)
     }
 
-    /**
-     * 조회 성공시 [MainState.sha] 값으로 nullable한 sha 값이 들어감
-     */
-    fun getStyeldSha(path: String) = viewModelScope.launch {
-        var state = eventValue.copy(type = EventType.StyeldSha, exception = null)
-        getStyledShaUseCase(path)
-            .onSuccess { nullableSha ->
-                state = state.copy(sha = nullableSha)
-            }.onFailure { throwable ->
-                state = state.copy(exception = throwable)
-            }
-        _event.emit(state)
+    suspend fun getStyeldSha(path: String): FileSha? = suspendCancellableCoroutine { continuation ->
+        viewModelScope.launch {
+            getStyledShaUseCase(path)
+                .onSuccess { nullableSha ->
+                    continuation.resume(nullableSha)
+                }.onFailure { throwable ->
+                    continuation.resume(null)
+                    throwable.emit()
+                }
+        }
     }
 
     fun deleteStyledUrl(styledUrl: StyledUrl) = viewModelScope.launch {
-        var state = eventValue.copy(type = EventType.DeleteStyledUrl, exception = null)
         deleteStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)
             .onSuccess {
                 _styledUrls.emit(styledUrlsValue.apply { remove(styledUrl) })
             }
             .onFailure { throwable ->
-                state = state.copy(exception = throwable)
+                throwable.emit()
             }
-        _event.emit(state)
     }
 
     /**
+     * [MainViewModel.styling]에서만 사용됨
      * [StyledUrl]을 firestore에 등록 요청함
      * 만약 요청 성공시 [styledUrls]에 해당 [StyledUrl]을 추가함
      *
@@ -159,4 +147,8 @@ class MainViewModel @Inject constructor(
                     }
             }
         }
+
+    private suspend fun Throwable.emit() {
+        _exceptionEvent.emit(this)
+    }
 }
