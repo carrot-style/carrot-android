@@ -82,28 +82,32 @@ class MainViewModel @Inject constructor(
      *
      * - 수정 요청일 때
      * 기존 파일에서 sha값을 조회해야 함 ->
-     * [styling] 호출 전 미리 [getStyeldSha] 함수를 호출하여 sha값 조회 ->
+     * [stylingUrl] 호출 전 미리 [getStyeldSha] 함수를 호출하여 sha값 조회 ->
      * 위에서 조회한 값이 [sha] 인자로 들어감
      *
      * - 새로운 스타일링 요청일 때
      * 새로운 파일을 만들어야 함 ->
      * [sha] 인자에 `""`(공백) 들어감
      */
-    fun styling(styledUrl: StyledUrl, sha: String = "") = viewModelScope.launch {
+    fun stylingUrl(styledUrl: StyledUrl, sha: String = "") = viewModelScope.launch {
         stylingUrlUseCase(
             path = styledUrl.styled,
             url = styledUrl.origin,
             sha = sha
         ).onSuccess {
             // addStyledUrl(styledUrl): firestore에 등록 요청
-            // 요청 실패 - return throwable
             // 요청 성공 - return null
+            // 요청 실패 - return throwable
             addStyledUrl(styledUrl)?.emit()
         }.onFailure { throwable ->
             throwable.emit()
         }
     }
 
+    /**
+     * @return 요청 성공 - [FileSha.sha] 값이 null이면 파일 없음, null이 아니면 파일 있음
+     * 요청 실패 - null
+     */
     suspend fun getStyeldSha(path: String): FileSha? = suspendCancellableCoroutine { continuation ->
         viewModelScope.launch {
             getStyledShaUseCase(path)
@@ -116,6 +120,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    /**
+     * @return true - 이미 사용중인 링크, false - 사용 가능한 링크
+     */
+    suspend fun checkAlreadyStyledOrRequestException(path: String) = getStyeldSha(path)?.sha != null
+
     fun deleteStyledUrl(styledUrl: StyledUrl) = viewModelScope.launch {
         deleteStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)
             .onSuccess {
@@ -127,7 +136,7 @@ class MainViewModel @Inject constructor(
     }
 
     /**
-     * [MainViewModel.styling]에서만 사용됨
+     * [MainViewModel.stylingUrl]에서만 사용됨
      * [StyledUrl]을 firestore에 등록 요청함
      * 만약 요청 성공시 [styledUrls]에 해당 [StyledUrl]을 추가함
      *

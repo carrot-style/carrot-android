@@ -25,12 +25,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
@@ -40,9 +42,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import style.carrot.android.R
 import style.carrot.android.activity.main.MainViewModel
+import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.theme.CarrotStyleTheme
+import style.carrot.android.util.extension.toast
 
 private const val DefaultStyle = "carrot.style/"
 private val DefaultStyleTextFieldValue = TextFieldValue(
@@ -55,11 +60,13 @@ private val DefaultStyleTextFieldValue = TextFieldValue(
 fun CreateStyle(modifier: Modifier = Modifier) {
     val vm: MainViewModel = viewModel()
 
-    var fullAddressField by remember { mutableStateOf(TextFieldValue()) }
-    var styledAddressField by remember { mutableStateOf(DefaultStyleTextFieldValue) }
+    var fullUrlField by remember { mutableStateOf(TextFieldValue()) }
+    var styledUrlField by remember { mutableStateOf(DefaultStyleTextFieldValue) }
     var memoField by remember { mutableStateOf(TextFieldValue()) }
 
+    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = modifier,
@@ -78,8 +85,8 @@ fun CreateStyle(modifier: Modifier = Modifier) {
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 keyboardActions = KeyboardActions { focusManager.moveFocus(FocusDirection.Down) },
-                value = fullAddressField,
-                onValueChange = { fullAddressField = it }
+                value = fullUrlField,
+                onValueChange = { fullUrlField = it }
             )
             Spacer()
             Text(
@@ -94,12 +101,12 @@ fun CreateStyle(modifier: Modifier = Modifier) {
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 keyboardActions = KeyboardActions { focusManager.moveFocus(FocusDirection.Down) },
-                value = styledAddressField,
-                onValueChange = { styledAddressFieldValue ->
-                    if (styledAddressFieldValue.text.isEmpty()) {
-                        styledAddressField = DefaultStyleTextFieldValue
-                    } else if (styledAddressFieldValue.text.run { startsWith(DefaultStyle) && length <= 15 }) {
-                        styledAddressField = styledAddressFieldValue
+                value = styledUrlField,
+                onValueChange = { styledUrlFieldValue ->
+                    if (styledUrlFieldValue.text.isEmpty()) {
+                        styledUrlField = DefaultStyleTextFieldValue
+                    } else if (styledUrlFieldValue.text.run { startsWith(DefaultStyle) && length <= 15 }) {
+                        styledUrlField = styledUrlFieldValue
                     }
                 }
             )
@@ -116,7 +123,7 @@ fun CreateStyle(modifier: Modifier = Modifier) {
                 maxLines = 1,
                 placeholder = {
                     Text(
-                        text = fullAddressField.text,
+                        text = fullUrlField.text,
                         style = LocalTextStyle.current.copy(color = Color.LightGray)
                     )
                 },
@@ -128,7 +135,29 @@ fun CreateStyle(modifier: Modifier = Modifier) {
         }
         Button(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            onClick = { /*TODO*/ }
+            onClick = {
+                coroutineScope.launch {
+                    val fullUrl = fullUrlField.text
+                    val styledUrl = "${styledUrlField.text}.html"
+                    val memo = memoField.text
+
+                    if (vm.checkAlreadyStyledOrRequestException(styledUrl)) {
+                        toast(
+                            context,
+                            context.getString(R.string.activity_main_component_createstyle_toast_create_fail)
+                        )
+                    } else {
+                        vm.stylingUrl(
+                            styledUrl = StyledUrl(
+                                styled = styledUrl,
+                                origin = fullUrl,
+                                memo = memo
+                            ),
+                            sha = ""
+                        )
+                    }
+                }
+            }
         ) {
             Text(text = stringResource(R.string.activity_main_component_createstyle_btn_create))
         }
