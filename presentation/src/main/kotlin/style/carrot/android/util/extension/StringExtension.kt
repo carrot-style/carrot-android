@@ -7,6 +7,6 @@
  * Please see: https://github.com/carrot-style/carrot-android/blob/main/LICENSE.
  */
 
-package style.carrot.android.domain.util
+package style.carrot.android.util.extension
 
 fun String.checkHttpAndAutoInsert() = if (contains("://")) this else "http://$this"

@@ -22,11 +22,11 @@ interface CarrotRepository {
      * @param url 단축될 링크
      * @param sha 업데이트하는 값이라면 sha가 필요함, 만약 새로 생성이라면 "" 들어옴
      */
-    suspend fun styling(path: String, url: String, sha: String)
+    suspend fun stylingUrl(path: String, url: String, sha: String)
 
-    suspend fun loadMyStyledUrls(uuid: String): List<StyledUrl>
+    suspend fun loadStyledUrls(uuid: String): List<StyledUrl>
 
-    suspend fun deleteStyledUrl(styledUrl: StyledUrl)
+    suspend fun deleteStyledUrl(uuid: String, styledUrl: StyledUrl)
 
-    fun addMyStyledUrl(uuid: String, styledUrl: StyledUrl)
+    fun addStyledUrl(uuid: String, styledUrl: StyledUrl)
 }

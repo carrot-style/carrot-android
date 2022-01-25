@@ -11,16 +11,9 @@ package style.carrot.android.domain.usecase
 
 import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.domain.repository.CarrotRepository
-import style.carrot.android.domain.util.checkHttpAndAutoInsert
 
-class AddMyStyledUrlUseCase(private val repository: CarrotRepository) {
+class AddStyledUrlUseCase(private val repository: CarrotRepository) {
     operator fun invoke(uuid: String, styledUrl: StyledUrl) = runCatching {
-        repository.addMyStyledUrl(
-            uuid = uuid,
-            styledUrl = styledUrl.copy(
-                styled = styledUrl.styled.checkHttpAndAutoInsert(),
-                origin = styledUrl.origin.checkHttpAndAutoInsert()
-            )
-        )
+        repository.addStyledUrl(uuid = uuid, styledUrl = styledUrl)
     }
 }

@@ -15,6 +15,7 @@ package style.carrot.android.activity.main.mvi
  * @property Styled 스타일링 결과
  * @property StyleUpdateSha 스타일링 업데이트에 필요한 Sha 값 요청
  * @property LoadStyledUrls 스타일링 링크들 firestore 에서 가져오기
+ * @property DeleteStyledUrl 스타일링된 링크 삭제
  * @property StyledUpdate 스타일링 결과 firestore 업데이트
  */
 enum class EventType {
@@ -23,5 +24,6 @@ enum class EventType {
     Styled,
     StyleUpdateSha,
     LoadStyledUrls,
+    DeleteStyledUrl,
     StyledUpdate
 }

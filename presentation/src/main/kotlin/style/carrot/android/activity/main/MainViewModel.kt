@@ -20,10 +20,11 @@ import kotlinx.coroutines.launch
 import style.carrot.android.activity.main.mvi.EventType
 import style.carrot.android.activity.main.mvi.MainState
 import style.carrot.android.domain.model.StyledUrl
-import style.carrot.android.domain.usecase.AddMyStyledUrlUseCase
+import style.carrot.android.domain.usecase.AddStyledUrlUseCase
+import style.carrot.android.domain.usecase.DeleteStyledUrlUseCase
 import style.carrot.android.domain.usecase.GetStyledShaUseCase
-import style.carrot.android.domain.usecase.LoadMyStyledUrlsUseCase
-import style.carrot.android.domain.usecase.StylingCarrotUrlUseCase
+import style.carrot.android.domain.usecase.LoadStyledUrlsUseCase
+import style.carrot.android.domain.usecase.StylingUrlUseCase
 import style.carrot.android.util.constant.Key
 import style.carrot.android.util.extension.get
 import style.carrot.android.util.extension.set
@@ -33,9 +34,10 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getStyledShaUseCase: GetStyledShaUseCase,
-    private val loadMyStyledUrlsUseCase: LoadMyStyledUrlsUseCase,
-    private val stylingCarrotUrlUseCase: StylingCarrotUrlUseCase,
-    private val addMyStyledUrlUseCase: AddMyStyledUrlUseCase,
+    private val loadStyledUrlsUseCase: LoadStyledUrlsUseCase,
+    private val stylingUrlUseCase: StylingUrlUseCase,
+    private val deleteStyledUrlUseCase: DeleteStyledUrlUseCase,
+    private val addStyledUrlUseCase: AddStyledUrlUseCase,
     private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
@@ -57,7 +59,7 @@ class MainViewModel @Inject constructor(
 
     fun loadStyledUrls() = viewModelScope.launch {
         var state = eventValue.copy(type = EventType.LoadStyledUrls, exception = null)
-        loadMyStyledUrlsUseCase(uuid = uuid)
+        loadStyledUrlsUseCase(uuid = uuid)
             .onSuccess { styledUrls ->
                 _styledUrls.emit(styledUrls.toMutableList())
             }
@@ -67,12 +69,9 @@ class MainViewModel @Inject constructor(
         _event.emit(state)
     }
 
-    fun styling(
-        styledUrl: StyledUrl,
-        sha: String = ""
-    ) = viewModelScope.launch {
+    fun styling(styledUrl: StyledUrl, sha: String = "") = viewModelScope.launch {
         var state = eventValue.copy(type = EventType.Styled, exception = null)
-        stylingCarrotUrlUseCase(
+        stylingUrlUseCase(
             path = styledUrl.styled,
             url = styledUrl.origin,
             sha = sha
@@ -92,16 +91,24 @@ class MainViewModel @Inject constructor(
             }.onFailure { throwable ->
                 state = state.copy(exception = throwable)
             }
-        _event.emit(state)
+        _event.emit(eventValue.copy(type = EventType.CheckStyled, exception = null))
+    }
+
+    fun deleteStyledUrl(styledUrl: StyledUrl) = viewModelScope.launch {
+        var state = eventValue.copy(type = EventType.Styled, exception = null)
+        deleteStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)
+            .onFailure {
+            }
     }
 
     private suspend fun addMyStyledUrl(styledUrl: StyledUrl) {
-        addMyStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)
+        val state = eventValue.copy(type = EventType.Styled, exception = null)
+        addStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)
             .onSuccess {
                 _styledUrls.emit(styledUrlsValue.apply { add(styledUrl) })
             }
             .onFailure { throwable ->
-                _event.emit(eventValue.copy(exception = throwable))
+                _event.emit(state.copy(exception = throwable))
             }
     }
 }

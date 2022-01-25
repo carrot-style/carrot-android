@@ -16,6 +16,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Retrofit
 import style.carrot.android.data.api.GithubRepoService
 import style.carrot.android.data.model.GithubFile
+import style.carrot.android.data.util.DeleteStyledMessage
 import style.carrot.android.data.util.extension.isValid
 import style.carrot.android.data.util.extension.toBase64
 import style.carrot.android.data.util.extension.toException
@@ -30,7 +31,7 @@ class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
     private val firestore by lazy { Firebase.firestore }
     private val api = signedRetrofit.create(GithubRepoService::class.java)
 
-    override suspend fun loadMyStyledUrls(uuid: String): List<StyledUrl> =
+    override suspend fun loadStyledUrls(uuid: String): List<StyledUrl> =
         suspendCancellableCoroutine { continuation ->
             firestore.collection(uuid)
                 .get()
@@ -42,7 +43,7 @@ class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
                 }
         }
 
-    override suspend fun styling(path: String, url: String, sha: String) {
+    override suspend fun stylingUrl(path: String, url: String, sha: String) {
         val githubFile = GithubFile(
             content = url.toRedirectContent().toBase64(),
             sha = sha
@@ -65,7 +66,26 @@ class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
         }
     }
 
-    override fun addMyStyledUrl(uuid: String, styledUrl: StyledUrl) {
+    override suspend fun deleteStyledUrl(uuid: String, styledUrl: StyledUrl) {
+        val sha = getStyledSha(path = styledUrl.styled)!!
+        val githubFile = GithubFile(message = DeleteStyledMessage, sha = sha)
+        val request = api.deleteFile(
+            path = styledUrl.styled,
+            githubFile = githubFile
+        )
+        if (request.isValid()) { // 파일 삭제 성공
+            firestore.collection(uuid)
+                .document(styledUrl.styled)
+                .delete()
+                .addOnFailureListener { exception ->
+                    throw exception
+                }
+        } else {
+            throw request.toException()
+        }
+    }
+
+    override fun addStyledUrl(uuid: String, styledUrl: StyledUrl) {
         firestore.collection(uuid)
             .document(styledUrl.styled)
             .set(styledUrl)
