@@ -60,6 +60,7 @@ dependencies {
     implementation(Dependencies.Hilt)
 
     Dependencies.Ui.forEach(::implementation)
+    Dependencies.Ktx.forEach(::implementation)
     Dependencies.Util.forEach(::implementation)
     Dependencies.Compose.forEach(::implementation)
     Dependencies.Jackson.forEach(::implementation)

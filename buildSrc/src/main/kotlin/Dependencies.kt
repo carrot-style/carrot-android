@@ -14,11 +14,15 @@ object Application {
 
 object Versions {
     object Essential {
-        const val Ktx = "1.7.0"
         const val Kotlin = "1.6.10"
         const val Coroutines = "1.6.0"
         const val Gradle = "7.1.0-rc01"
         const val GoogleService = "4.3.3"
+    }
+
+    object Ktx {
+        const val Core = "1.7.0"
+        const val LifeCycle = "2.4.0"
     }
 
     object Compose {
@@ -69,9 +73,11 @@ object Dependencies {
 
     val Firebase = listOf("com.google.firebase:firebase-firestore-ktx")
 
-    val Essential = listOf(
-        "androidx.core:core-ktx:${Versions.Essential.Ktx}",
-        "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.Essential.Coroutines}"
+    val Essential = listOf("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.Essential.Coroutines}")
+
+    val Ktx = listOf(
+        "androidx.core:core-ktx:${Versions.Ktx.Core}",
+        "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.Ktx.LifeCycle}",
     )
 
     val Compose = listOf(

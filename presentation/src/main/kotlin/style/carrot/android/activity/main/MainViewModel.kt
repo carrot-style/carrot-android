@@ -130,6 +130,9 @@ class MainViewModel @Inject constructor(
     fun deleteStyledUrl(styledUrl: StyledUrl) = viewModelScope.launch {
         var state = eventValue.copy(type = EventType.DeleteStyledUrl, exception = null)
         deleteStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)
+            .onSuccess {
+                _styledUrls.emit(styledUrlsValue.apply { remove(styledUrl) })
+            }
             .onFailure { throwable ->
                 state = state.copy(exception = throwable)
             }

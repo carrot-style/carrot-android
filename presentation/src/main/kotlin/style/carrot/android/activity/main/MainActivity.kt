@@ -31,6 +31,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -44,18 +46,19 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.github.jisungbin.logeukes.logeukes
 import style.carrot.android.R
 import style.carrot.android.activity.error.ErrorActivity
-import style.carrot.android.domain.model.StyledUrl
+import style.carrot.android.activity.main.mvi.MainState
 import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.theme.SystemUiController
 import style.carrot.android.ui.StyledCard
 import style.carrot.android.util.NetworkUtil
 import style.carrot.android.util.constant.IntentConstant
+import style.carrot.android.util.extension.collectWithLifecycle
 
 @ExperimentalFoundationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private var isReady = true
+    private var isReady = false
     private val vm: MainViewModel by viewModels()
     private val systemUiController by lazy { SystemUiController(window) }
 
@@ -73,6 +76,7 @@ class MainActivity : ComponentActivity() {
             return
         }
 
+        vm.event.collectWithLifecycle(lifecycleOwner = this, action = ::handleState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             splashScreen.setOnExitAnimationListener { splashScreenView ->
@@ -91,7 +95,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val localView = LocalView.current
-
             localView.viewTreeObserver.addOnPreDrawListener(
                 object : ViewTreeObserver.OnPreDrawListener {
                     override fun onPreDraw(): Boolean {
@@ -107,6 +110,7 @@ class MainActivity : ComponentActivity() {
 
             CarrotStyleTheme {
                 ProvideWindowInsets {
+                    val styledUrls by vm.styledUrls.collectAsState(emptyList())
                     val backgroundColor = MaterialTheme.colors.background
 
                     SideEffect {
@@ -141,20 +145,11 @@ class MainActivity : ComponentActivity() {
                                 style = MaterialTheme.typography.h3,
                             )
                             LazyColumn( // TODO: fading edge
-                                modifier = Modifier
-                                    .padding(top = 16.dp),
+                                modifier = Modifier.padding(top = 16.dp),
                                 contentPadding = PaddingValues(bottom = 16.dp),
                                 verticalArrangement = Arrangement.spacedBy(15.dp)
                             ) {
-                                items(
-                                    List(20) {
-                                        StyledUrl(
-                                            "carrot.style/test",
-                                            "BBB",
-                                            "This is my Awesome carro-styled url."
-                                        )
-                                    }
-                                ) { carrotUrl ->
+                                items(items = styledUrls, key = { it.styled }) { carrotUrl ->
                                     StyledCard(
                                         modifier = Modifier.animateItemPlacement(),
                                         styledUrl = carrotUrl,
@@ -167,6 +162,12 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun handleState(state: MainState) {
+        if (state.isException) {
+        } else {
         }
     }
 }
