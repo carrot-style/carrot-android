@@ -7,7 +7,7 @@ Carrot-style with android.
 ### Dev Skill
 
 - Jetpack Compose
-- Material You
+- ~~Material You~~ (Migrating to Material 2 because there are many things that have not been implemented yet)
 - Splash API (Android 12)
 - Retrofit, OkHttp
 - Github API
@@ -17,8 +17,6 @@ Carrot-style with android.
 
 ### Design Preview
 
-> ⚠️ `Card` component is [not implemented](https://m3.material.io/components/cards/implementation) in Material You yet. Therefore, the `Card` design is not pretty.
-> 
 > ⚠️ The icon picture I obtained is a png, not a vector, so the [icon](https://github.com/carrot-style/carrot-android/blob/main/presentation/src/main/res/drawable/ic_splash_logo.png) quality is bad in the splash screen.
 
 - [Error screen](https://youtu.be/q3Hqfr9-cYw)
