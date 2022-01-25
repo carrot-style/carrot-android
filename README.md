@@ -7,7 +7,7 @@ Carrot-style with android.
 ### Dev Skill
 
 - Jetpack Compose
-- ~~Material You~~ ([Migrated to Material 2](https://github.com/carrot-style/carrot-android/commit/4413747356c17664fe976e222288527cf61a6288) because there are many things that have not been implemented yet)
+- ~~Material You~~ ([Migrated to Material 2](https://github.com/carrot-style/carrot-android/commit/4413747356c17664fe976e222288527cf61a6288) because there are many components that have not been implemented yet)
 - Splash API (Android 12)
 - Retrofit, OkHttp
 - Github API
