@@ -36,6 +36,7 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -127,86 +128,91 @@ class MainActivity : ComponentActivity() {
 
             CarrotStyleTheme {
                 ProvideWindowInsets {
-                    val styledUrls by vm.styledUrls.collectAsState(emptyList())
-                    val backgroundColor = MaterialTheme.colors.background
-                    val modalBottomSheetState =
-                        rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-                    val coroutineScope = rememberCoroutineScope()
+                    MainContent()
+                }
+            }
+        }
+    }
 
-                    LaunchedEffect(Unit) {
-                        systemUiController.setSystemBarsColor(backgroundColor)
+    @Composable
+    private fun MainContent() {
+        val styledUrls by vm.styledUrls.collectAsState(emptyList())
+        val backgroundColor = MaterialTheme.colors.background
+        val modalBottomSheetState =
+            rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+        val coroutineScope = rememberCoroutineScope()
+
+        LaunchedEffect(Unit) {
+            systemUiController.setSystemBarsColor(backgroundColor)
+        }
+
+        BackHandler(enabled = modalBottomSheetState.isVisible) {
+            coroutineScope.launch {
+                modalBottomSheetState.hide()
+            }
+        }
+
+        fun ModalBottomSheetState.expandFull() {
+            coroutineScope.launch {
+                animateTo(ModalBottomSheetValue.Expanded)
+            }
+        }
+
+        ModalBottomSheetLayout(
+            sheetContent = {
+                CreateStyle(
+                    modifier = Modifier
+                        .navigationBarsWithImePadding()
+                        .height(450.dp)
+                        .fillMaxWidth()
+                        .padding(30.dp)
+                )
+            },
+            sheetState = modalBottomSheetState,
+            sheetShape = RoundedCornerShape(20.dp)
+        ) {
+            Scaffold(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .systemBarsPadding(),
+                floatingActionButton = {
+                    FloatingActionButton(onClick = {
+                        modalBottomSheetState.expandFull()
+                    }) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_round_add_24),
+                            contentDescription = null
+                        )
                     }
-
-                    BackHandler(enabled = modalBottomSheetState.isVisible) {
-                        coroutineScope.launch {
-                            modalBottomSheetState.hide()
-                        }
-                    }
-
-                    fun ModalBottomSheetState.expandFull() {
-                        coroutineScope.launch {
-                            animateTo(ModalBottomSheetValue.Expanded)
-                        }
-                    }
-
-                    ModalBottomSheetLayout(
-                        sheetContent = {
-                            CreateStyle(
-                                modifier = Modifier
-                                    .navigationBarsWithImePadding()
-                                    .height(450.dp)
-                                    .fillMaxWidth()
-                                    .padding(30.dp)
-                            )
-                        },
-                        sheetState = modalBottomSheetState,
-                        sheetShape = RoundedCornerShape(20.dp)
-                    ) {
-                        Scaffold(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .systemBarsPadding(),
-                            floatingActionButton = {
-                                FloatingActionButton(onClick = {
-                                    modalBottomSheetState.expandFull()
-                                }) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_round_add_24),
-                                        contentDescription = null
-                                    )
-                                }
-                            },
-                            backgroundColor = backgroundColor
-                        ) { padding ->
-                            Column(
-                                modifier = Modifier
-                                    .padding(padding)
-                                    .padding(
-                                        top = 60.dp,
-                                        start = 16.dp,
-                                        end = 16.dp
-                                    )
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.app_name),
-                                    style = MaterialTheme.typography.h3,
-                                )
-                                Crossfade(styledUrls.isEmpty()) { isEmpty ->
-                                    when (isEmpty) {
-                                        true -> {
-                                            EmptyStyled()
-                                        }
-                                        else -> {
-                                            LazyStyledCard(
-                                                styledUrls = styledUrls,
-                                                expandEditStyleModalBottomSheet = { styledUrl ->
-                                                    vm.styledUrlForUpdate = styledUrl
-                                                    modalBottomSheetState.expandFull()
-                                                }
-                                            )
-                                        }
+                },
+                backgroundColor = backgroundColor
+            ) { padding ->
+                Column(
+                    modifier = Modifier
+                        .padding(padding)
+                        .padding(
+                            top = 60.dp,
+                            start = 16.dp,
+                            end = 16.dp
+                        )
+                ) {
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        style = MaterialTheme.typography.h3,
+                    )
+                    Crossfade(styledUrls.isEmpty()) { isEmpty ->
+                        when (isEmpty) {
+                            true -> {
+                                EmptyStyled()
+                            }
+                            else -> {
+                                LazyStyledCard(
+                                    styledUrls = styledUrls,
+                                    expandEditStyleModalBottomSheet = { styledUrl ->
+                                        vm.styledUrlForUpdate = styledUrl
+                                        modalBottomSheetState.expandFull()
                                     }
-                                }
+                                )
                             }
                         }
                     }
