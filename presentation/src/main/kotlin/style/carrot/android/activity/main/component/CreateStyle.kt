@@ -59,17 +59,19 @@ private val DefaultStyleTextFieldValue = TextFieldValue(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CreateStyle(modifier: Modifier = Modifier, styledUrl: StyledUrl? = null) {
+fun CreateStyle(modifier: Modifier = Modifier) {
     val vm: MainViewModel = viewModel()
 
     var styledUrlField by remember { mutableStateOf(DefaultStyleTextFieldValue) }
     var fullUrlField by remember { mutableStateOf(TextFieldValue()) }
     var memoField by remember { mutableStateOf(TextFieldValue()) }
 
-    if (styledUrl != null) {
-        styledUrlField = styledUrlField.copy(text = styledUrl.styled)
-        fullUrlField = fullUrlField.copy(text = styledUrl.origin)
-        memoField = memoField.copy(text = styledUrl.memo)
+    val styledUrlForUpdate = vm.styledUrlForUpdate
+    vm.styledUrlForUpdate = null
+    if (styledUrlForUpdate != null) {
+        styledUrlField = styledUrlField.copy(text = styledUrlForUpdate.styled)
+        fullUrlField = fullUrlField.copy(text = styledUrlForUpdate.origin)
+        memoField = memoField.copy(text = styledUrlForUpdate.memo)
     }
 
     val context = LocalContext.current
@@ -155,7 +157,7 @@ fun CreateStyle(modifier: Modifier = Modifier, styledUrl: StyledUrl? = null) {
 
                     // 실패시 null
                     if (styledShaRequest != null) {
-                        when (styledUrl == null) {
+                        when (styledUrlForUpdate == null) {
                             true -> { // 새로 추가
                                 if (styledShaRequest.sha == null) {
                                     vm.stylingUrl(

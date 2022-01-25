@@ -39,10 +39,7 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -63,7 +60,6 @@ import style.carrot.android.activity.error.ErrorActivity
 import style.carrot.android.activity.main.component.CreateStyle
 import style.carrot.android.activity.main.component.EmptyStyled
 import style.carrot.android.activity.main.component.LazyStyledCard
-import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.theme.SystemUiController
 import style.carrot.android.util.NetworkUtil
@@ -136,7 +132,6 @@ class MainActivity : ComponentActivity() {
                     val modalBottomSheetState =
                         rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
                     val coroutineScope = rememberCoroutineScope()
-                    var styledUrl by remember { mutableStateOf<StyledUrl?>(null) }
 
                     LaunchedEffect(Unit) {
                         systemUiController.setSystemBarsColor(backgroundColor)
@@ -161,8 +156,7 @@ class MainActivity : ComponentActivity() {
                                     .navigationBarsWithImePadding()
                                     .height(450.dp)
                                     .fillMaxWidth()
-                                    .padding(30.dp),
-                                styledUrl = styledUrl
+                                    .padding(30.dp)
                             )
                         },
                         sheetState = modalBottomSheetState,
@@ -205,8 +199,8 @@ class MainActivity : ComponentActivity() {
                                         else -> {
                                             LazyStyledCard(
                                                 styledUrls = styledUrls,
-                                                expandEditStyleModalBottomSheet = { _styledUrl ->
-                                                    styledUrl = _styledUrl
+                                                expandEditStyleModalBottomSheet = { styledUrl ->
+                                                    vm.styledUrlForUpdate = styledUrl
                                                     modalBottomSheetState.expandFull()
                                                 }
                                             )

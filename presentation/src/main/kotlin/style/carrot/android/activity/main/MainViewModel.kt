@@ -45,6 +45,9 @@ class MainViewModel @Inject constructor(
     private val _exceptionEvent = MutableStateFlow<Throwable?>(null)
     val exceptionFlow = _exceptionEvent.asStateFlow()
 
+    // https://stackoverflow.com/questions/70729578/how-to-pass-parameter-to-bottomsheet-of-jetpack-compose
+    var styledUrlForUpdate: StyledUrl? = null
+
     /**
      * `StateFlow<T>.collectAsState` 로 받아서 처리해야 함 -> [Flow]로 작성
      */
