@@ -13,6 +13,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -40,8 +41,12 @@ class MainViewModel @Inject constructor(
 
     private val _event = MutableStateFlow(MainState())
     private val state get() = _event.value
-    private val uuid by lazy { sharedPreferences[Key.Uuid]!! }
     val event = _event.asStateFlow()
+
+    private val _carrotUrls = MutableStateFlow(mutableListOf<CarrotUrl>())
+    private val carrotUrls: Flow<List<CarrotUrl>> = _carrotUrls.asStateFlow()
+
+    private val uuid by lazy { sharedPreferences[Key.Uuid]!! }
 
     init {
         if (sharedPreferences[Key.Uuid] == null) {

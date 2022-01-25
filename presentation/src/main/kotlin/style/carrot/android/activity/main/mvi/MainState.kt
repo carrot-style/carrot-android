@@ -9,13 +9,10 @@
 
 package style.carrot.android.activity.main.mvi
 
-import style.carrot.android.domain.model.CarrotUrl
-
 data class MainState(
     val type: EventType = EventType.None,
     val exception: Throwable? = null,
     val sha: String? = null,
-    val carrotUrls: List<CarrotUrl> = emptyList()
 ) {
     val isException get() = exception != null
     val isTakenStyle get() = sha != null

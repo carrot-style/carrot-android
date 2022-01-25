@@ -59,11 +59,18 @@ fun StyledCard(
     val backgroundColor = Color(242, 240, 240)
     val dismissState = rememberDismissState(confirmStateChange = { dismissValue ->
         when (dismissValue) {
-            DismissValue.Default -> {} // useless
-            DismissValue.DismissedToEnd -> onEditClick(carrotUrl) // -> 방향 스와이프 (수정)
-            DismissValue.DismissedToStart -> onDeleteClick(carrotUrl) // <- 방향 스와이프 (삭제)
+            DismissValue.Default -> {
+                false
+            }
+            DismissValue.DismissedToEnd -> { // -> 방향 스와이프 (수정)
+                onEditClick(carrotUrl)
+                false
+            }
+            DismissValue.DismissedToStart -> { // <- 방향 스와이프 (삭제)
+                onDeleteClick(carrotUrl)
+                true
+            }
         }
-        false
     })
 
     SwipeToDismiss(
