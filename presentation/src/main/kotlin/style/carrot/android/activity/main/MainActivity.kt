@@ -138,8 +138,7 @@ class MainActivity : ComponentActivity() {
     private fun MainContent() {
         val styledUrls by vm.styledUrls.collectAsState(emptyList())
         val backgroundColor = MaterialTheme.colors.background
-        val modalBottomSheetState =
-            rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+        val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val coroutineScope = rememberCoroutineScope()
 
         LaunchedEffect(Unit) {
