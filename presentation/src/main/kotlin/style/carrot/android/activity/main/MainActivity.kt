@@ -20,6 +20,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -130,7 +131,6 @@ class MainActivity : ComponentActivity() {
                                 .padding(padding)
                                 .padding(
                                     top = 60.dp,
-                                    bottom = 16.dp,
                                     start = 16.dp,
                                     end = 16.dp
                                 )
@@ -139,23 +139,26 @@ class MainActivity : ComponentActivity() {
                                 text = stringResource(R.string.app_name),
                                 style = MaterialTheme.typography.h3,
                             )
-                            LazyColumn(
+                            LazyColumn( // TODO: fading edge
                                 modifier = Modifier
-                                    .padding(top = 15.dp),
+                                    .padding(top = 16.dp),
+                                contentPadding = PaddingValues(bottom = 16.dp),
                                 verticalArrangement = Arrangement.spacedBy(15.dp)
                             ) {
                                 items(
-                                    List(100) {
+                                    List(20) {
                                         CarrotUrl(
                                             "carrot.style/test",
                                             "BBB",
-                                            "안녕하세요. 반갑습니다."
+                                            "This is my Awesome carro-styled url."
                                         )
                                     }
                                 ) { carrotUrl ->
                                     StyledCard(
                                         modifier = Modifier.animateItemPlacement(),
-                                        carrotUrl = carrotUrl
+                                        carrotUrl = carrotUrl,
+                                        onEditClick = {},
+                                        onDeleteClick = {}
                                     )
                                 }
                             }

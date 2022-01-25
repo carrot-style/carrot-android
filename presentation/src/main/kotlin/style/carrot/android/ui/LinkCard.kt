@@ -32,7 +32,12 @@ import style.carrot.android.util.Util
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun StyledCard(modifier: Modifier, carrotUrl: CarrotUrl) {
+fun StyledCard(
+    modifier: Modifier,
+    carrotUrl: CarrotUrl,
+    onEditClick: (carrotUrl: CarrotUrl) -> Unit,
+    onDeleteClick: (carrotUrl: CarrotUrl) -> Unit
+) {
     val context = LocalContext.current
 
     fun toast(message: String) {
@@ -57,7 +62,7 @@ fun StyledCard(modifier: Modifier, carrotUrl: CarrotUrl) {
             Text(text = carrotUrl.styled, style = MaterialTheme.typography.h6)
             Text(
                 text = carrotUrl.memo,
-                style = MaterialTheme.typography.subtitle2
+                style = MaterialTheme.typography.body2
             )
         }
     }
@@ -66,5 +71,10 @@ fun StyledCard(modifier: Modifier, carrotUrl: CarrotUrl) {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewStyledCard() {
-    StyledCard(Modifier, CarrotUrl("carrot.style/test", "www.naver.com", "just carrot-style."))
+    StyledCard(
+        modifier = Modifier,
+        carrotUrl = CarrotUrl("carrot.style/test", "www.naver.com", "just carrot-style."),
+        onEditClick = {},
+        onDeleteClick = {}
+    )
 }
