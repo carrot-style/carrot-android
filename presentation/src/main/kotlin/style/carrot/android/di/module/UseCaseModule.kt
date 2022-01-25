@@ -26,12 +26,12 @@ import style.carrot.android.domain.usecase.StylingUrlUseCase
 object UseCaseModule {
     @Provides
     @ViewModelScoped
-    fun provideStylingCarrotUrlUseCase(repository: CarrotRepository): StylingUrlUseCase =
+    fun provideStylingUrlUseCase(repository: CarrotRepository): StylingUrlUseCase =
         StylingUrlUseCase(repository)
 
     @Provides
     @ViewModelScoped
-    fun provideLoadCarrotUrlsUseCase(repository: CarrotRepository): LoadStyledUrlsUseCase =
+    fun provideLoadStyledUrlsUseCase(repository: CarrotRepository): LoadStyledUrlsUseCase =
         LoadStyledUrlsUseCase(repository)
 
     @Provides
