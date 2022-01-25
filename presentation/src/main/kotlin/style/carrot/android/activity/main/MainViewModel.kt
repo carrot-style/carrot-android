@@ -55,11 +55,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun loadCarrotUrls() = viewModelScope.launch {
+    fun loadStyledUrls() = viewModelScope.launch {
         var state = eventValue.copy(type = EventType.LoadStyledUrls, exception = null)
         loadMyStyledUrlsUseCase(uuid = uuid)
-            .onSuccess { carrotUrls ->
-                _styledUrls.emit(carrotUrls.toMutableList())
+            .onSuccess { styledUrls ->
+                _styledUrls.emit(styledUrls.toMutableList())
             }
             .onFailure { throwable ->
                 state = state.copy(exception = throwable)
@@ -96,9 +96,9 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun addMyStyledUrl(styledUrl: StyledUrl) {
-        addMyStyledUrlUseCase(uuid = uuid, carrotUrl = styledUrl)
+        addMyStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)
             .onSuccess {
-                _styledUrls.emit()
+                _styledUrls.emit(styledUrlsValue.apply { add(styledUrl) })
             }
             .onFailure { throwable ->
                 _event.emit(eventValue.copy(exception = throwable))
