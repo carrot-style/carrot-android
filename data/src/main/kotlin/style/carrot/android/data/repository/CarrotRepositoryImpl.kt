@@ -22,7 +22,6 @@ import style.carrot.android.data.util.extension.toBase64
 import style.carrot.android.data.util.extension.toException
 import style.carrot.android.data.util.extension.toObjectNonNull
 import style.carrot.android.data.util.extension.toRedirectContent
-import style.carrot.android.domain.model.FileSha
 import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.domain.repository.CarrotRepository
 import kotlin.coroutines.resume
@@ -58,18 +57,22 @@ class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
         }
     }
 
-    override suspend fun getStyledSha(path: String): FileSha {
+    override suspend fun getStyledSha(path: String): String? {
         val request = api.getFileContent(path = path)
-        println(request)
-        if (request.isValid()) {
-            return FileSha(request.body()!!.sha)
+        return if (request.isValid()) {
+            request.body()!!.sha
         } else {
-            throw request.toException()
+            val exception = request.toException()
+            if (exception.message!!.contains("\"message\": \"Not Found\"")) {
+                null
+            } else {
+                throw exception
+            }
         }
     }
 
     override suspend fun deleteStyledUrl(uuid: String, styledUrl: StyledUrl) {
-        val sha = getStyledSha(path = styledUrl.styled).sha!!
+        val sha = getStyledSha(path = styledUrl.styled)!!
         val githubFile = GithubFile(message = DeleteStyledMessage, sha = sha)
         val request = api.deleteFile(
             path = styledUrl.styled,

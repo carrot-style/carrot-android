@@ -59,12 +59,18 @@ private val DefaultStyleTextFieldValue = TextFieldValue(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CreateStyle(modifier: Modifier = Modifier) {
+fun CreateStyle(modifier: Modifier = Modifier, styledUrl: StyledUrl? = null) {
     val vm: MainViewModel = viewModel()
 
-    var fullUrlField by remember { mutableStateOf(TextFieldValue()) }
     var styledUrlField by remember { mutableStateOf(DefaultStyleTextFieldValue) }
+    var fullUrlField by remember { mutableStateOf(TextFieldValue()) }
     var memoField by remember { mutableStateOf(TextFieldValue()) }
+
+    if (styledUrl != null) {
+        styledUrlField = styledUrlField.copy(text = styledUrl.styled)
+        fullUrlField = fullUrlField.copy(text = styledUrl.origin)
+        memoField = memoField.copy(text = styledUrl.memo)
+    }
 
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -140,26 +146,44 @@ fun CreateStyle(modifier: Modifier = Modifier) {
             onClick = {
                 coroutineScope.launch {
                     val fullUrl = fullUrlField.text.checkHttpAndAutoInsert()
-                    val styledUrl = "${styledUrlField.text}.html".replaceFirst(DefaultStyle, "")
+                    val newStyledUrl = "${styledUrlField.text}.html".replaceFirst(DefaultStyle, "")
                     val memo = when (memoField.text.isEmpty()) {
                         true -> fullUrl.split("://")[1]
                         else -> memoField.text
                     }
+                    val styledShaRequest = vm.getStyeldSha(newStyledUrl)
 
-                    if (vm.checkAlreadyStyledOrRequestException(styledUrl)) {
-                        toast(
-                            context,
-                            context.getString(R.string.activity_main_component_createstyle_toast_create_fail)
-                        )
-                    } else {
-                        vm.stylingUrl(
-                            styledUrl = StyledUrl(
-                                styled = styledUrl,
-                                origin = fullUrl,
-                                memo = memo
-                            ),
-                            sha = ""
-                        )
+                    // 실패시 null
+                    if (styledShaRequest != null) {
+                        when (styledUrl == null) {
+                            true -> { // 새로 추가
+                                if (styledShaRequest.sha == null) {
+                                    vm.stylingUrl(
+                                        styledUrl = StyledUrl(
+                                            styled = newStyledUrl,
+                                            origin = fullUrl,
+                                            memo = memo
+                                        ),
+                                        sha = ""
+                                    )
+                                } else {
+                                    toast(
+                                        context,
+                                        context.getString(R.string.activity_main_component_createstyle_toast_already_used_styled)
+                                    )
+                                }
+                            }
+                            else -> { // 업데이트
+                                vm.stylingUrl(
+                                    styledUrl = StyledUrl(
+                                        styled = newStyledUrl,
+                                        origin = fullUrl,
+                                        memo = memo
+                                    ),
+                                    sha = styledShaRequest.sha!!
+                                )
+                            }
+                        }
                     }
                 }
             }

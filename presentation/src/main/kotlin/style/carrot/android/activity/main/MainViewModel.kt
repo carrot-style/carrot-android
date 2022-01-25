@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import style.carrot.android.domain.model.FileSha
+import style.carrot.android.activity.main.model.FileSha
 import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.domain.usecase.AddStyledUrlUseCase
 import style.carrot.android.domain.usecase.DeleteStyledUrlUseCase
@@ -89,7 +89,7 @@ class MainViewModel @Inject constructor(
      * 새로운 파일을 만들어야 함 ->
      * [sha] 인자에 `""`(공백) 들어감
      */
-    fun stylingUrl(styledUrl: StyledUrl, sha: String = "") = viewModelScope.launch {
+    fun stylingUrl(styledUrl: StyledUrl, sha: String) = viewModelScope.launch {
         stylingUrlUseCase(
             path = styledUrl.styled,
             url = styledUrl.origin,
@@ -104,26 +104,17 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    /**
-     * @return 요청 성공 - [FileSha.sha] 값이 null이면 파일 없음, null이 아니면 파일 있음
-     * 요청 실패 - null
-     */
     suspend fun getStyeldSha(path: String): FileSha? = suspendCancellableCoroutine { continuation ->
         viewModelScope.launch {
             getStyledShaUseCase(path)
                 .onSuccess { nullableSha ->
-                    continuation.resume(nullableSha)
+                    continuation.resume(FileSha(nullableSha))
                 }.onFailure { throwable ->
                     continuation.resume(null)
                     throwable.emit()
                 }
         }
     }
-
-    /**
-     * @return true - 이미 사용중인 링크, false - 사용 가능한 링크
-     */
-    suspend fun checkAlreadyStyledOrRequestException(path: String) = getStyeldSha(path)?.sha != null
 
     fun deleteStyledUrl(styledUrl: StyledUrl) = viewModelScope.launch {
         deleteStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)

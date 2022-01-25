@@ -23,5 +23,5 @@
     <string name="activity_main_component_createstyle_full_address">Full address:</string>
     <string name="activity_main_component_createstyle_my_style">My style: (max 15 length)</string>
     <string name="activity_main_component_createstyle_memo">One line note:</string>
-    <string name="activity_main_component_createstyle_toast_create_fail">The style has been already used or the request is failed.</string>
+    <string name="activity_main_component_createstyle_toast_already_used_styled">The style has been already used.</string>
 </resources>
