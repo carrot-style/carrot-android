@@ -46,6 +46,6 @@ object UseCaseModule {
 
     @Provides
     @ViewModelScoped
-    fun provideAddMyStyledUrl(repository: CarrotRepository): AddStyledUrlUseCase =
+    fun provideAddStyledUrlUseCase(repository: CarrotRepository): AddStyledUrlUseCase =
         AddStyledUrlUseCase(repository)
 }

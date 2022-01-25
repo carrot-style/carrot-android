@@ -21,7 +21,7 @@ import style.carrot.android.domain.repository.CarrotRepository
 
 @Module
 @InstallIn(ViewModelComponent::class)
-object RepoModule {
+object RepositoryModule {
     @Provides
     @ViewModelScoped
     fun provideCarrotRepository(@SignedRetrofit signedRetrofit: Retrofit): CarrotRepository =
