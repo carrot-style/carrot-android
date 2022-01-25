@@ -31,6 +31,7 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -38,7 +39,10 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -59,6 +63,7 @@ import style.carrot.android.activity.error.ErrorActivity
 import style.carrot.android.activity.main.component.CreateStyle
 import style.carrot.android.activity.main.component.EmptyStyled
 import style.carrot.android.activity.main.component.LazyStyledCard
+import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.theme.SystemUiController
 import style.carrot.android.util.NetworkUtil
@@ -131,6 +136,7 @@ class MainActivity : ComponentActivity() {
                     val modalBottomSheetState =
                         rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
                     val coroutineScope = rememberCoroutineScope()
+                    var styledUrl by remember { mutableStateOf<StyledUrl?>(null) }
 
                     LaunchedEffect(Unit) {
                         systemUiController.setSystemBarsColor(backgroundColor)
@@ -142,6 +148,12 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
+                    fun ModalBottomSheetState.expandFull() {
+                        coroutineScope.launch {
+                            animateTo(ModalBottomSheetValue.Expanded)
+                        }
+                    }
+
                     ModalBottomSheetLayout(
                         sheetContent = {
                             CreateStyle(
@@ -149,7 +161,8 @@ class MainActivity : ComponentActivity() {
                                     .navigationBarsWithImePadding()
                                     .height(450.dp)
                                     .fillMaxWidth()
-                                    .padding(30.dp)
+                                    .padding(30.dp),
+                                styledUrl = styledUrl
                             )
                         },
                         sheetState = modalBottomSheetState,
@@ -161,9 +174,7 @@ class MainActivity : ComponentActivity() {
                                 .systemBarsPadding(),
                             floatingActionButton = {
                                 FloatingActionButton(onClick = {
-                                    coroutineScope.launch {
-                                        modalBottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
-                                    }
+                                    modalBottomSheetState.expandFull()
                                 }) {
                                     Icon(
                                         painter = painterResource(R.drawable.ic_round_add_24),
@@ -188,8 +199,18 @@ class MainActivity : ComponentActivity() {
                                 )
                                 Crossfade(styledUrls.isEmpty()) { isEmpty ->
                                     when (isEmpty) {
-                                        true -> EmptyStyled()
-                                        else -> LazyStyledCard(styledUrls = styledUrls)
+                                        true -> {
+                                            EmptyStyled()
+                                        }
+                                        else -> {
+                                            LazyStyledCard(
+                                                styledUrls = styledUrls,
+                                                expandEditStyleModalBottomSheet = { _styledUrl ->
+                                                    styledUrl = _styledUrl
+                                                    modalBottomSheetState.expandFull()
+                                                }
+                                            )
+                                        }
                                     }
                                 }
                             }

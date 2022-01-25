@@ -18,12 +18,18 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.github.jisungbin.logeukes.logeukes
+import androidx.lifecycle.viewmodel.compose.viewModel
+import style.carrot.android.activity.main.MainViewModel
 import style.carrot.android.domain.model.StyledUrl
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LazyStyledCard(styledUrls: List<StyledUrl>) {
+fun LazyStyledCard(
+    styledUrls: List<StyledUrl>,
+    expandEditStyleModalBottomSheet: (StyledUrl) -> Unit
+) {
+    val vm: MainViewModel = viewModel()
+
     LazyColumn( // TODO: fading edge
         modifier = Modifier.padding(top = 16.dp),
         contentPadding = PaddingValues(bottom = 16.dp),
@@ -33,8 +39,12 @@ fun LazyStyledCard(styledUrls: List<StyledUrl>) {
             StyledCard(
                 modifier = Modifier.animateItemPlacement(),
                 styledUrl = carrotUrl,
-                onEditClick = { logeukes { listOf("edit", it) } },
-                onDeleteClick = { logeukes { listOf("delete", it) } }
+                onEditClick = { styledUrl ->
+                    expandEditStyleModalBottomSheet(styledUrl)
+                },
+                onDeleteClick = { styledUrl ->
+                    vm.deleteStyledUrl(styledUrl)
+                }
             )
         }
     }
