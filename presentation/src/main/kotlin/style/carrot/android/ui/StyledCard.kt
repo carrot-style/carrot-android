@@ -44,16 +44,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import style.carrot.android.R
-import style.carrot.android.domain.model.CarrotUrl
+import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.util.Util
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun StyledCard(
     modifier: Modifier,
-    carrotUrl: CarrotUrl,
-    onEditClick: (carrotUrl: CarrotUrl) -> Unit,
-    onDeleteClick: (carrotUrl: CarrotUrl) -> Unit
+    styledUrl: StyledUrl,
+    onEditClick: (styledUrl: StyledUrl) -> Unit,
+    onDeleteClick: (styledUrl: StyledUrl) -> Unit
 ) {
     val shape = RoundedCornerShape(30.dp)
     val backgroundColor = Color(242, 240, 240)
@@ -63,11 +63,11 @@ fun StyledCard(
                 false
             }
             DismissValue.DismissedToEnd -> { // -> 방향 스와이프 (수정)
-                onEditClick(carrotUrl)
+                onEditClick(styledUrl)
                 false
             }
             DismissValue.DismissedToStart -> { // <- 방향 스와이프 (삭제)
-                onDeleteClick(carrotUrl)
+                onDeleteClick(styledUrl)
                 true
             }
         }
@@ -82,7 +82,7 @@ fun StyledCard(
             .clip(shape),
         dismissContent = { // content
             CarrotUrlCard(
-                carrotUrl = carrotUrl,
+                styledUrl = styledUrl,
                 backgroundColor = backgroundColor,
                 shape = shape
             )
@@ -130,7 +130,7 @@ fun StyledCard(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun CarrotUrlCard(carrotUrl: CarrotUrl, backgroundColor: Color, shape: Shape) {
+private fun CarrotUrlCard(styledUrl: StyledUrl, backgroundColor: Color, shape: Shape) {
     val context = LocalContext.current
 
     fun toast(message: String) {
@@ -142,7 +142,7 @@ private fun CarrotUrlCard(carrotUrl: CarrotUrl, backgroundColor: Color, shape: S
         shape = shape,
         backgroundColor = backgroundColor,
         onClick = {
-            Util.copy(context, carrotUrl.styled)
+            Util.copy(context, styledUrl.styled)
             toast(context.getString(R.string.ui_linkcard_toast_copied))
         }
     ) {
@@ -150,9 +150,9 @@ private fun CarrotUrlCard(carrotUrl: CarrotUrl, backgroundColor: Color, shape: S
             modifier = Modifier.padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(text = carrotUrl.styled, style = MaterialTheme.typography.h6)
+            Text(text = styledUrl.styled, style = MaterialTheme.typography.h6)
             Text(
-                text = carrotUrl.memo,
+                text = styledUrl.memo,
                 style = MaterialTheme.typography.body2
             )
         }
@@ -164,7 +164,7 @@ private fun CarrotUrlCard(carrotUrl: CarrotUrl, backgroundColor: Color, shape: S
 private fun PreviewStyledCard() {
     StyledCard(
         modifier = Modifier,
-        carrotUrl = CarrotUrl("carrot.style/test", "www.naver.com", "just carrot-style."),
+        styledUrl = StyledUrl("carrot.style/test", "www.naver.com", "just carrot-style."),
         onEditClick = {},
         onDeleteClick = {}
     )

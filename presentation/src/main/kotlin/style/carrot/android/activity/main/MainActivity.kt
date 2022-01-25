@@ -44,7 +44,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.github.jisungbin.logeukes.logeukes
 import style.carrot.android.R
 import style.carrot.android.activity.error.ErrorActivity
-import style.carrot.android.domain.model.CarrotUrl
+import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.theme.SystemUiController
 import style.carrot.android.ui.StyledCard
@@ -148,7 +148,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 items(
                                     List(20) {
-                                        CarrotUrl(
+                                        StyledUrl(
                                             "carrot.style/test",
                                             "BBB",
                                             "This is my Awesome carro-styled url."
@@ -157,7 +157,7 @@ class MainActivity : ComponentActivity() {
                                 ) { carrotUrl ->
                                     StyledCard(
                                         modifier = Modifier.animateItemPlacement(),
-                                        carrotUrl = carrotUrl,
+                                        styledUrl = carrotUrl,
                                         onEditClick = { logeukes { listOf("edit", it) } },
                                         onDeleteClick = { logeukes { listOf("delete", it) } }
                                     )

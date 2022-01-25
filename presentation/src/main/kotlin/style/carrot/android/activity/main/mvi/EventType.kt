@@ -14,6 +14,14 @@ package style.carrot.android.activity.main.mvi
  * @property CheckStyled 사용하려는 커스텀 링크가 이미 사용 됐는지 확인
  * @property Styled 스타일링 결과
  * @property StyleUpdateSha 스타일링 업데이트에 필요한 Sha 값 요청
+ * @property LoadStyledUrls 스타일링 링크들 firestore 에서 가져오기
  * @property StyledUpdate 스타일링 결과 firestore 업데이트
  */
-enum class EventType { None, CheckStyled, Styled, StyleUpdateSha, StyledUpdate }
+enum class EventType {
+    None,
+    CheckStyled,
+    Styled,
+    StyleUpdateSha,
+    LoadStyledUrls,
+    StyledUpdate
+}

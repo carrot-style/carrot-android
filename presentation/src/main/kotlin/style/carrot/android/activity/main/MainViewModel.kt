@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import style.carrot.android.activity.main.mvi.EventType
 import style.carrot.android.activity.main.mvi.MainState
-import style.carrot.android.domain.model.CarrotUrl
+import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.domain.usecase.AddMyStyledUrlUseCase
 import style.carrot.android.domain.usecase.GetStyledShaUseCase
 import style.carrot.android.domain.usecase.LoadMyStyledUrlsUseCase
@@ -40,11 +40,12 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _event = MutableStateFlow(MainState())
-    private val state get() = _event.value
+    private val eventValue get() = _event.value
     val event = _event.asStateFlow()
 
-    private val _carrotUrls = MutableStateFlow(mutableListOf<CarrotUrl>())
-    private val carrotUrls: Flow<List<CarrotUrl>> = _carrotUrls.asStateFlow()
+    private val _styledUrls = MutableStateFlow(mutableListOf<StyledUrl>())
+    private val styledUrlsValue get() = _styledUrls.value
+    val styledUrls: Flow<List<StyledUrl>> = _styledUrls.asStateFlow()
 
     private val uuid by lazy { sharedPreferences[Key.Uuid]!! }
 
@@ -55,10 +56,10 @@ class MainViewModel @Inject constructor(
     }
 
     fun loadCarrotUrls() = viewModelScope.launch {
-        var state = state.copy(type = EventType.LoadCarrotUrls, exception = null)
+        var state = eventValue.copy(type = EventType.LoadStyledUrls, exception = null)
         loadMyStyledUrlsUseCase(uuid = uuid)
             .onSuccess { carrotUrls ->
-                state = state.copy(carrotUrls = carrotUrls)
+                _styledUrls.emit(carrotUrls.toMutableList())
             }
             .onFailure { throwable ->
                 state = state.copy(exception = throwable)
@@ -67,16 +68,16 @@ class MainViewModel @Inject constructor(
     }
 
     fun styling(
-        carrotUrl: CarrotUrl,
+        styledUrl: StyledUrl,
         sha: String = ""
     ) = viewModelScope.launch {
-        var state = state.copy(type = EventType.Styled, exception = null)
+        var state = eventValue.copy(type = EventType.Styled, exception = null)
         stylingCarrotUrlUseCase(
-            path = carrotUrl.styled,
-            url = carrotUrl.origin,
+            path = styledUrl.styled,
+            url = styledUrl.origin,
             sha = sha
         ).onSuccess {
-            addMyStyledUrl(carrotUrl)
+            addMyStyledUrl(styledUrl)
         }.onFailure { throwable ->
             state = state.copy(exception = throwable)
         }
@@ -84,7 +85,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun getStyeldSha(path: String) = viewModelScope.launch {
-        var state = state.copy(type = EventType.CheckStyled, exception = null)
+        var state = eventValue.copy(type = EventType.CheckStyled, exception = null)
         getStyledShaUseCase(path)
             .onSuccess { nullableSha ->
                 state = state.copy(sha = nullableSha)
@@ -94,10 +95,13 @@ class MainViewModel @Inject constructor(
         _event.emit(state)
     }
 
-    private suspend fun addMyStyledUrl(carrotUrl: CarrotUrl) {
-        addMyStyledUrlUseCase(uuid = uuid, carrotUrl = carrotUrl)
+    private suspend fun addMyStyledUrl(styledUrl: StyledUrl) {
+        addMyStyledUrlUseCase(uuid = uuid, carrotUrl = styledUrl)
+            .onSuccess {
+                _styledUrls.emit()
+            }
             .onFailure { throwable ->
-                _event.emit(state.copy(exception = throwable))
+                _event.emit(eventValue.copy(exception = throwable))
             }
     }
 }

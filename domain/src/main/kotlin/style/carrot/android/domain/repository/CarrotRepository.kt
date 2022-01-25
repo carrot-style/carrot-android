@@ -9,7 +9,7 @@
 
 package style.carrot.android.domain.repository
 
-import style.carrot.android.domain.model.CarrotUrl
+import style.carrot.android.domain.model.StyledUrl
 
 interface CarrotRepository {
     /**
@@ -23,7 +23,7 @@ interface CarrotRepository {
         sha: String, // 업데이트하는 값이라면 sha가 필요함
     )
 
-    suspend fun loadMyStyledUrls(uuid: String): List<CarrotUrl>
+    suspend fun loadMyStyledUrls(uuid: String): List<StyledUrl>
 
-    fun addMyStyledUrl(uuid: String, carrotUrl: CarrotUrl)
+    fun addMyStyledUrl(uuid: String, styledUrl: StyledUrl)
 }

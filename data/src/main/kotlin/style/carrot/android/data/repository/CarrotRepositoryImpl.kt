@@ -21,7 +21,7 @@ import style.carrot.android.data.util.extension.toBase64
 import style.carrot.android.data.util.extension.toException
 import style.carrot.android.data.util.extension.toObjectNonNull
 import style.carrot.android.data.util.extension.toRedirectContent
-import style.carrot.android.domain.model.CarrotUrl
+import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.domain.repository.CarrotRepository
 import kotlin.coroutines.resume
 
@@ -30,7 +30,7 @@ class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
     private val firestore by lazy { Firebase.firestore }
     private val api = signedRetrofit.create(GithubRepoService::class.java)
 
-    override suspend fun loadMyStyledUrls(uuid: String): List<CarrotUrl> =
+    override suspend fun loadMyStyledUrls(uuid: String): List<StyledUrl> =
         suspendCancellableCoroutine { continuation ->
             firestore.collection(uuid)
                 .get()
@@ -65,10 +65,10 @@ class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
         }
     }
 
-    override fun addMyStyledUrl(uuid: String, carrotUrl: CarrotUrl) {
+    override fun addMyStyledUrl(uuid: String, styledUrl: StyledUrl) {
         firestore.collection(uuid)
-            .document(carrotUrl.styled)
-            .set(carrotUrl)
+            .document(styledUrl.styled)
+            .set(styledUrl)
             .addOnFailureListener { exception ->
                 throw exception
             }

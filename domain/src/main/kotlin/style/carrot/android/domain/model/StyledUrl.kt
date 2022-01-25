@@ -14,4 +14,4 @@ package style.carrot.android.domain.model
  * @param origin 단축 전 링크
  * @param memo 링크 메모
  */
-data class CarrotUrl(val styled: String, val origin: String, val memo: String)
+data class StyledUrl(val styled: String, val origin: String, val memo: String)
