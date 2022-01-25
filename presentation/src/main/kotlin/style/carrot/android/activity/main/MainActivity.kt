@@ -21,6 +21,8 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -63,7 +65,7 @@ import style.carrot.android.util.constant.IntentConstant
 import style.carrot.android.util.extension.collectWithLifecycle
 import style.carrot.android.util.extension.toast
 
-@ExperimentalFoundationApi
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -71,7 +73,6 @@ class MainActivity : ComponentActivity() {
     private val vm: MainViewModel by viewModels()
     private val systemUiController by lazy { SystemUiController(window) }
 
-    @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -135,9 +136,17 @@ class MainActivity : ComponentActivity() {
                     }
 
                     ModalBottomSheetLayout(
-                        sheetContent = { CreateStyle(modifier = Modifier.navigationBarsPadding()) },
+                        sheetContent = {
+                            CreateStyle(
+                                modifier = Modifier
+                                    .navigationBarsPadding()
+                                    .height(450.dp)
+                                    .fillMaxWidth()
+                                    .padding(30.dp)
+                            )
+                        },
                         sheetState = modalBottomSheetState,
-                        sheetShape = RoundedCornerShape(30.dp)
+                        sheetShape = RoundedCornerShape(20.dp)
                     ) {
                         Scaffold(
                             modifier = Modifier
@@ -146,7 +155,7 @@ class MainActivity : ComponentActivity() {
                             floatingActionButton = {
                                 FloatingActionButton(onClick = {
                                     coroutineScope.launch {
-                                        modalBottomSheetState.show()
+                                        modalBottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                     }
                                 }) {
                                     Icon(

@@ -53,10 +53,7 @@ fun CreateStyle(modifier: Modifier = Modifier) {
     val focusManager = LocalFocusManager.current
 
     Column(
-        modifier = modifier
-            .height(400.dp)
-            .padding(30.dp)
-            .fillMaxSize(),
+        modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -68,7 +65,7 @@ fun CreateStyle(modifier: Modifier = Modifier) {
                 singleLine = true,
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                keyboardActions = KeyboardActions { styledAddressFieldFocusRequest.requestFocus() },
+                keyboardActions = KeyboardActions { focusManager.moveFocus(FocusDirection.Down) },
                 value = fullAddressField,
                 onValueChange = { fullAddressField = it }
             )
@@ -78,7 +75,7 @@ fun CreateStyle(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .fillMaxWidth()
-                    .focusRequester(styledAddressFieldFocusRequest),
+                    /*.focusRequester(styledAddressFieldFocusRequest)*/,
                 singleLine = true,
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -92,7 +89,7 @@ fun CreateStyle(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .fillMaxWidth()
-                    .focusRequester(memoFieldFocusRequest),
+                    /*.focusRequester(memoFieldFocusRequest)*/,
                 singleLine = true,
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
