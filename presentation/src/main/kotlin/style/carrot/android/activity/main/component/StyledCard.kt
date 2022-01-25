@@ -7,7 +7,7 @@
  * Please see: https://github.com/carrot-style/carrot-android/blob/main/LICENSE.
  */
 
-package style.carrot.android.ui
+package style.carrot.android.activity.main.component
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -44,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import style.carrot.android.R
 import style.carrot.android.domain.model.StyledUrl
+import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.util.Util
 import style.carrot.android.util.extension.toast
 
@@ -59,7 +60,7 @@ fun StyledCard(
     val backgroundColor = Color(242, 240, 240)
     val dismissState = rememberDismissState(confirmStateChange = { dismissValue ->
         when (dismissValue) {
-            DismissValue.Default -> {
+            DismissValue.Default -> { // dismissThresholds 만족 안한 상태
                 false
             }
             DismissValue.DismissedToEnd -> { // -> 방향 스와이프 (수정)
@@ -91,7 +92,7 @@ fun StyledCard(
             val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
             val color by animateColorAsState(
                 when (dismissState.targetValue) {
-                    DismissValue.Default -> backgroundColor.copy(alpha = 0.5f) // dismiss 안한 상태
+                    DismissValue.Default -> backgroundColor.copy(alpha = 0.5f) // dismissThresholds 만족 안한 상태
                     DismissValue.DismissedToEnd -> Color.Green.copy(alpha = 0.4f) // -> 방향 스와이프 (수정)
                     DismissValue.DismissedToStart -> Color.Red.copy(alpha = 0.5f) // <- 방향 스와이프 (삭제)
                 }
@@ -139,7 +140,10 @@ private fun CarrotUrlCard(styledUrl: StyledUrl, backgroundColor: Color, shape: S
         backgroundColor = backgroundColor,
         onClick = {
             Util.copy(context, styledUrl.styled)
-            toast(context, context.getString(R.string.ui_linkcard_toast_copied))
+            toast(
+                context,
+                context.getString(R.string.activity_main_component_styledcard_toast_copied)
+            )
         }
     ) {
         Column(
@@ -158,10 +162,12 @@ private fun CarrotUrlCard(styledUrl: StyledUrl, backgroundColor: Color, shape: S
 @Preview(showBackground = true)
 @Composable
 private fun PreviewStyledCard() {
-    StyledCard(
-        modifier = Modifier,
-        styledUrl = StyledUrl("carrot.style/test", "www.naver.com", "just carrot-style."),
-        onEditClick = {},
-        onDeleteClick = {}
-    )
+    CarrotStyleTheme {
+        StyledCard(
+            modifier = Modifier,
+            styledUrl = StyledUrl("carrot.style/test", "www.naver.com", "just carrot-style."),
+            onEditClick = {},
+            onDeleteClick = {}
+        )
+    }
 }

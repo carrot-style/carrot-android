@@ -17,14 +17,11 @@ import android.view.animation.AnticipateInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -48,9 +45,10 @@ import io.github.jisungbin.logeukes.logeukes
 import style.carrot.android.BuildConfig
 import style.carrot.android.R
 import style.carrot.android.activity.error.ErrorActivity
+import style.carrot.android.activity.main.component.EmptyStyled
+import style.carrot.android.activity.main.component.LazyStyledCard
 import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.theme.SystemUiController
-import style.carrot.android.ui.StyledCard
 import style.carrot.android.util.NetworkUtil
 import style.carrot.android.util.constant.IntentConstant
 import style.carrot.android.util.extension.collectWithLifecycle
@@ -150,18 +148,10 @@ class MainActivity : ComponentActivity() {
                                 text = stringResource(R.string.app_name),
                                 style = MaterialTheme.typography.h3,
                             )
-                            LazyColumn( // TODO: fading edge
-                                modifier = Modifier.padding(top = 16.dp),
-                                contentPadding = PaddingValues(bottom = 16.dp),
-                                verticalArrangement = Arrangement.spacedBy(15.dp)
-                            ) {
-                                items(items = styledUrls, key = { it.styled }) { carrotUrl ->
-                                    StyledCard(
-                                        modifier = Modifier.animateItemPlacement(),
-                                        styledUrl = carrotUrl,
-                                        onEditClick = { logeukes { listOf("edit", it) } },
-                                        onDeleteClick = { logeukes { listOf("delete", it) } }
-                                    )
+                            Crossfade(styledUrls.isEmpty()) { isEmpty ->
+                                when (isEmpty) {
+                                    true -> EmptyStyled()
+                                    else -> LazyStyledCard(styledUrls = styledUrls)
                                 }
                             }
                         }
