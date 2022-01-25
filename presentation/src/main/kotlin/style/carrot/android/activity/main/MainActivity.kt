@@ -22,7 +22,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -140,13 +140,13 @@ class MainActivity : ComponentActivity() {
                             CreateStyle(
                                 modifier = Modifier
                                     .navigationBarsWithImePadding()
-                                    .heightIn(min = 450.dp, max = 450.dp)
+                                    .height(450.dp)
                                     .fillMaxWidth()
                                     .padding(30.dp)
                             )
                         },
                         sheetState = modalBottomSheetState,
-                        sheetShape = RoundedCornerShape(20.dp)
+                        sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
                     ) {
                         Scaffold(
                             modifier = Modifier
