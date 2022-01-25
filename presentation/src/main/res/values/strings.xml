@@ -20,4 +20,7 @@
     <string name="activity_main_component_emptystyled_make_first_styled">Make your first carrot-style!</string>
     <string name="activity_main_component_styledcard_toast_copied">Copied.</string>
     <string name="activity_main_component_createstyle_btn_create">Create</string>
+    <string name="activity_main_component_createstyle_full_address">Full address:</string>
+    <string name="activity_main_component_createstyle_my_style">My style:</string>
+    <string name="activity_main_component_createstyle_memo">Memo:</string>
 </resources>
