@@ -26,11 +26,11 @@ Carrot-style with android.
 
 - Link shorten with carrot-style (custom support)
 - Edit/delete shorten link
-- Support dark mode
+- ~~Support dark mode~~
 
 ### TODO
 
 - [x] Firestore connect
-- [ ] Edit/delete shorten link
+- [x] Edit/delete shorten link
 - [x] Check duplicate link when shorten
 - [x] Auto add `http://`
