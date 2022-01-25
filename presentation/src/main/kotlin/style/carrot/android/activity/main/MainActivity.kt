@@ -18,14 +18,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
@@ -45,6 +46,7 @@ import io.github.jisungbin.logeukes.logeukes
 import style.carrot.android.BuildConfig
 import style.carrot.android.R
 import style.carrot.android.activity.error.ErrorActivity
+import style.carrot.android.activity.main.component.CreateStyle
 import style.carrot.android.activity.main.component.EmptyStyled
 import style.carrot.android.activity.main.component.LazyStyledCard
 import style.carrot.android.theme.CarrotStyleTheme
@@ -54,7 +56,7 @@ import style.carrot.android.util.constant.IntentConstant
 import style.carrot.android.util.extension.collectWithLifecycle
 import style.carrot.android.util.extension.toast
 
-@ExperimentalFoundationApi
+@OptIn(ExperimentalMaterialApi::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -121,7 +123,7 @@ class MainActivity : ComponentActivity() {
                         systemUiController.setSystemBarsColor(backgroundColor)
                     }
 
-                    Scaffold(
+                    BottomSheetScaffold(
                         modifier = Modifier
                             .fillMaxSize()
                             .systemBarsPadding(),
@@ -133,6 +135,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         },
+                        sheetContent = { CreateStyle() },
                         backgroundColor = backgroundColor
                     ) { padding ->
                         Column(

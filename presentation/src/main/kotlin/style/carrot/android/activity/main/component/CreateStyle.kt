@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -25,8 +27,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -34,14 +41,21 @@ import androidx.compose.ui.unit.dp
 import style.carrot.android.R
 import style.carrot.android.theme.CarrotStyleTheme
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CreateStyle(modifier: Modifier = Modifier) {
+fun CreateStyle() {
     var fullAddressField by remember { mutableStateOf(TextFieldValue()) }
     var styledAddressField by remember { mutableStateOf(TextFieldValue()) }
     var memoField by remember { mutableStateOf(TextFieldValue()) }
 
+    val (styledAddressFieldFocusRequest, memoFieldFocusRequest) = FocusRequester.createRefs()
+    val focusManager = LocalFocusManager.current
+
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier
+            .height(500.dp)
+            .padding(30.dp)
+            .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -50,24 +64,38 @@ fun CreateStyle(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .fillMaxWidth(),
+                singleLine = true,
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions { styledAddressFieldFocusRequest.requestFocus() },
                 value = fullAddressField,
                 onValueChange = { fullAddressField = it }
             )
-            Spacer(16.dp)
+            Spacer(20.dp)
             Text(text = "Styled address:", style = MaterialTheme.typography.body2)
             OutlinedTextField(
                 modifier = Modifier
                     .padding(top = 4.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .focusRequester(styledAddressFieldFocusRequest),
+                singleLine = true,
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions { memoFieldFocusRequest.requestFocus() },
                 value = styledAddressField,
                 onValueChange = { styledAddressField = it }
             )
-            Spacer(16.dp)
+            Spacer(20.dp)
             Text(text = "Memo:", style = MaterialTheme.typography.body2)
             OutlinedTextField(
                 modifier = Modifier
                     .padding(top = 4.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .focusRequester(memoFieldFocusRequest),
+                singleLine = true,
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions { focusManager.clearFocus() },
                 value = memoField,
                 onValueChange = { memoField = it }
             )
@@ -91,10 +119,6 @@ private fun Spacer(height: Dp) {
 @Composable
 private fun PreviewCreateStyle() {
     CarrotStyleTheme {
-        CreateStyle(
-            modifier = Modifier
-                .height(500.dp)
-                .padding(30.dp)
-        )
+        CreateStyle()
     }
 }
