@@ -46,6 +46,7 @@ import style.carrot.android.R
 import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.util.Util
+import style.carrot.android.util.extension.replaceLast
 import style.carrot.android.util.extension.toast
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -139,7 +140,7 @@ private fun CarrotUrlCard(styledUrl: StyledUrl, backgroundColor: Color, shape: S
         shape = shape,
         backgroundColor = backgroundColor,
         onClick = {
-            Util.copy(context, styledUrl.styled)
+            Util.copy(context, "https://${styledUrl.styled.replaceLast(".html", "")}")
             toast(
                 context,
                 context.getString(R.string.activity_main_component_styledcard_toast_copied)

@@ -47,6 +47,7 @@ import style.carrot.android.R
 import style.carrot.android.activity.main.MainViewModel
 import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.theme.CarrotStyleTheme
+import style.carrot.android.util.extension.checkHttpAndAutoInsert
 import style.carrot.android.util.extension.toast
 
 private const val DefaultStyle = "carrot.style/"
@@ -138,7 +139,7 @@ fun CreateStyle(modifier: Modifier = Modifier) {
             modifier = Modifier.align(Alignment.CenterHorizontally),
             onClick = {
                 coroutineScope.launch {
-                    val fullUrl = fullUrlField.text
+                    val fullUrl = fullUrlField.text.checkHttpAndAutoInsert()
                     val styledUrl = "${styledUrlField.text}.html".replaceFirst(DefaultStyle, "")
                     val memo = when (memoField.text.isEmpty()) {
                         true -> fullUrl.split("://")[1]
