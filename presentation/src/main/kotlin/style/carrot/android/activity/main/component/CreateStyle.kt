@@ -11,7 +11,6 @@ package style.carrot.android.activity.main.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -30,8 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -49,7 +46,6 @@ fun CreateStyle(modifier: Modifier = Modifier) {
     var styledAddressField by remember { mutableStateOf(TextFieldValue()) }
     var memoField by remember { mutableStateOf(TextFieldValue()) }
 
-    val (styledAddressFieldFocusRequest, memoFieldFocusRequest) = FocusRequester.createRefs()
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -74,8 +70,7 @@ fun CreateStyle(modifier: Modifier = Modifier) {
             OutlinedTextField(
                 modifier = Modifier
                     .padding(top = 4.dp)
-                    .fillMaxWidth()
-                    /*.focusRequester(styledAddressFieldFocusRequest)*/,
+                    .fillMaxWidth(),
                 singleLine = true,
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -88,8 +83,7 @@ fun CreateStyle(modifier: Modifier = Modifier) {
             OutlinedTextField(
                 modifier = Modifier
                     .padding(top = 4.dp)
-                    .fillMaxWidth()
-                    /*.focusRequester(memoFieldFocusRequest)*/,
+                    .fillMaxWidth(),
                 singleLine = true,
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),

@@ -21,23 +21,22 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -46,12 +45,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.systemBarsPadding
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jisungbin.logeukes.LoggerType
 import io.github.jisungbin.logeukes.logeukes
-import kotlinx.coroutines.launch
 import style.carrot.android.BuildConfig
 import style.carrot.android.R
 import style.carrot.android.activity.error.ErrorActivity
@@ -127,69 +124,72 @@ class MainActivity : ComponentActivity() {
                 ProvideWindowInsets {
                     val styledUrls by vm.styledUrls.collectAsState(emptyList())
                     val backgroundColor = MaterialTheme.colors.background
-                    val modalBottomSheetState =
-                        rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-                    val coroutineScope = rememberCoroutineScope()
+                    var createStyleDialogVisibleState by remember { mutableStateOf(false) }
 
                     SideEffect {
                         systemUiController.setSystemBarsColor(backgroundColor)
                     }
 
-                    ModalBottomSheetLayout(
-                        sheetContent = {
-                            CreateStyle(
-                                modifier = Modifier
-                                    .navigationBarsPadding()
-                                    .height(450.dp)
-                                    .fillMaxWidth()
-                                    .padding(30.dp)
-                            )
-                        },
-                        sheetState = modalBottomSheetState,
-                        sheetShape = RoundedCornerShape(20.dp)
-                    ) {
-                        Scaffold(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .systemBarsPadding(),
-                            floatingActionButton = {
-                                FloatingActionButton(onClick = {
-                                    coroutineScope.launch {
-                                        modalBottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
-                                    }
-                                }) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_round_add_24),
-                                        contentDescription = null
-                                    )
-                                }
-                            },
-                            backgroundColor = backgroundColor
-                        ) { padding ->
-                            Column(
-                                modifier = Modifier
-                                    .padding(padding)
-                                    .padding(
-                                        top = 60.dp,
-                                        start = 16.dp,
-                                        end = 16.dp
-                                    )
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.app_name),
-                                    style = MaterialTheme.typography.h3,
+                    CreateStyleDialog(
+                        visible = createStyleDialogVisibleState,
+                        onDismissRequest = { createStyleDialogVisibleState = false }
+                    )
+
+                    Scaffold(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .systemBarsPadding(),
+                        floatingActionButton = {
+                            FloatingActionButton(onClick = {
+                                createStyleDialogVisibleState = true
+                            }) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_round_add_24),
+                                    contentDescription = null
                                 )
-                                Crossfade(styledUrls.isEmpty()) { isEmpty ->
-                                    when (isEmpty) {
-                                        true -> EmptyStyled()
-                                        else -> LazyStyledCard(styledUrls = styledUrls)
-                                    }
+                            }
+                        },
+                        backgroundColor = backgroundColor
+                    ) { padding ->
+                        Column(
+                            modifier = Modifier
+                                .padding(padding)
+                                .padding(
+                                    top = 60.dp,
+                                    start = 16.dp,
+                                    end = 16.dp
+                                )
+                        ) {
+                            Text(
+                                text = stringResource(R.string.app_name),
+                                style = MaterialTheme.typography.h3,
+                            )
+                            Crossfade(styledUrls.isEmpty()) { isEmpty ->
+                                when (isEmpty) {
+                                    true -> EmptyStyled()
+                                    else -> LazyStyledCard(styledUrls = styledUrls)
                                 }
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun CreateStyleDialog(visible: Boolean, onDismissRequest: () -> Unit) {
+        if (visible) {
+            AlertDialog(
+                modifier = Modifier
+                    .height(400.dp)
+                    .padding(16.dp),
+                onDismissRequest = { onDismissRequest() },
+                buttons = {},
+                text = {
+                    CreateStyle(modifier = Modifier.fillMaxSize())
+                }
+            )
         }
     }
 
