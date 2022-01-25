@@ -33,6 +33,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,12 +43,16 @@ import style.carrot.android.R
 import style.carrot.android.theme.CarrotStyleTheme
 
 private const val DefaultStyle = "carrot.style/"
+private val DefaultStyleTextFieldValue = TextFieldValue(
+    text = DefaultStyle,
+    selection = TextRange(DefaultStyle.length)
+)
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CreateStyle(modifier: Modifier = Modifier) {
     var fullAddressField by remember { mutableStateOf(TextFieldValue()) }
-    var styledAddressField by remember { mutableStateOf(TextFieldValue(text = DefaultStyle)) }
+    var styledAddressField by remember { mutableStateOf(DefaultStyleTextFieldValue) }
     var memoField by remember { mutableStateOf(TextFieldValue()) }
 
     val focusManager = LocalFocusManager.current
@@ -87,7 +92,9 @@ fun CreateStyle(modifier: Modifier = Modifier) {
                 keyboardActions = KeyboardActions { focusManager.moveFocus(FocusDirection.Down) },
                 value = styledAddressField,
                 onValueChange = { styledAddressFieldValue ->
-                    if (styledAddressFieldValue.text.startsWith(DefaultStyle)) {
+                    if (styledAddressFieldValue.text.isEmpty()) {
+                        styledAddressField = DefaultStyleTextFieldValue
+                    } else if (styledAddressFieldValue.text.startsWith(DefaultStyle)) {
                         styledAddressField = styledAddressFieldValue
                     }
                 }
