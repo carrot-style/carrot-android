@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.systemBarsPadding
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jisungbin.logeukes.LoggerType
@@ -139,14 +139,14 @@ class MainActivity : ComponentActivity() {
                         sheetContent = {
                             CreateStyle(
                                 modifier = Modifier
-                                    .navigationBarsPadding()
+                                    .navigationBarsWithImePadding()
                                     .height(450.dp)
                                     .fillMaxWidth()
                                     .padding(30.dp)
                             )
                         },
                         sheetState = modalBottomSheetState,
-                        sheetShape = RoundedCornerShape(20.dp)
+                        sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
                     ) {
                         Scaffold(
                             modifier = Modifier
