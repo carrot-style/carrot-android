@@ -110,7 +110,7 @@ class ErrorActivity : ErratumExceptionActivity() {
             ) {
                 Text(
                     text = stringResource(R.string.activity_error_oops),
-                    style = MaterialTheme.typography.subtitle1
+                    style = MaterialTheme.typography.h3
                 )
                 Text(
                     modifier = Modifier.padding(horizontal = 30.dp),

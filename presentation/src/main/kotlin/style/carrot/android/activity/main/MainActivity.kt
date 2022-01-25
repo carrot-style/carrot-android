@@ -137,10 +137,11 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Text(
                                 text = stringResource(R.string.app_name),
-                                style = MaterialTheme.typography.h1
+                                style = MaterialTheme.typography.h3,
                             )
                             LazyColumn(
-                                modifier = Modifier.padding(top = 15.dp),
+                                modifier = Modifier
+                                    .padding(top = 15.dp),
                                 verticalArrangement = Arrangement.spacedBy(15.dp)
                             ) {
                                 items(

@@ -22,6 +22,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,16 +42,19 @@ fun StyledCard(modifier: Modifier, carrotUrl: CarrotUrl) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(100.dp)
-            .padding(horizontal = 20.dp),
+            .height(100.dp),
         shape = RoundedCornerShape(30.dp),
+        backgroundColor = Color(242, 240, 240),
         onClick = {
             Util.copy(context, carrotUrl.styled)
             toast(context.getString(R.string.ui_linkcard_toast_copied))
         }
     ) {
-        Column(verticalArrangement = Arrangement.SpaceEvenly) {
-            Text(text = carrotUrl.styled, style = MaterialTheme.typography.h4)
+        Column(
+            modifier = Modifier.padding(horizontal = 20.dp),
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Text(text = carrotUrl.styled, style = MaterialTheme.typography.h6)
             Text(
                 text = carrotUrl.memo,
                 style = MaterialTheme.typography.subtitle2
