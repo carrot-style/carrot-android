@@ -41,6 +41,7 @@ import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.systemBarsPadding
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.jisungbin.logeukes.logeukes
 import style.carrot.android.R
 import style.carrot.android.activity.error.ErrorActivity
 import style.carrot.android.domain.model.CarrotUrl
@@ -157,8 +158,8 @@ class MainActivity : ComponentActivity() {
                                     StyledCard(
                                         modifier = Modifier.animateItemPlacement(),
                                         carrotUrl = carrotUrl,
-                                        onEditClick = {},
-                                        onDeleteClick = {}
+                                        onEditClick = { logeukes { listOf("edit", it) } },
+                                        onDeleteClick = { logeukes { listOf("delete", it) } }
                                     )
                                 }
                             }
