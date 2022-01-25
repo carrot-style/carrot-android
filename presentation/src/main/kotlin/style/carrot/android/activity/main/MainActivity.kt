@@ -90,6 +90,7 @@ class MainActivity : ComponentActivity() {
             return
         }
 
+        println("A: $vm")
         vm.loadStyledUrlsWithDoneAction {
             isReady = true
         }
@@ -136,6 +137,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun MainContent() {
+        println("B: $vm")
         val styledUrls by vm.styledUrls.collectAsState(emptyList())
         val backgroundColor = MaterialTheme.colors.background
         val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)

@@ -61,6 +61,7 @@ private val DefaultStyleTextFieldValue = TextFieldValue(
 @Composable
 fun CreateStyle(modifier: Modifier = Modifier) {
     val vm: MainViewModel = viewModel()
+    println("C: $vm")
 
     var styledUrlField by remember { mutableStateOf(DefaultStyleTextFieldValue) }
     var fullUrlField by remember { mutableStateOf(TextFieldValue()) }

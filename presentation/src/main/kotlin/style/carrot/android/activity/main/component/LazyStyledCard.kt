@@ -29,6 +29,7 @@ fun LazyStyledCard(
     expandEditStyleModalBottomSheet: (StyledUrl) -> Unit
 ) {
     val vm: MainViewModel = viewModel()
+    println("D: $vm")
 
     LazyColumn( // TODO: fading edge
         modifier = Modifier.padding(top = 16.dp),
