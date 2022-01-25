@@ -17,9 +17,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -57,14 +57,14 @@ class ErrorActivity : ErratumExceptionActivity() {
         setContent {
             CarrotStyleTheme {
                 ProvideWindowInsets {
-                    val containerColor = MaterialTheme.colorScheme.background
+                    val backgroundColor = MaterialTheme.colors.background
 
                     SideEffect {
-                        systemUiController.setStatusBarColor(containerColor)
+                        systemUiController.setStatusBarColor(backgroundColor)
                         systemUiController.setNavigationBarColor(Color.Transparent)
                     }
 
-                    Exception(containerColor)
+                    Exception(backgroundColor)
                 }
             }
         }
@@ -110,7 +110,7 @@ class ErrorActivity : ErratumExceptionActivity() {
             ) {
                 Text(
                     text = stringResource(R.string.activity_error_oops),
-                    style = MaterialTheme.typography.displaySmall
+                    style = MaterialTheme.typography.subtitle1
                 )
                 Text(
                     modifier = Modifier.padding(horizontal = 30.dp),
