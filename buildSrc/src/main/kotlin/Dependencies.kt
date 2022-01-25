@@ -26,7 +26,7 @@ object Versions {
         const val Activity = "1.4.0"
         const val Insets = "0.24.0-alpha"
         const val Master = "1.2.0-alpha01"
-        const val Material = "1.0.0-alpha03"
+        const val Material = "1.2.0-alpha01"
         const val ConstraintLayout = "1.0.0"
     }
 
@@ -75,11 +75,10 @@ object Dependencies {
     )
 
     val Compose = listOf(
-        "androidx.compose.ui:ui:${Versions.Compose.Master}",
         "androidx.compose.ui:ui-tooling:${Versions.Compose.Master}",
         "com.airbnb.android:lottie-compose:${Versions.Compose.Lottie}",
         "androidx.activity:activity-compose:${Versions.Compose.Activity}",
-        "androidx.compose.material3:material3:${Versions.Compose.Material}",
+        "androidx.compose.material:material:${Versions.Compose.Material}",
         "com.google.accompanist:accompanist-insets:${Versions.Compose.Insets}",
         "androidx.constraintlayout:constraintlayout-compose:${Versions.Compose.ConstraintLayout}"
     )

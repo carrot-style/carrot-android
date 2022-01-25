@@ -24,12 +24,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
@@ -50,8 +49,8 @@ import style.carrot.android.ui.StyledCard
 import style.carrot.android.util.NetworkUtil
 import style.carrot.android.util.constant.IntentConstant
 
+@ExperimentalFoundationApi
 @AndroidEntryPoint
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 class MainActivity : ComponentActivity() {
 
     private var isReady = true
@@ -106,10 +105,10 @@ class MainActivity : ComponentActivity() {
 
             CarrotStyleTheme {
                 ProvideWindowInsets {
-                    val containerColor = MaterialTheme.colorScheme.background
+                    val backgroundColor = MaterialTheme.colors.background
 
                     SideEffect {
-                        systemUiController.setSystemBarsColor(containerColor)
+                        systemUiController.setSystemBarsColor(backgroundColor)
                     }
 
                     Scaffold(
@@ -124,7 +123,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         },
-                        containerColor = containerColor
+                        backgroundColor = backgroundColor
                     ) { padding ->
                         Column(
                             modifier = Modifier
@@ -138,7 +137,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Text(
                                 text = stringResource(R.string.app_name),
-                                style = MaterialTheme.typography.headlineLarge
+                                style = MaterialTheme.typography.h1
                             )
                             LazyColumn(
                                 modifier = Modifier.padding(top = 15.dp),
