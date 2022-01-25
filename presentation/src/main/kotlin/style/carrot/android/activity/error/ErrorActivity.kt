@@ -71,7 +71,7 @@ class ErrorActivity : ErratumExceptionActivity() {
     }
 
     @Composable
-    fun Exception(containerColor: Color) {
+    fun Exception(backgroundColor: Color) {
         val message: String
         val lottieRaw: Int
         when (intent.getStringExtra(IntentConstant.Error)) {
@@ -92,7 +92,7 @@ class ErrorActivity : ErratumExceptionActivity() {
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = containerColor)
+                .background(color = backgroundColor)
                 .statusBarsPadding()
         ) {
             val (content, footer) = createRefs()
