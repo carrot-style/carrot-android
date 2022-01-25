@@ -17,13 +17,16 @@ interface CarrotRepository {
      */
     suspend fun getStyledSha(path: String): String?
 
-    suspend fun styling(
-        path: String, // 커스텀 단축 링크 (carrot.style/${path}.html)
-        url: String, // 단축될 링크
-        sha: String, // 업데이트하는 값이라면 sha가 필요함
-    )
+    /**
+     * @param path 커스텀 단축 링크 (carrot.style/${path}.html)
+     * @param url 단축될 링크
+     * @param sha 업데이트하는 값이라면 sha가 필요함, 만약 새로 생성이라면 "" 들어옴
+     */
+    suspend fun styling(path: String, url: String, sha: String)
 
     suspend fun loadMyStyledUrls(uuid: String): List<StyledUrl>
+
+    suspend fun deleteStyledUrl(styledUrl: StyledUrl)
 
     fun addMyStyledUrl(uuid: String, styledUrl: StyledUrl)
 }

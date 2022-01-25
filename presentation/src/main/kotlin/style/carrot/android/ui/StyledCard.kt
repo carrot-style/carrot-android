@@ -92,7 +92,7 @@ fun StyledCard(
             val color by animateColorAsState(
                 when (dismissState.targetValue) {
                     DismissValue.Default -> backgroundColor.copy(alpha = 0.5f) // dismiss 안한 상태
-                    DismissValue.DismissedToEnd -> Color.Green.copy(alpha = 0.5f) // -> 방향 스와이프 (수정)
+                    DismissValue.DismissedToEnd -> Color.Green.copy(alpha = 0.4f) // -> 방향 스와이프 (수정)
                     DismissValue.DismissedToStart -> Color.Red.copy(alpha = 0.5f) // <- 방향 스와이프 (삭제)
                 }
             )

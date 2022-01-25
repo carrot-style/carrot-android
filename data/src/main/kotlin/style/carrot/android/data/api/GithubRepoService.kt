@@ -12,6 +12,7 @@ package style.carrot.android.data.api
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -28,7 +29,7 @@ interface GithubRepoService {
         @Path("owner") owner: String = CarrotStyle,
         @Path("repoName") repoName: String = CarrotStyleRepo,
         @Path("path") path: String,
-        @Body githubFile: GithubFile,
+        @Body githubFile: GithubFile
     ): Response<ResponseBody>
 
     @GET("/repos/{owner}/{repoName}/contents/{path}")
@@ -36,6 +37,14 @@ interface GithubRepoService {
         @Path("owner") owner: String = CarrotStyle,
         @Path("repoName") repoName: String = CarrotStyleRepo,
         @Path("path") path: String,
-        @Query("ref") branch: String = CarrotBranch,
+        @Query("ref") branch: String = CarrotBranch
     ): Response<FileContentResponse>
+
+    @DELETE("/repos/{owner}/{repoName}/contents/{path}")
+    suspend fun deleteFile(
+        @Path("owner") owner: String = CarrotStyle,
+        @Path("repoName") repoName: String = CarrotStyleRepo,
+        @Path("path") path: String,
+        @Body githubFile: GithubFile
+    ): Response<ResponseBody>
 }
