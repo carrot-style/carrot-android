@@ -140,7 +140,7 @@ private fun CarrotUrlCard(styledUrl: StyledUrl, backgroundColor: Color, shape: S
         shape = shape,
         backgroundColor = backgroundColor,
         onClick = {
-            Util.copy(context, "https://${styledUrl.styled.replaceLast(".html", "")}")
+            Util.copy(context, "https://carrot.style/${styledUrl.styled.replaceLast(".html", "")}")
             toast(
                 context,
                 context.getString(R.string.activity_main_component_styledcard_toast_copied)
