@@ -18,19 +18,24 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -39,10 +44,12 @@ import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.systemBarsPadding
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jisungbin.logeukes.LoggerType
 import io.github.jisungbin.logeukes.logeukes
+import kotlinx.coroutines.launch
 import style.carrot.android.BuildConfig
 import style.carrot.android.R
 import style.carrot.android.activity.error.ErrorActivity
@@ -56,7 +63,7 @@ import style.carrot.android.util.constant.IntentConstant
 import style.carrot.android.util.extension.collectWithLifecycle
 import style.carrot.android.util.extension.toast
 
-@OptIn(ExperimentalMaterialApi::class)
+@ExperimentalFoundationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -64,6 +71,7 @@ class MainActivity : ComponentActivity() {
     private val vm: MainViewModel by viewModels()
     private val systemUiController by lazy { SystemUiController(window) }
 
+    @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -118,43 +126,55 @@ class MainActivity : ComponentActivity() {
                 ProvideWindowInsets {
                     val styledUrls by vm.styledUrls.collectAsState(emptyList())
                     val backgroundColor = MaterialTheme.colors.background
+                    val modalBottomSheetState =
+                        rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+                    val coroutineScope = rememberCoroutineScope()
 
                     SideEffect {
                         systemUiController.setSystemBarsColor(backgroundColor)
                     }
 
-                    BottomSheetScaffold(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .systemBarsPadding(),
-                        floatingActionButton = {
-                            FloatingActionButton(onClick = { /*TODO*/ }) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_round_add_24),
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        sheetContent = { CreateStyle() },
-                        backgroundColor = backgroundColor
-                    ) { padding ->
-                        Column(
+                    ModalBottomSheetLayout(
+                        sheetContent = { CreateStyle(modifier = Modifier.navigationBarsPadding()) },
+                        sheetState = modalBottomSheetState,
+                        sheetShape = RoundedCornerShape(30.dp)
+                    ) {
+                        Scaffold(
                             modifier = Modifier
-                                .padding(padding)
-                                .padding(
-                                    top = 60.dp,
-                                    start = 16.dp,
-                                    end = 16.dp
+                                .fillMaxSize()
+                                .systemBarsPadding(),
+                            floatingActionButton = {
+                                FloatingActionButton(onClick = {
+                                    coroutineScope.launch {
+                                        modalBottomSheetState.show()
+                                    }
+                                }) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_round_add_24),
+                                        contentDescription = null
+                                    )
+                                }
+                            },
+                            backgroundColor = backgroundColor
+                        ) { padding ->
+                            Column(
+                                modifier = Modifier
+                                    .padding(padding)
+                                    .padding(
+                                        top = 60.dp,
+                                        start = 16.dp,
+                                        end = 16.dp
+                                    )
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.app_name),
+                                    style = MaterialTheme.typography.h3,
                                 )
-                        ) {
-                            Text(
-                                text = stringResource(R.string.app_name),
-                                style = MaterialTheme.typography.h3,
-                            )
-                            Crossfade(styledUrls.isEmpty()) { isEmpty ->
-                                when (isEmpty) {
-                                    true -> EmptyStyled()
-                                    else -> LazyStyledCard(styledUrls = styledUrls)
+                                Crossfade(styledUrls.isEmpty()) { isEmpty ->
+                                    when (isEmpty) {
+                                        true -> EmptyStyled()
+                                        else -> LazyStyledCard(styledUrls = styledUrls)
+                                    }
                                 }
                             }
                         }

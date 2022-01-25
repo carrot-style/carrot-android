@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
@@ -43,7 +44,7 @@ import style.carrot.android.theme.CarrotStyleTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CreateStyle() {
+fun CreateStyle(modifier: Modifier) {
     var fullAddressField by remember { mutableStateOf(TextFieldValue()) }
     var styledAddressField by remember { mutableStateOf(TextFieldValue()) }
     var memoField by remember { mutableStateOf(TextFieldValue()) }
@@ -52,8 +53,8 @@ fun CreateStyle() {
     val focusManager = LocalFocusManager.current
 
     Column(
-        modifier = Modifier
-            .height(500.dp)
+        modifier = modifier
+            .height(400.dp)
             .padding(30.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
@@ -81,7 +82,7 @@ fun CreateStyle() {
                 singleLine = true,
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                keyboardActions = KeyboardActions { memoFieldFocusRequest.requestFocus() },
+                keyboardActions = KeyboardActions { focusManager.moveFocus(FocusDirection.Down) },
                 value = styledAddressField,
                 onValueChange = { styledAddressField = it }
             )
