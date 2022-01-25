@@ -28,9 +28,9 @@ import style.carrot.android.domain.usecase.StylingUrlUseCase
 import style.carrot.android.util.constant.Key
 import style.carrot.android.util.extension.get
 import style.carrot.android.util.extension.set
-import java.util.UUID
 import javax.inject.Inject
 import kotlin.coroutines.resume
+import kotlin.random.Random
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -56,7 +56,7 @@ class MainViewModel @Inject constructor(
 
     init {
         if (sharedPreferences[Key.Uuid] == null) {
-            sharedPreferences[Key.Uuid] = UUID.randomUUID().toString()
+            sharedPreferences[Key.Uuid] = Random.nextInt().toString()
         }
     }
 

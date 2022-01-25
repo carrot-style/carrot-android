@@ -50,6 +50,7 @@ import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.util.extension.toast
 
 private const val DefaultStyle = "carrot.style/"
+private const val DefaultStyleLengthLimit = DefaultStyle.length + 15
 private val DefaultStyleTextFieldValue = TextFieldValue(
     text = DefaultStyle,
     selection = TextRange(DefaultStyle.length)
@@ -105,7 +106,7 @@ fun CreateStyle(modifier: Modifier = Modifier) {
                 onValueChange = { styledUrlFieldValue ->
                     if (styledUrlFieldValue.text.isEmpty()) {
                         styledUrlField = DefaultStyleTextFieldValue
-                    } else if (styledUrlFieldValue.text.run { startsWith(DefaultStyle) && length <= 15 }) {
+                    } else if (styledUrlFieldValue.text.run { startsWith(DefaultStyle) && length <= DefaultStyleLengthLimit }) {
                         styledUrlField = styledUrlFieldValue
                     }
                 }
@@ -138,8 +139,11 @@ fun CreateStyle(modifier: Modifier = Modifier) {
             onClick = {
                 coroutineScope.launch {
                     val fullUrl = fullUrlField.text
-                    val styledUrl = "${styledUrlField.text}.html"
-                    val memo = memoField.text
+                    val styledUrl = "${styledUrlField.text}.html".replaceFirst(DefaultStyle, "")
+                    val memo = when (memoField.text.isEmpty()) {
+                        true -> fullUrl.split("://")[1]
+                        else -> memoField.text
+                    }
 
                     if (vm.checkAlreadyStyledOrRequestException(styledUrl)) {
                         toast(

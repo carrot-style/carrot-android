@@ -60,6 +60,7 @@ class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
 
     override suspend fun getStyledSha(path: String): FileSha {
         val request = api.getFileContent(path = path)
+        println(request)
         if (request.isValid()) {
             return FileSha(request.body()!!.sha)
         } else {
