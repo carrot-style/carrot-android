@@ -31,6 +31,6 @@ Carrot-style with android.
 ### TODO
 
 - [x] Firestore connect
-- [x] Edit/delete shorten link
+- [ ] Edit/delete shorten link (currently, only delete is supported)
 - [x] Check duplicate link when shorten
 - [x] Auto add `http://`
