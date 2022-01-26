@@ -47,6 +47,7 @@ import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.ui.HeightSpacer
 import style.carrot.android.util.extension.checkHttpAndAutoInsert
+import style.carrot.android.util.extension.isNiceUrl
 import style.carrot.android.util.extension.toast
 
 private const val DefaultStyle = "carrot.style/"
@@ -150,6 +151,13 @@ fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit, uuid
                     val memo = when (memoField.text.isEmpty()) {
                         true -> fullUrl.split("://")[1]
                         else -> memoField.text
+                    }
+
+                    if (!fullUrl.isNiceUrl()) {
+                        toast(context) {
+                            getString(R.string.activity_main_component_styledcard_toast_check_url)
+                        }
+                        return@launch
                     }
 
                     when (styledUrlForUpdate == null) {

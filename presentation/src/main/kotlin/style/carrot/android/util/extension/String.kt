@@ -9,6 +9,8 @@
 
 package style.carrot.android.util.extension
 
+import android.util.Patterns
+
 fun String.checkHttpAndAutoInsert() = if (contains("://")) this else "http://$this"
 
 fun String.replaceLast(from: String, to: String): String {
@@ -17,3 +19,5 @@ fun String.replaceLast(from: String, to: String): String {
     val tail = substring(lastIndex).replaceFirst(from.toRegex(), to)
     return substring(0, lastIndex) + tail
 }
+
+fun String.isNiceUrl() = Patterns.WEB_URL.matcher(this).matches()
