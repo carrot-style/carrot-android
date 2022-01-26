@@ -41,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -151,6 +152,7 @@ class MainActivity : ComponentActivity() {
     private fun MainContent() {
         println("B: $vm")
         val styledUrls by vm.styledUrls.collectAsState(emptyList())
+        val styledUrlStateList = remember { mutableStateListOf(*styledUrls.toTypedArray()) }
         val backgroundColor = MaterialTheme.colors.background
         val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val coroutineScope = rememberCoroutineScope()
@@ -237,7 +239,7 @@ class MainActivity : ComponentActivity() {
                             }
                             else -> {
                                 LazyStyledCard(
-                                    styledUrls = styledUrls,
+                                    styledUrls = styledUrlStateList,
                                     expandEditStyleModalBottomSheet = { styledUrl ->
                                         vm.styledUrlForUpdate = styledUrl
                                         modalBottomSheetState.expandFull()

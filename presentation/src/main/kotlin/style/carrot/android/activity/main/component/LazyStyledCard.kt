@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,8 +26,8 @@ import style.carrot.android.domain.model.StyledUrl
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LazyStyledCard(
-    styledUrls: List<StyledUrl>,
-    expandEditStyleModalBottomSheet: (StyledUrl) -> Unit
+    styledUrls: SnapshotStateList<StyledUrl>,
+    expandEditStyleModalBottomSheet: (StyledUrl) -> Unit,
 ) {
     val vm: MainViewModel = viewModel()
     println("D: $vm")

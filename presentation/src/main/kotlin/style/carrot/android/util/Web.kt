@@ -25,7 +25,7 @@ object Web {
 
     suspend fun parse(url: String) = runCatching {
         withContext(Dispatchers.IO) {
-            Jsoup.connect(url).get().wholeText()
+            Jsoup.connect(url).ignoreContentType(true).ignoreHttpErrors(true).get().wholeText()
         }
     }
 
