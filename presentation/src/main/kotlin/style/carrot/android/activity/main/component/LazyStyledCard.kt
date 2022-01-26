@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.jisungbin.logeukes.logeukes
 import style.carrot.android.R
 import style.carrot.android.activity.main.MainViewModel
 import style.carrot.android.util.extension.toast
@@ -34,9 +33,6 @@ fun LazyStyledCard(uuid: String) {
     val vm: MainViewModel = viewModel()
     val styledUrls by vm.styledUrls.collectAsState(emptyList())
     val context = LocalContext.current
-
-    logeukes { vm }
-    logeukes { styledUrls }
 
     LazyColumn( // TODO: fading edge
         modifier = Modifier

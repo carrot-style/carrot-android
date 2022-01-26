@@ -65,7 +65,6 @@ import style.carrot.android.activity.main.component.CreateStyle
 import style.carrot.android.activity.main.component.EmptyStyled
 import style.carrot.android.activity.main.component.LazyStyledCard
 import style.carrot.android.activity.main.component.TermsOfServiceDialog
-import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.theme.SystemUiController
 import style.carrot.android.util.NetworkUtil
@@ -85,7 +84,6 @@ class MainActivity : ComponentActivity() {
     private var isReady = false
     private val vm: MainViewModel by viewModels()
     private val systemUiController by lazy { SystemUiController(window) }
-    private var styledUrls = emptyList<StyledUrl>()
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
@@ -111,12 +109,10 @@ class MainActivity : ComponentActivity() {
 
         vm.loadStyledUrls(uuid = uuid) { styledUrls ->
             // LaunchedEffect가 호출된 후에 이 로직이 실행됨;;
-            this.styledUrls = styledUrls
             vm.directEmitStyledUrls(styledUrls)
-            logeukes { styledUrls }
-            logeukes { "finished" }
             isReady = true
         }
+
         vm.exceptionFlow.collectWithLifecycle(lifecycleOwner = this, action = ::handleException)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -162,8 +158,6 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun MainContent() {
         val styledUrls by vm.styledUrls.collectAsState(emptyList())
-        logeukes { styledUrls }
-        logeukes { vm }
         val backgroundColor = MaterialTheme.colors.background
         val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val coroutineScope = rememberCoroutineScope()
@@ -183,11 +177,6 @@ class MainActivity : ComponentActivity() {
 
         LaunchedEffect(Unit) {
             systemUiController.setSystemBarsColor(backgroundColor)
-            vm.testEmit()
-            vm.directEmitStyledUrls(this@MainActivity.styledUrls)
-            logeukes { "A" }
-            logeukes { this@MainActivity.styledUrls }
-
             if (sharedPreferences[Key.TermsOfServiceAgree, "false"] == "false") {
                 termsOfServiceDialogVisible = true
             }
