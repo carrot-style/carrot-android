@@ -35,6 +35,6 @@ dependencies {
 
     Dependencies.Jackson.forEach(::implementation)
     Dependencies.Firebase.forEach(::implementation)
-    Dependencies.Retrofit.forEach(::implementation)
+    Dependencies.Network.forEach(::implementation)
     Dependencies.Essential.forEach(::implementation)
 }

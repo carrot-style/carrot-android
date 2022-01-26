@@ -15,7 +15,7 @@ interface CarrotRepository {
     /**
      * @return 만약 파일이 있다면 해당 파일의 sha값을 리턴하고, 파일이 없다면 null을 리턴함
      */
-    suspend fun getStyledSha(path: String): String?
+    suspend fun getStyledSha(path: String): String
 
     /**
      * @param path 커스텀 단축 링크 (carrot.style/${path}.html)

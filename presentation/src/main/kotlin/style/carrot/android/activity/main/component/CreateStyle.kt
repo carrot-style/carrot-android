@@ -154,38 +154,36 @@ fun CreateStyle(modifier: Modifier = Modifier) {
                         true -> fullUrl.split("://")[1]
                         else -> memoField.text
                     }
-                    val styledShaRequest = vm.getStyeldSha(newStyledUrl)
 
-                    // 실패시 null
-                    if (styledShaRequest != null) {
-                        when (styledUrlForUpdate == null) {
-                            true -> { // 새로 추가
-                                if (styledShaRequest.sha == null) {
-                                    vm.stylingUrl(
-                                        styledUrl = StyledUrl(
-                                            styled = newStyledUrl,
-                                            origin = fullUrl,
-                                            memo = memo
-                                        ),
-                                        sha = ""
-                                    )
-                                } else {
-                                    toast(
-                                        context,
-                                        context.getString(R.string.activity_main_component_createstyle_toast_already_used_styled)
-                                    )
-                                }
-                            }
-                            else -> { // 업데이트
+                    when (styledUrlForUpdate == null) {
+                        true -> { // 새로 추가
+                            val checkAlreadyStyled =
+                                vm.checkAlreadyStyled(newStyledUrl) ?: return@launch
+                            if (!checkAlreadyStyled) {
                                 vm.stylingUrl(
                                     styledUrl = StyledUrl(
                                         styled = newStyledUrl,
                                         origin = fullUrl,
                                         memo = memo
                                     ),
-                                    sha = styledShaRequest.sha!!
+                                    sha = ""
+                                )
+                            } else {
+                                toast(
+                                    context,
+                                    context.getString(R.string.activity_main_component_createstyle_toast_already_used_styled)
                                 )
                             }
+                        }
+                        else -> { // 업데이트
+                            vm.stylingUrl(
+                                styledUrl = StyledUrl(
+                                    styled = newStyledUrl,
+                                    origin = fullUrl,
+                                    memo = memo
+                                ),
+                                sha = vm.getStyledSha(newStyledUrl) ?: return@launch
+                            )
                         }
                     }
                 }

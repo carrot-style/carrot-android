@@ -24,4 +24,6 @@
     <string name="activity_main_component_createstyle_my_style">My style: (max 15 length)</string>
     <string name="activity_main_component_createstyle_memo">One line note:</string>
     <string name="activity_main_component_createstyle_toast_already_used_styled">The style has been already used.</string>
+
+    <string name="web_toast_non_install_browser">No browser app installed 😢</string>
 </resources>

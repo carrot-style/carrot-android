@@ -57,17 +57,12 @@ class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
         }
     }
 
-    override suspend fun getStyledSha(path: String): String? {
+    override suspend fun getStyledSha(path: String): String {
         val request = api.getFileContent(path = path)
         return if (request.isValid()) {
-            request.body()!!.sha
+            request.body()!!.sha!!
         } else {
-            val exception = request.toException()
-            if (exception.message!!.contains("\"message\": \"Not Found\"")) {
-                null
-            } else {
-                throw exception
-            }
+            throw request.toException()
         }
     }
 

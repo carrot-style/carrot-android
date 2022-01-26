@@ -10,6 +10,7 @@
 package style.carrot.android.activity.main
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.view.ViewTreeObserver
@@ -54,6 +55,7 @@ import com.google.accompanist.insets.systemBarsPadding
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jisungbin.logeukes.LoggerType
 import io.github.jisungbin.logeukes.logeukes
+import javax.inject.Inject
 import kotlinx.coroutines.launch
 import style.carrot.android.BuildConfig
 import style.carrot.android.R
@@ -75,6 +77,9 @@ class MainActivity : ComponentActivity() {
     private var isReady = false
     private val vm: MainViewModel by viewModels()
     private val systemUiController by lazy { SystemUiController(window) }
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()

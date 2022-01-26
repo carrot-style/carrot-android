@@ -18,13 +18,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import style.carrot.android.activity.main.model.FileSha
 import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.domain.usecase.AddStyledUrlUseCase
 import style.carrot.android.domain.usecase.DeleteStyledUrlUseCase
 import style.carrot.android.domain.usecase.GetStyledShaUseCase
 import style.carrot.android.domain.usecase.LoadStyledUrlsUseCase
 import style.carrot.android.domain.usecase.StylingUrlUseCase
+import style.carrot.android.util.Web
 import style.carrot.android.util.constant.Key
 import style.carrot.android.util.extension.get
 import style.carrot.android.util.extension.set
@@ -39,7 +39,7 @@ class MainViewModel @Inject constructor(
     private val stylingUrlUseCase: StylingUrlUseCase,
     private val deleteStyledUrlUseCase: DeleteStyledUrlUseCase,
     private val addStyledUrlUseCase: AddStyledUrlUseCase,
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
 ) : ViewModel() {
 
     private val _exceptionEvent = MutableStateFlow<Throwable?>(null)
@@ -85,7 +85,7 @@ class MainViewModel @Inject constructor(
      *
      * - 수정 요청일 때
      * 기존 파일에서 sha값을 조회해야 함 ->
-     * [stylingUrl] 호출 전 미리 [getStyeldSha] 함수를 호출하여 sha값 조회 ->
+     * [stylingUrl] 호출 전 미리 [getStyledSha] 함수를 호출하여 sha값 조회 ->
      * 위에서 조회한 값이 [sha] 인자로 들어감
      *
      * - 새로운 스타일링 요청일 때
@@ -107,11 +107,29 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    suspend fun getStyeldSha(path: String): FileSha? = suspendCancellableCoroutine { continuation ->
+    suspend fun checkAlreadyStyled(path: String): Boolean? =
+        suspendCancellableCoroutine { continuation ->
+            viewModelScope.launch {
+                val pathUrl = "https://api.github.com/repos/carrotstyle/carrot.style/contents/$path"
+                Web.parse(pathUrl)
+                    .onSuccess { html ->
+                        continuation.resume(!html.contains("\"message\": \"Not Found\","))
+                    }
+                    .onFailure { throwable ->
+                        continuation.resume(null)
+                        throwable.emit()
+                    }
+            }
+        }
+
+    /**
+     * @return 요청 성공시 sha 값 리턴, 요청 실패시 null 리턴
+     */
+    suspend fun getStyledSha(path: String): String? = suspendCancellableCoroutine { continuation ->
         viewModelScope.launch {
             getStyledShaUseCase(path)
-                .onSuccess { nullableSha ->
-                    continuation.resume(FileSha(nullableSha))
+                .onSuccess { sha ->
+                    continuation.resume(sha)
                 }.onFailure { throwable ->
                     continuation.resume(null)
                     throwable.emit()

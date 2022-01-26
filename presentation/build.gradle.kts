@@ -64,7 +64,7 @@ dependencies {
     Dependencies.Util.forEach(::implementation)
     Dependencies.Compose.forEach(::implementation)
     Dependencies.Jackson.forEach(::implementation)
-    Dependencies.Retrofit.forEach(::implementation)
+    Dependencies.Network.forEach(::implementation)
     Dependencies.Essential.forEach(::implementation)
 
     Dependencies.Debug.forEach(::debugImplementation)

@@ -36,11 +36,13 @@ object Versions {
     }
 
     object Ui {
+        const val Browser = "1.3.0"
         const val Material = "1.5.0"
         const val Splash = "1.0.0-beta01"
     }
 
     object Network {
+        const val Jsoup = "1.14.3"
         const val OkHttp = "4.9.3"
         const val Retrofit = "2.9.0"
     }
@@ -93,6 +95,7 @@ object Dependencies {
     )
 
     val Ui = listOf(
+        "androidx.browser:browser:${Versions.Ui.Browser}",
         "androidx.core:core-splashscreen:${Versions.Ui.Splash}",
         "com.google.android.material:material:${Versions.Ui.Material}",
         "com.google.android.gms:play-services-oss-licenses:${Versions.OssLicense.Master}"
@@ -105,7 +108,8 @@ object Dependencies {
         "com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.Util.Jackson}"
     )
 
-    val Retrofit = listOf(
+    val Network = listOf(
+        "org.jsoup:jsoup:${Versions.Network.Jsoup}",
         "com.squareup.retrofit2:retrofit:${Versions.Network.Retrofit}",
         "com.squareup.okhttp3:logging-interceptor:${Versions.Network.OkHttp}",
         "com.squareup.retrofit2:converter-jackson:${Versions.Network.Retrofit}"
