@@ -135,8 +135,8 @@ class MainViewModel @Inject constructor(
                 logeukes { "before: styledUrlsValue: $styledUrlsValue" }
                 logeukes { "to remove styledUrlsValue: $styledUrl" }
                 styledUrlsValue.remove(styledUrl)
-                logeukes { "after styledUrlsValue: $styledUrlsValue" }
                 _styledUrls.emit(styledUrlsValue)
+                logeukes { "after styledUrlsValue: $styledUrlsValue" }
             }
             .onFailure { throwable ->
                 logeukes { "failured: deleteStyledUrl" }

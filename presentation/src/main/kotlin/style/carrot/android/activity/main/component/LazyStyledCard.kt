@@ -17,12 +17,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.jisungbin.logeukes.logeukes
 import style.carrot.android.R
 import style.carrot.android.activity.main.MainViewModel
 import style.carrot.android.util.extension.toast
@@ -31,8 +33,19 @@ import style.carrot.android.util.extension.toast
 @Composable
 fun LazyStyledCard(uuid: String) {
     val vm: MainViewModel = viewModel()
-    val styledUrls by vm.styledUrls.collectAsState(emptyList())
+    val styledUrlsInstance = vm.styledUrls.collectAsState(emptyList())
+    val styledUrls by styledUrlsInstance
     val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        vm.styledUrls.collect {
+            logeukes { "vm.styledUrls.collect: $it" }
+        }
+    }
+
+    logeukes { "LazyStyledCard ViewModel instance: $vm" }
+    logeukes { "LazyStyledCard styledUrls instance: $styledUrlsInstance" }
+    logeukes { "LazyStyledCard styledUrls value: $styledUrls" }
 
     LazyColumn( // TODO: fading edge
         modifier = Modifier

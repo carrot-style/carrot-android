@@ -157,11 +157,16 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun MainContent() {
-        val styledUrls by vm.styledUrls.collectAsState(emptyList())
+        val styledUrlsInstance = vm.styledUrls.collectAsState(emptyList())
+        val styledUrls by styledUrlsInstance
         val backgroundColor = MaterialTheme.colors.background
         val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val coroutineScope = rememberCoroutineScope()
         var termsOfServiceDialogVisible by remember { mutableStateOf(false) }
+
+        logeukes { "MainContent ViewModel instance: $vm" }
+        logeukes { "MainContent styledUrls instance: $styledUrlsInstance" }
+        logeukes { "MainContent styledUrls value: $styledUrls" }
 
         TermsOfServiceDialog(
             visible = termsOfServiceDialogVisible,
