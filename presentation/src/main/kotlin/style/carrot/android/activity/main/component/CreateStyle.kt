@@ -59,7 +59,7 @@ private val DefaultStyleTextFieldValue = TextFieldValue(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit) {
+fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit, uuid: String) {
     val vm: MainViewModel = viewModel()
     logeukes { "C: $vm" }
 
@@ -166,7 +166,8 @@ fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit) {
                                         origin = fullUrl,
                                         memo = memo
                                     ),
-                                    sha = ""
+                                    sha = "",
+                                    uuid = uuid
                                 )
                                 hideModalBottomSheetAction()
                             } else {
@@ -183,7 +184,8 @@ fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit) {
                                     origin = fullUrl,
                                     memo = memo
                                 ),
-                                sha = vm.getStyledSha(newStyledUrl) ?: return@launch
+                                sha = vm.getStyledSha(newStyledUrl) ?: return@launch,
+                                uuid = uuid
                             )
                             hideModalBottomSheetAction()
                         }
@@ -200,6 +202,6 @@ fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit) {
 @Composable
 private fun PreviewCreateStyle() {
     CarrotStyleTheme {
-        CreateStyle(modifier = Modifier, hideModalBottomSheetAction = {})
+        CreateStyle(modifier = Modifier, hideModalBottomSheetAction = {}, uuid = "")
     }
 }

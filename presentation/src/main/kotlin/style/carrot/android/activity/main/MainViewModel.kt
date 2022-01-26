@@ -9,7 +9,6 @@
 
 package style.carrot.android.activity.main
 
-import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,12 +25,8 @@ import style.carrot.android.domain.usecase.GetStyledShaUseCase
 import style.carrot.android.domain.usecase.LoadStyledUrlsUseCase
 import style.carrot.android.domain.usecase.StylingUrlUseCase
 import style.carrot.android.util.Web
-import style.carrot.android.util.constant.Key
-import style.carrot.android.util.extension.get
-import style.carrot.android.util.extension.set
 import javax.inject.Inject
 import kotlin.coroutines.resume
-import kotlin.random.Random
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -40,7 +35,6 @@ class MainViewModel @Inject constructor(
     private val stylingUrlUseCase: StylingUrlUseCase,
     private val deleteStyledUrlUseCase: DeleteStyledUrlUseCase,
     private val addStyledUrlUseCase: AddStyledUrlUseCase,
-    private val sharedPreferences: SharedPreferences,
 ) : ViewModel() {
 
     private val _exceptionEvent = MutableStateFlow<Throwable?>(null)
@@ -56,19 +50,11 @@ class MainViewModel @Inject constructor(
     private val styledUrlsValue get() = _styledUrls.value
     val styledUrls: Flow<List<StyledUrl>> = _styledUrls.asStateFlow()
 
-    private val uuid by lazy { sharedPreferences[Key.Uuid]!! }
-
-    init {
-        if (sharedPreferences[Key.Uuid] == null) {
-            sharedPreferences[Key.Uuid] = Random.nextInt().toString()
-        }
-    }
-
     /**
      * [StyledUrl] 리스트 firestore에서 조회
      * 요청 성공시 [StyledUrl] 리스트를 [styledUrls]에 넘겨줌
      */
-    fun loadStyledUrlsWithDoneAction(doneAction: () -> Unit) = viewModelScope.launch {
+    fun loadStyledUrlsWithDoneAction(uuid: String, doneAction: () -> Unit) = viewModelScope.launch {
         loadStyledUrlsUseCase(uuid = uuid)
             .onSuccess { styledUrls ->
                 _styledUrls.emit(styledUrls.toMutableList())
@@ -93,7 +79,7 @@ class MainViewModel @Inject constructor(
      * 새로운 파일을 만들어야 함 ->
      * [sha] 인자에 `""`(공백) 들어감
      */
-    fun stylingUrl(styledUrl: StyledUrl, sha: String) = viewModelScope.launch {
+    fun stylingUrl(uuid: String, styledUrl: StyledUrl, sha: String) = viewModelScope.launch {
         stylingUrlUseCase(
             path = styledUrl.styled,
             url = styledUrl.origin,
@@ -102,7 +88,7 @@ class MainViewModel @Inject constructor(
             // addStyledUrl(styledUrl): firestore에 등록 요청
             // 요청 성공 - return null
             // 요청 실패 - return throwable
-            addStyledUrl(styledUrl)?.emit()
+            addStyledUrl(uuid = uuid, styledUrl = styledUrl)?.emit()
         }.onFailure { throwable ->
             throwable.emit()
         }
@@ -138,7 +124,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun deleteStyledUrl(styledUrl: StyledUrl) = viewModelScope.launch {
+    fun deleteStyledUrl(uuid: String, styledUrl: StyledUrl) = viewModelScope.launch {
         deleteStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)
             .onSuccess {
                 _styledUrls.emit(styledUrlsValue.apply { remove(styledUrl) })
@@ -156,7 +142,7 @@ class MainViewModel @Inject constructor(
      *  @return 요청 성공시: null
      *  요청 실패시: [Throwable]
      */
-    private suspend fun addStyledUrl(styledUrl: StyledUrl): Throwable? =
+    private suspend fun addStyledUrl(uuid: String, styledUrl: StyledUrl): Throwable? =
         suspendCancellableCoroutine { continutation ->
             viewModelScope.launch {
                 addStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)

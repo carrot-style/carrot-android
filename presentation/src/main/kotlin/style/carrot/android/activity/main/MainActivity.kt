@@ -77,6 +77,7 @@ import style.carrot.android.util.extension.get
 import style.carrot.android.util.extension.set
 import style.carrot.android.util.extension.toast
 import javax.inject.Inject
+import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @AndroidEntryPoint
@@ -88,10 +89,15 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
+    private val uuid by lazy { sharedPreferences[Key.Uuid]!! }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        if (sharedPreferences[Key.Uuid] == null) {
+            sharedPreferences[Key.Uuid] = Random.nextInt().toString()
+        }
 
         if (!NetworkUtil.isNetworkAvailable(applicationContext)) {
             finish()
@@ -104,7 +110,7 @@ class MainActivity : ComponentActivity() {
         }
 
         logeukes { "A: $vm" }
-        vm.loadStyledUrlsWithDoneAction {
+        vm.loadStyledUrlsWithDoneAction(uuid = uuid) {
             isReady = true
         }
         vm.exceptionFlow.collectWithLifecycle(lifecycleOwner = this, action = ::handleException)
@@ -151,13 +157,14 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun MainContent() {
         val styledUrls by vm.styledUrls.collectAsState(emptyList())
-        logeukes { "B: $vm" }
-        logeukes { styledUrls }
         val styledUrlStateList = remember { mutableStateListOf(*styledUrls.toTypedArray()) }
         val backgroundColor = MaterialTheme.colors.background
         val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val coroutineScope = rememberCoroutineScope()
         var termsOfServiceDialogVisible by remember { mutableStateOf(false) }
+        logeukes { "B: $vm" }
+        logeukes { styledUrls }
+        logeukes { styledUrlStateList }
 
         TermsOfServiceDialog(
             visible = termsOfServiceDialogVisible,
@@ -203,7 +210,8 @@ class MainActivity : ComponentActivity() {
                         coroutineScope.launch {
                             modalBottomSheetState.hide()
                         }
-                    }
+                    },
+                    uuid = uuid
                 )
             },
             sheetState = modalBottomSheetState,
@@ -245,7 +253,7 @@ class MainActivity : ComponentActivity() {
                             }
                             else -> {
                                 LazyStyledCard(
-                                    styledUrls = styledUrlStateList,
+                                    uuid = uuid,
                                     expandEditStyleModalBottomSheet = { styledUrl ->
                                         vm.styledUrlForUpdate = styledUrl
                                         modalBottomSheetState.expandFull()

@@ -17,7 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -27,12 +28,11 @@ import style.carrot.android.domain.model.StyledUrl
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LazyStyledCard(
-    styledUrls: SnapshotStateList<StyledUrl>,
-    expandEditStyleModalBottomSheet: (StyledUrl) -> Unit,
-) {
+fun LazyStyledCard(uuid: String, expandEditStyleModalBottomSheet: (StyledUrl) -> Unit) {
     val vm: MainViewModel = viewModel()
+    val styledUrls by vm.styledUrls.collectAsState(emptyList())
     logeukes { "D: $vm" }
+    logeukes { styledUrls }
 
     LazyColumn( // TODO: fading edge
         modifier = Modifier
@@ -41,15 +41,15 @@ fun LazyStyledCard(
         contentPadding = PaddingValues(bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
-        items(items = styledUrls, key = { it.styled }) { carrotUrl ->
+        items(items = styledUrls, key = { it.styled }) { styledUrl ->
             StyledCard(
                 modifier = Modifier.animateItemPlacement(),
-                styledUrl = carrotUrl,
-                onEditClick = { styledUrl ->
-                    expandEditStyleModalBottomSheet(styledUrl)
+                styledUrl = styledUrl,
+                onEditClick = { _styledUrl ->
+                    expandEditStyleModalBottomSheet(_styledUrl)
                 },
-                onDeleteClick = { styledUrl ->
-                    vm.deleteStyledUrl(styledUrl)
+                onDeleteClick = { _styledUrl ->
+                    vm.deleteStyledUrl(styledUrl = _styledUrl, uuid = uuid)
                 }
             )
         }
