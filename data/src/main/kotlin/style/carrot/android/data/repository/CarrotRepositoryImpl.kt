@@ -67,7 +67,7 @@ class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
     }
 
     override suspend fun deleteStyledUrl(uuid: String, styledUrl: StyledUrl) {
-        val sha = getStyledSha(path = styledUrl.styled)!!
+        val sha = getStyledSha(path = styledUrl.styled)
         val githubFile = GithubFile(message = DeleteStyledMessage, sha = sha)
         val request = api.deleteFile(
             path = styledUrl.styled,
