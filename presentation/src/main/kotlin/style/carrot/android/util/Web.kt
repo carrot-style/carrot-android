@@ -41,7 +41,9 @@ object Web {
             customTabIntent.launchUrl(context, url.toUri())
         } catch (exception: Exception) {
             exception.printStackTrace()
-            toast(context, context.getString(R.string.web_toast_non_install_browser))
+            toast(context) {
+                getString(R.string.web_toast_non_install_browser)
+            }
         }
     }
 }

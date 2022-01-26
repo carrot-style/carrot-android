@@ -20,19 +20,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.jisungbin.logeukes.logeukes
+import style.carrot.android.R
 import style.carrot.android.activity.main.MainViewModel
 import style.carrot.android.domain.model.StyledUrl
+import style.carrot.android.util.extension.toast
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LazyStyledCard(uuid: String, expandEditStyleModalBottomSheet: (StyledUrl) -> Unit) {
     val vm: MainViewModel = viewModel()
     val styledUrls by vm.styledUrls.collectAsState(emptyList())
-    logeukes { "D: $vm" }
-    logeukes { styledUrls }
+    val context = LocalContext.current
 
     LazyColumn( // TODO: fading edge
         modifier = Modifier
@@ -45,10 +46,13 @@ fun LazyStyledCard(uuid: String, expandEditStyleModalBottomSheet: (StyledUrl) ->
             StyledCard(
                 modifier = Modifier.animateItemPlacement(),
                 styledUrl = styledUrl,
-                onEditClick = { _styledUrl ->
+                onDismissedToEdit = { _styledUrl ->
                     expandEditStyleModalBottomSheet(_styledUrl)
                 },
-                onDeleteClick = { _styledUrl ->
+                onDismissedToDelete = { _styledUrl ->
+                    toast(context) {
+                        getString(R.string.activity_main_component_createstyle_toast_deleting)
+                    }
                     vm.deleteStyledUrl(styledUrl = _styledUrl, uuid = uuid)
                 }
             )

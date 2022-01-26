@@ -54,8 +54,8 @@ import style.carrot.android.util.extension.toast
 fun StyledCard(
     modifier: Modifier,
     styledUrl: StyledUrl,
-    onEditClick: (styledUrl: StyledUrl) -> Unit,
-    onDeleteClick: (styledUrl: StyledUrl) -> Unit,
+    onDismissedToEdit: (styledUrl: StyledUrl) -> Unit,
+    onDismissedToDelete: (styledUrl: StyledUrl) -> Unit,
 ) {
     val shape = RoundedCornerShape(30.dp)
     val backgroundColor = Color(240, 240, 240)
@@ -65,11 +65,11 @@ fun StyledCard(
                 false
             }
             DismissValue.DismissedToEnd -> { // -> 방향 스와이프 (수정)
-                onEditClick(styledUrl)
+                onDismissedToEdit(styledUrl)
                 false
             }
             DismissValue.DismissedToStart -> { // <- 방향 스와이프 (삭제)
-                onDeleteClick(styledUrl)
+                onDismissedToDelete(styledUrl)
                 true
             }
         }
@@ -141,10 +141,9 @@ private fun CarrotUrlCard(styledUrl: StyledUrl, backgroundColor: Color, shape: S
         backgroundColor = backgroundColor,
         onClick = {
             Util.copy(context, "https://carrot.style/${styledUrl.styled.replaceLast(".html", "")}")
-            toast(
-                context,
-                context.getString(R.string.activity_main_component_styledcard_toast_copied)
-            )
+            toast(context) {
+                getString(R.string.activity_main_component_styledcard_toast_copied)
+            }
         }
     ) {
         Column(
@@ -167,8 +166,8 @@ private fun PreviewStyledCard() {
         StyledCard(
             modifier = Modifier,
             styledUrl = StyledUrl("carrot.style/test", "www.naver.com", "just carrot-style."),
-            onEditClick = {},
-            onDeleteClick = {}
+            onDismissedToEdit = {},
+            onDismissedToDelete = {}
         )
     }
 }

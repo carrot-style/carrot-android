@@ -41,7 +41,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -109,7 +108,6 @@ class MainActivity : ComponentActivity() {
             return
         }
 
-        logeukes { "A: $vm" }
         vm.loadStyledUrlsWithDoneAction(uuid = uuid) {
             isReady = true
         }
@@ -157,14 +155,10 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun MainContent() {
         val styledUrls by vm.styledUrls.collectAsState(emptyList())
-        val styledUrlStateList = remember { mutableStateListOf(*styledUrls.toTypedArray()) }
         val backgroundColor = MaterialTheme.colors.background
         val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val coroutineScope = rememberCoroutineScope()
         var termsOfServiceDialogVisible by remember { mutableStateOf(false) }
-        logeukes { "B: $vm" }
-        logeukes { styledUrls }
-        logeukes { styledUrlStateList }
 
         TermsOfServiceDialog(
             visible = termsOfServiceDialogVisible,

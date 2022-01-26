@@ -12,7 +12,6 @@ package style.carrot.android.activity.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.jisungbin.logeukes.logeukes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -148,7 +147,6 @@ class MainViewModel @Inject constructor(
                 addStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)
                     .onSuccess {
                         _styledUrls.emit(styledUrlsValue.apply { add(styledUrl) })
-                        logeukes { listOf("emited: $styledUrlsValue") }
                         continutation.resume(null)
                     }
                     .onFailure { throwable ->
