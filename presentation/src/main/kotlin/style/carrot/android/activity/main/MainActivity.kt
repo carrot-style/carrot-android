@@ -45,12 +45,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsWithImePadding
@@ -114,7 +117,7 @@ class MainActivity : ComponentActivity() {
             isReady = true
         }
 
-        vm.exceptionFlow.collectWithLifecycle(lifecycleOwner = this, action = ::handleException)
+        vm.exceptionEvent.collectWithLifecycle(lifecycleOwner = this, action = ::handleException)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -164,28 +167,18 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun MainContent() {
-        val styledUrlsInstance = vm.styledUrls.collectAsState(emptyList())
-        val styledUrls by styledUrlsInstance
+        val lifecycleOwner = LocalLifecycleOwner.current
+        val styledUrlsFlowLifecycleAware = remember(vm.styledUrls, lifecycleOwner) {
+            vm.styledUrls.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+        }
+        val styledUrls by styledUrlsFlowLifecycleAware.collectAsState(emptyList())
         val backgroundColor = MaterialTheme.colors.background
         val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val coroutineScope = rememberCoroutineScope()
         var termsOfServiceDialogVisible by remember { mutableStateOf(false) }
 
         logeukes { "MainContent ViewModel instance: $vm" }
-        logeukes { "MainContent styledUrls instance: $styledUrlsInstance" }
         logeukes { "MainContent styledUrls value: $styledUrls" }
-
-        TermsOfServiceDialog(
-            visible = termsOfServiceDialogVisible,
-            onDismissRequest = { termsOfServiceDialogVisible = false },
-            onConfirmButtonClick = {
-                sharedPreferences[Key.TermsOfServiceAgree] = "true"
-                termsOfServiceDialogVisible = false
-            },
-            onDismissButtonClick = {
-                finish()
-            }
-        )
 
         LaunchedEffect(Unit) {
             systemUiController.setSystemBarsColor(backgroundColor)
@@ -200,6 +193,18 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        TermsOfServiceDialog(
+            visible = termsOfServiceDialogVisible,
+            onDismissRequest = { termsOfServiceDialogVisible = false },
+            onConfirmButtonClick = {
+                sharedPreferences[Key.TermsOfServiceAgree] = "true"
+                termsOfServiceDialogVisible = false
+            },
+            onDismissButtonClick = {
+                finish()
+            }
+        )
+
         ModalBottomSheetLayout(
             sheetContent = {
                 CreateStyle(
@@ -213,6 +218,7 @@ class MainActivity : ComponentActivity() {
                             modalBottomSheetState.hide()
                         }
                     },
+                    vm = vm,
                     uuid = uuid
                 )
             },
@@ -256,7 +262,7 @@ class MainActivity : ComponentActivity() {
                                 EmptyStyled()
                             }
                             else -> {
-                                LazyStyledCard(uuid = uuid)
+                                LazyStyledCard(vm = vm, uuid = uuid)
                             }
                         }
                     }
@@ -265,16 +271,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun handleException(exception: Throwable?) {
-        if (exception != null) {
-            val message = when (BuildConfig.DEBUG) {
-                true -> {
-                    logeukes(type = LoggerType.E) { exception }
-                    exception.message.toString()
-                }
-                else -> getString(R.string.activity_main_toast_error)
+    private fun handleException(exception: Throwable) {
+        val message = when (BuildConfig.DEBUG) {
+            true -> {
+                logeukes(type = LoggerType.E) { exception }
+                exception.message.toString()
             }
-            toast(message)
+            else -> getString(R.string.activity_main_toast_error)
         }
+        toast(message)
     }
 }

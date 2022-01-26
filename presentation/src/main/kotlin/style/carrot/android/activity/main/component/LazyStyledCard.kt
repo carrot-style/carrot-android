@@ -17,39 +17,32 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import io.github.jisungbin.logeukes.logeukes
-import kotlinx.coroutines.launch
 import style.carrot.android.R
 import style.carrot.android.activity.main.MainViewModel
 import style.carrot.android.util.extension.toast
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LazyStyledCard(uuid: String) {
-    val vm: MainViewModel = viewModel()
-    val styledUrlsInstance = vm.styledUrls.collectAsState(emptyList())
-    val styledUrls by styledUrlsInstance
+fun LazyStyledCard(vm: MainViewModel, uuid: String) {
+    // val vm: MainViewModel = viewModel()
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-
-    SideEffect {
-        coroutineScope.launch {
-            vm.styledUrls.collect {
-                logeukes { "LazyStyledCard vm.styledUrls.collect: $it" }
-            }
-        }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val styledUrlsFlowLifecycleAware = remember(vm.styledUrls, lifecycleOwner) {
+        vm.styledUrls.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
     }
+    val styledUrls by styledUrlsFlowLifecycleAware.collectAsState(emptyList())
 
     logeukes { "LazyStyledCard ViewModel instance: $vm" }
-    logeukes { "LazyStyledCard styledUrls instance: $styledUrlsInstance" }
     logeukes { "LazyStyledCard styledUrls value: $styledUrls" }
 
     LazyColumn( // TODO: fading edge

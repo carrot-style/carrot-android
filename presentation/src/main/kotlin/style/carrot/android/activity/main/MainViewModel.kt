@@ -14,9 +14,12 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jisungbin.logeukes.logeukes
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import style.carrot.android.domain.model.StyledUrl
@@ -38,8 +41,8 @@ class MainViewModel @Inject constructor(
     private val addStyledUrlUseCase: AddStyledUrlUseCase,
 ) : ViewModel() {
 
-    private val _exceptionEvent = MutableStateFlow<Throwable?>(null)
-    val exceptionFlow = _exceptionEvent.asStateFlow()
+    private val _exceptionEvent = MutableSharedFlow<Throwable>()
+    val exceptionEvent = _exceptionEvent.asSharedFlow()
 
     // https://stackoverflow.com/questions/70729578/how-to-pass-parameter-to-bottomsheet-of-jetpack-compose
     var styledUrlForUpdate: StyledUrl? = null
@@ -135,8 +138,8 @@ class MainViewModel @Inject constructor(
                 logeukes { "success: deleteStyledUrl" }
                 logeukes { "before: styledUrlsValue: $styledUrlsValue" }
                 logeukes { "to remove value: $styledUrl" }
-                styledUrlsValue.remove(styledUrl)
-                _styledUrls.emit(styledUrlsValue)
+                // styledUrlsValue.remove(styledUrl)
+                _styledUrls.update { it.apply { remove(styledUrl) } }
                 logeukes { "after styledUrlsValue: $styledUrlsValue" }
             }
             .onFailure { throwable ->
@@ -163,8 +166,8 @@ class MainViewModel @Inject constructor(
                         logeukes { "success: addStyledUrl" }
                         logeukes { "before: styledUrlsValue: $styledUrlsValue" }
                         logeukes { "to add value: $styledUrl" }
-                        styledUrlsValue.add(styledUrl)
-                        _styledUrls.emit(styledUrlsValue)
+                        // styledUrlsValue.add(styledUrl)
+                        _styledUrls.update { it.apply { add(styledUrl) } }
                         logeukes { "after styledUrlsValue: $styledUrlsValue" }
                         continutation.resume(null)
                     }
