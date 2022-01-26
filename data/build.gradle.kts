@@ -34,7 +34,7 @@ dependencies {
     implementation(platform(Dependencies.FirebaseBom))
 
     Dependencies.Jackson.forEach(::implementation)
-    Dependencies.Firebase.forEach(::implementation)
     Dependencies.Network.forEach(::implementation)
+    Dependencies.Firebase.forEach(::implementation)
     Dependencies.Essential.forEach(::implementation)
 }
