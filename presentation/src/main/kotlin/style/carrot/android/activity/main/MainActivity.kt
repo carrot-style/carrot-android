@@ -110,7 +110,9 @@ class MainActivity : ComponentActivity() {
         }
 
         vm.loadStyledUrls(uuid = uuid) { styledUrls ->
+            // LaunchedEffect가 호출된 후에 이 로직이 실행됨;;
             this.styledUrls = styledUrls
+            vm.directEmitStyledUrls(styledUrls)
             logeukes { styledUrls }
             logeukes { "finished" }
             isReady = true

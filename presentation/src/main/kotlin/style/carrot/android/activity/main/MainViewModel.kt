@@ -124,8 +124,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    suspend fun directEmitStyledUrls(styledUrls: List<StyledUrl>) =
+    fun directEmitStyledUrls(styledUrls: List<StyledUrl>) = viewModelScope.launch {
         _styledUrls.emit(styledUrls.toMutableList())
+    }
 
     fun deleteStyledUrl(uuid: String, styledUrl: StyledUrl) = viewModelScope.launch {
         deleteStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)
