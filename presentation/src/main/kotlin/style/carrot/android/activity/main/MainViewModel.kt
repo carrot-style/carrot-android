@@ -12,6 +12,7 @@ package style.carrot.android.activity.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.jisungbin.logeukes.logeukes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -48,8 +49,6 @@ class MainViewModel @Inject constructor(
     private val _styledUrls = MutableStateFlow(mutableListOf<StyledUrl>())
     private val styledUrlsValue get() = _styledUrls.value
     val styledUrls: Flow<List<StyledUrl>> = _styledUrls.asStateFlow()
-
-    suspend fun testEmit() = _styledUrls.emit(styledUrlsValue.apply { add(StyledUrl()) })
 
     /**
      * [StyledUrl] 리스트 firestore에서 조회
@@ -129,13 +128,21 @@ class MainViewModel @Inject constructor(
     }
 
     fun deleteStyledUrl(uuid: String, styledUrl: StyledUrl) = viewModelScope.launch {
+        logeukes { "call: deleteStyledUrl" }
         deleteStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)
             .onSuccess {
-                _styledUrls.emit(styledUrlsValue.apply { remove(styledUrl) })
+                logeukes { "success: deleteStyledUrl" }
+                logeukes { "before: styledUrlsValue: $styledUrlsValue" }
+                logeukes { "to remove styledUrlsValue: $styledUrl" }
+                styledUrlsValue.remove(styledUrl)
+                logeukes { "after styledUrlsValue: $styledUrlsValue" }
+                _styledUrls.emit(styledUrlsValue)
             }
             .onFailure { throwable ->
+                logeukes { "failured: deleteStyledUrl" }
                 throwable.emit()
             }
+        logeukes { "end: deleteStyledUrl" }
     }
 
     /**
