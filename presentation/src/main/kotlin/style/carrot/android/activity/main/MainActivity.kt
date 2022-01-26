@@ -110,9 +110,7 @@ class MainActivity : ComponentActivity() {
             return
         }
 
-        vm.loadStyledUrls(uuid = uuid) { styledUrls ->
-            // LaunchedEffect가 호출된 후에 이 로직이 실행됨;;
-            vm.directEmitStyledUrls(styledUrls)
+        vm.loadStyledUrls(uuid = uuid) {
             isReady = true
         }
 
@@ -156,13 +154,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
-        /*lifecycleScope.launch {
-            vm.styledUrls.collect {
-                logeukes { "Collected: $it" }
-                return@collect
-            }
-        }*/
     }
 
     @Composable
@@ -176,10 +167,6 @@ class MainActivity : ComponentActivity() {
         val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val coroutineScope = rememberCoroutineScope()
         var termsOfServiceDialogVisible by remember { mutableStateOf(false) }
-
-        logeukes { "MainContent ViewModel instance: $vm" }
-        logeukes { "MainContent styledUrls value: $styledUrls" }
-        // logeukes { "test flow value: $testFlow" }
 
         LaunchedEffect(Unit) {
             systemUiController.setSystemBarsColor(backgroundColor)
@@ -219,7 +206,6 @@ class MainActivity : ComponentActivity() {
                             modalBottomSheetState.hide()
                         }
                     },
-                    vm = vm,
                     uuid = uuid
                 )
             },
@@ -234,7 +220,6 @@ class MainActivity : ComponentActivity() {
                     FloatingActionButton(onClick = {
                         coroutineScope.launch {
                             modalBottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
-                            // vm.testDirectlyEmit()
                         }
                     }) {
                         Icon(
@@ -264,7 +249,7 @@ class MainActivity : ComponentActivity() {
                                 EmptyStyled()
                             }
                             else -> {
-                                LazyStyledCard(vm = vm, uuid = uuid)
+                                LazyStyledCard(uuid = uuid)
                             }
                         }
                     }

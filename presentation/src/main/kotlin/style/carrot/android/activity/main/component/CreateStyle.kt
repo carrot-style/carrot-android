@@ -37,11 +37,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import style.carrot.android.R
 import style.carrot.android.activity.main.MainViewModel
 import style.carrot.android.domain.model.StyledUrl
+import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.ui.HeightSpacer
 import style.carrot.android.util.extension.checkHttpAndAutoInsert
 import style.carrot.android.util.extension.toast
@@ -55,12 +58,8 @@ private val DefaultStyleTextFieldValue = TextFieldValue(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CreateStyle(
-    modifier: Modifier,
-    hideModalBottomSheetAction: () -> Unit,
-    vm: MainViewModel,
-    uuid: String,
-) {
+fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit, uuid: String) {
+    val vm: MainViewModel = viewModel()
     var styledUrlField by remember { mutableStateOf(DefaultStyleTextFieldValue) }
     var fullUrlField by remember { mutableStateOf(TextFieldValue()) }
     var memoField by remember { mutableStateOf(TextFieldValue()) }
@@ -197,7 +196,7 @@ fun CreateStyle(
     }
 }
 
-/*@Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
 private fun PreviewCreateStyle() {
     CarrotStyleTheme {
@@ -205,7 +204,6 @@ private fun PreviewCreateStyle() {
             modifier = Modifier,
             hideModalBottomSheetAction = {},
             uuid = "",
-            vm = MainViewModel()
         )
     }
-}*/
+}

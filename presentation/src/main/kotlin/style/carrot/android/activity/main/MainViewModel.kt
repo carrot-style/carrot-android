@@ -12,7 +12,6 @@ package style.carrot.android.activity.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.jisungbin.logeukes.logeukes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,17 +50,17 @@ class MainViewModel @Inject constructor(
      * Flow는 같은 인스턴스는 다시 방출하지 않으므로 매 요청마다 List 인스턴스를 다르게 해줘야 함 -> immutable 처리
      */
     private val _styledUrls = MutableStateFlow(emptyList<StyledUrl>())
-    private val styledUrlsValue get() = _styledUrls.value
     val styledUrls = _styledUrls.asStateFlow()
 
     /**
      * [StyledUrl] 리스트 firestore에서 조회
      */
-    fun loadStyledUrls(uuid: String, doneAction: (List<StyledUrl>) -> Unit) =
+    fun loadStyledUrls(uuid: String, doneAction: () -> Unit) =
         viewModelScope.launch {
             loadStyledUrlsUseCase(uuid = uuid)
                 .onSuccess { styledUrls ->
-                    doneAction(styledUrls)
+                    _styledUrls.value = styledUrls
+                    doneAction()
                 }
                 .onFailure { throwable ->
                     throwable.emit()
@@ -132,21 +131,13 @@ class MainViewModel @Inject constructor(
     }
 
     fun deleteStyledUrl(uuid: String, styledUrl: StyledUrl) = viewModelScope.launch {
-        logeukes { "call: deleteStyledUrl" }
         deleteStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)
             .onSuccess {
-                logeukes { "success: deleteStyledUrl" }
-                logeukes { "before: styledUrlsValue: $styledUrlsValue" }
-                logeukes { "to remove value: $styledUrl" }
-                // styledUrlsValue.remove(styledUrl)
                 _styledUrls.update { it - styledUrl }
-                logeukes { "after styledUrlsValue: $styledUrlsValue" }
             }
             .onFailure { throwable ->
-                logeukes { "failured: deleteStyledUrl" }
                 throwable.emit()
             }
-        logeukes { "end: deleteStyledUrl" }
     }
 
     /**
@@ -159,22 +150,16 @@ class MainViewModel @Inject constructor(
      */
     private suspend fun addStyledUrl(uuid: String, styledUrl: StyledUrl): Throwable? =
         suspendCancellableCoroutine { continutation ->
-            logeukes { "call: addStyledUrl" }
             viewModelScope.launch {
                 addStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)
                     .onSuccess {
-                        logeukes { "success: addStyledUrl" }
-                        logeukes { "before: styledUrlsValue: $styledUrlsValue" }
-                        logeukes { "to add value: $styledUrl" }
                         _styledUrls.update { it + styledUrl }
-                        logeukes { "after styledUrlsValue: $styledUrlsValue" }
                         continutation.resume(null)
                     }
                     .onFailure { throwable ->
                         continutation.resume(throwable)
                     }
             }
-            logeukes { "end: addStyledUrl" }
         }
 
     private suspend fun Throwable.emit() {
