@@ -23,6 +23,14 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/Theme.CarrotStyle" />
+
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:theme="@style/Theme.CarrotStyle" />
+
         <activity android:name=".activity.error.ErrorActivity" />
 
     </application>
