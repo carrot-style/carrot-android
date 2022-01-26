@@ -21,6 +21,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,6 +54,7 @@ import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.systemBarsPadding
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jisungbin.logeukes.LoggerType
 import io.github.jisungbin.logeukes.logeukes
@@ -233,6 +235,14 @@ class MainActivity : ComponentActivity() {
                         )
                 ) {
                     Text(
+                        modifier = Modifier.clickable {
+                            startActivity(
+                                Intent(
+                                    this@MainActivity,
+                                    OssLicensesMenuActivity::class.java
+                                )
+                            )
+                        },
                         text = stringResource(R.string.app_name),
                         style = MaterialTheme.typography.h3,
                     )
