@@ -17,6 +17,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
+import io.github.jisungbin.logeukes.LoggerType
 import io.github.jisungbin.logeukes.logeukes
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -53,7 +54,9 @@ object RetrofitModule {
     }
 
     private fun provideHttpLoggingInterceptor() =
-        HttpLoggingInterceptor { message -> logeukes("OkHttp") { message } }.apply {
+        HttpLoggingInterceptor { message ->
+            logeukes(tag = "OkHttp", type = LoggerType.I) { message }
+        }.apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
 

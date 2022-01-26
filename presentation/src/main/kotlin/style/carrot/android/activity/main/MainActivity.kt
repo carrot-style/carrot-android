@@ -51,6 +51,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.systemBarsPadding
@@ -151,6 +152,12 @@ class MainActivity : ComponentActivity() {
                 ProvideWindowInsets {
                     MainContent()
                 }
+            }
+        }
+
+        lifecycleScope.launch {
+            vm.styledUrls.collect {
+                logeukes { "MainActivity vm.styledUrls collect: $it" }
             }
         }
     }

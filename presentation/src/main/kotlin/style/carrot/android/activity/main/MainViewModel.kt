@@ -133,7 +133,7 @@ class MainViewModel @Inject constructor(
             .onSuccess {
                 logeukes { "success: deleteStyledUrl" }
                 logeukes { "before: styledUrlsValue: $styledUrlsValue" }
-                logeukes { "to remove styledUrlsValue: $styledUrl" }
+                logeukes { "to remove value: $styledUrl" }
                 styledUrlsValue.remove(styledUrl)
                 _styledUrls.emit(styledUrlsValue)
                 logeukes { "after styledUrlsValue: $styledUrlsValue" }
@@ -155,16 +155,23 @@ class MainViewModel @Inject constructor(
      */
     private suspend fun addStyledUrl(uuid: String, styledUrl: StyledUrl): Throwable? =
         suspendCancellableCoroutine { continutation ->
+            logeukes { "call: addStyledUrl" }
             viewModelScope.launch {
                 addStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)
                     .onSuccess {
-                        _styledUrls.emit(styledUrlsValue.apply { add(styledUrl) })
+                        logeukes { "success: addStyledUrl" }
+                        logeukes { "before: styledUrlsValue: $styledUrlsValue" }
+                        logeukes { "to add value: $styledUrl" }
+                        styledUrlsValue.add(styledUrl)
+                        _styledUrls.emit(styledUrlsValue)
+                        logeukes { "after styledUrlsValue: $styledUrlsValue" }
                         continutation.resume(null)
                     }
                     .onFailure { throwable ->
                         continutation.resume(throwable)
                     }
             }
+            logeukes { "end: addStyledUrl" }
         }
 
     private suspend fun Throwable.emit() {

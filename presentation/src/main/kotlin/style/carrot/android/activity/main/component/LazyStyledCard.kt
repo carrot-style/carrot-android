@@ -17,14 +17,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.jisungbin.logeukes.logeukes
+import kotlinx.coroutines.launch
 import style.carrot.android.R
 import style.carrot.android.activity.main.MainViewModel
 import style.carrot.android.util.extension.toast
@@ -36,10 +38,13 @@ fun LazyStyledCard(uuid: String) {
     val styledUrlsInstance = vm.styledUrls.collectAsState(emptyList())
     val styledUrls by styledUrlsInstance
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(Unit) {
-        vm.styledUrls.collect {
-            logeukes { "vm.styledUrls.collect: $it" }
+    SideEffect {
+        coroutineScope.launch {
+            vm.styledUrls.collect {
+                logeukes { "LazyStyledCard vm.styledUrls.collect: $it" }
+            }
         }
     }
 
