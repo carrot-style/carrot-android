@@ -41,7 +41,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -55,7 +58,6 @@ import com.google.accompanist.insets.systemBarsPadding
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jisungbin.logeukes.LoggerType
 import io.github.jisungbin.logeukes.logeukes
-import javax.inject.Inject
 import kotlinx.coroutines.launch
 import style.carrot.android.BuildConfig
 import style.carrot.android.R
@@ -63,12 +65,17 @@ import style.carrot.android.activity.error.ErrorActivity
 import style.carrot.android.activity.main.component.CreateStyle
 import style.carrot.android.activity.main.component.EmptyStyled
 import style.carrot.android.activity.main.component.LazyStyledCard
+import style.carrot.android.activity.main.component.TermsOfServiceDialog
 import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.theme.SystemUiController
 import style.carrot.android.util.NetworkUtil
 import style.carrot.android.util.constant.IntentConstant
+import style.carrot.android.util.constant.Key
 import style.carrot.android.util.extension.collectWithLifecycle
+import style.carrot.android.util.extension.get
+import style.carrot.android.util.extension.set
 import style.carrot.android.util.extension.toast
+import javax.inject.Inject
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @AndroidEntryPoint
@@ -147,9 +154,25 @@ class MainActivity : ComponentActivity() {
         val backgroundColor = MaterialTheme.colors.background
         val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val coroutineScope = rememberCoroutineScope()
+        var termsOfServiceDialogVisible by remember { mutableStateOf(false) }
+
+        TermsOfServiceDialog(
+            visible = termsOfServiceDialogVisible,
+            onDismissRequest = { termsOfServiceDialogVisible = false },
+            onConfirmButtonClick = {
+                sharedPreferences[Key.TermsOfServiceAgree] = "true"
+            },
+            onDismissButtonClick = {
+                finish()
+            }
+        )
 
         LaunchedEffect(Unit) {
             systemUiController.setSystemBarsColor(backgroundColor)
+
+            if (sharedPreferences[Key.TermsOfServiceAgree, "false"] == "false") {
+                termsOfServiceDialogVisible = true
+            }
         }
 
         BackHandler(enabled = modalBottomSheetState.isVisible) {

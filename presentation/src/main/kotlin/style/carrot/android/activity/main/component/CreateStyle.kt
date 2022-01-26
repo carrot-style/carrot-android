@@ -12,7 +12,6 @@ package style.carrot.android.activity.main.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -39,7 +38,6 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
@@ -47,6 +45,7 @@ import style.carrot.android.R
 import style.carrot.android.activity.main.MainViewModel
 import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.theme.CarrotStyleTheme
+import style.carrot.android.ui.HeightSpacer
 import style.carrot.android.util.extension.checkHttpAndAutoInsert
 import style.carrot.android.util.extension.toast
 
@@ -99,7 +98,7 @@ fun CreateStyle(modifier: Modifier = Modifier) {
                 value = fullUrlField,
                 onValueChange = { fullUrlField = it }
             )
-            Spacer()
+            HeightSpacer(height = 20.dp)
             Text(
                 text = stringResource(R.string.activity_main_component_createstyle_my_style),
                 style = MaterialTheme.typography.body2
@@ -121,7 +120,7 @@ fun CreateStyle(modifier: Modifier = Modifier) {
                     }
                 }
             )
-            Spacer()
+            HeightSpacer(height = 20.dp)
             Text(
                 text = stringResource(R.string.activity_main_component_createstyle_memo),
                 style = MaterialTheme.typography.body2
@@ -192,11 +191,6 @@ fun CreateStyle(modifier: Modifier = Modifier) {
             Text(text = stringResource(R.string.activity_main_component_createstyle_btn_create))
         }
     }
-}
-
-@Composable
-private fun Spacer(height: Dp = 20.dp) {
-    androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(height))
 }
 
 @Preview(showBackground = true)

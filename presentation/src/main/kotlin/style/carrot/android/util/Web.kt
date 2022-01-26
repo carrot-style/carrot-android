@@ -20,10 +20,8 @@ import style.carrot.android.R
 import style.carrot.android.util.extension.toast
 
 object Web {
-    object Link {
-        const val TermsOfService =
-            "https://github.com/carrot-style/terms-of-service/blob/main/README.md"
-    }
+    const val TermsOfServiceUrl =
+        "https://github.com/carrot-style/terms-of-service/blob/main/README.md"
 
     suspend fun parse(url: String) = runCatching {
         withContext(Dispatchers.IO) {

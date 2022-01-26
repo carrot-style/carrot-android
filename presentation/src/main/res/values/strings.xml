@@ -16,13 +16,16 @@
     <string name="activity_error_btn_retry">Retry</string>
 
     <string name="activity_main_toast_error">An error has occurred 😢. Please try again later.</string>
-    <string name="activity_main_dialog_use_notice">In order to use carrot.style service, you need to agree to the terms of service.</string>
-    <string name="activity_main_dialog_section_terms_of_service">[terms of service]</string>
-    <string name="activity_main_dialog_btn_agree">agree</string>
-    <string name="activity_main_dialog_btn_disagree">disagree</string>
+
+    <string name="activity_main_component_termsofservicedialog_notice">In order to use carrot.style service, you need to agree to the terms of service.</string>
+    <string name="activity_main_component_termsofservicedialog_section_terms_of_service">[terms of service]</string>
+    <string name="activity_main_component_termsofservicedialog_btn_agree">agree</string>
+    <string name="activity_main_component_termsofservicedialog_btn_disagree">disagree</string>
 
     <string name="activity_main_component_emptystyled_make_first_styled">Make your first carrot-style!</string>
+
     <string name="activity_main_component_styledcard_toast_copied">Copied.</string>
+
     <string name="activity_main_component_createstyle_btn_create">Create</string>
     <string name="activity_main_component_createstyle_full_address">Full address:</string>
     <string name="activity_main_component_createstyle_my_style">My style: (max 15 length)</string>
