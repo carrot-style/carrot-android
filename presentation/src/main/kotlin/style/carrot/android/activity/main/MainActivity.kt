@@ -38,22 +38,18 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.systemBarsPadding
@@ -73,6 +69,7 @@ import style.carrot.android.theme.SystemUiController
 import style.carrot.android.util.NetworkUtil
 import style.carrot.android.util.constant.IntentConstant
 import style.carrot.android.util.constant.Key
+import style.carrot.android.util.extension.collectAsStateWithLifecycleRemember
 import style.carrot.android.util.extension.collectWithLifecycle
 import style.carrot.android.util.extension.get
 import style.carrot.android.util.extension.set
@@ -158,11 +155,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun MainContent() {
-        val lifecycleOwner = LocalLifecycleOwner.current
-        val styledUrlsFlowLifecycleAware = remember(vm.styledUrls, lifecycleOwner) {
-            vm.styledUrls.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-        }
-        val styledUrls by styledUrlsFlowLifecycleAware.collectAsState(emptyList())
+        val styledUrls by vm.styledUrls.collectAsStateWithLifecycleRemember(emptyList())
         val backgroundColor = MaterialTheme.colors.background
         val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val coroutineScope = rememberCoroutineScope()
