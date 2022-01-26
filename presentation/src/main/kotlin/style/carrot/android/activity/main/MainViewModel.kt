@@ -16,7 +16,6 @@ import io.github.jisungbin.logeukes.logeukes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -49,10 +48,11 @@ class MainViewModel @Inject constructor(
 
     /**
      * `StateFlow<T>.collectAsState` 로 받아서 처리해야 함 -> [Flow]로 작성
+     * Flow는 같은 인스턴스는 다시 방출하지 않으므로 매 요청마다 List 인스턴스를 다르게 해줘야 함 -> immutable 처리
      */
-    private val _styledUrls = MutableStateFlow(mutableListOf<StyledUrl>())
+    private val _styledUrls = MutableStateFlow(emptyList<StyledUrl>())
     private val styledUrlsValue get() = _styledUrls.value
-    val styledUrls: StateFlow<List<StyledUrl>> = _styledUrls.asStateFlow()
+    val styledUrls = _styledUrls.asStateFlow()
 
     /**
      * [StyledUrl] 리스트 firestore에서 조회
@@ -128,7 +128,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun directEmitStyledUrls(styledUrls: List<StyledUrl>) = viewModelScope.launch {
-        _styledUrls.emit(styledUrls.toMutableList())
+        _styledUrls.value = styledUrls
     }
 
     fun deleteStyledUrl(uuid: String, styledUrl: StyledUrl) = viewModelScope.launch {
@@ -139,7 +139,7 @@ class MainViewModel @Inject constructor(
                 logeukes { "before: styledUrlsValue: $styledUrlsValue" }
                 logeukes { "to remove value: $styledUrl" }
                 // styledUrlsValue.remove(styledUrl)
-                _styledUrls.update { it.apply { remove(styledUrl) } }
+                _styledUrls.update { it - styledUrl }
                 logeukes { "after styledUrlsValue: $styledUrlsValue" }
             }
             .onFailure { throwable ->
@@ -166,8 +166,7 @@ class MainViewModel @Inject constructor(
                         logeukes { "success: addStyledUrl" }
                         logeukes { "before: styledUrlsValue: $styledUrlsValue" }
                         logeukes { "to add value: $styledUrl" }
-                        // styledUrlsValue.add(styledUrl)
-                        _styledUrls.update { it.apply { add(styledUrl) } }
+                        _styledUrls.update { it + styledUrl }
                         logeukes { "after styledUrlsValue: $styledUrlsValue" }
                         continutation.resume(null)
                     }

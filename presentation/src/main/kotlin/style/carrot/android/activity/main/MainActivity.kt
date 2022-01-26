@@ -54,7 +54,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.systemBarsPadding
@@ -158,11 +157,12 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        lifecycleScope.launch {
+        /*lifecycleScope.launch {
             vm.styledUrls.collect {
-                logeukes { "MainActivity vm.styledUrls collect: $it" }
+                logeukes { "Collected: $it" }
+                return@collect
             }
-        }
+        }*/
     }
 
     @Composable
@@ -179,6 +179,7 @@ class MainActivity : ComponentActivity() {
 
         logeukes { "MainContent ViewModel instance: $vm" }
         logeukes { "MainContent styledUrls value: $styledUrls" }
+        // logeukes { "test flow value: $testFlow" }
 
         LaunchedEffect(Unit) {
             systemUiController.setSystemBarsColor(backgroundColor)
@@ -233,6 +234,7 @@ class MainActivity : ComponentActivity() {
                     FloatingActionButton(onClick = {
                         coroutineScope.launch {
                             modalBottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                            // vm.testDirectlyEmit()
                         }
                     }) {
                         Icon(
