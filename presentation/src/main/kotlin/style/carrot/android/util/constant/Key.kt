@@ -11,4 +11,5 @@ package style.carrot.android.util.constant
 
 object Key {
     const val Uuid = "carrot-device-uuid"
+    const val TermsOfServiceAgree = "carrot-terms-of-service-agree"
 }
