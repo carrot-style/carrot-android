@@ -25,12 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import style.carrot.android.R
 import style.carrot.android.activity.main.MainViewModel
-import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.util.extension.toast
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LazyStyledCard(uuid: String, expandEditStyleModalBottomSheet: (StyledUrl) -> Unit) {
+fun LazyStyledCard(uuid: String) {
     val vm: MainViewModel = viewModel()
     val styledUrls by vm.styledUrls.collectAsState(emptyList())
     val context = LocalContext.current
@@ -46,9 +45,6 @@ fun LazyStyledCard(uuid: String, expandEditStyleModalBottomSheet: (StyledUrl) ->
             StyledCard(
                 modifier = Modifier.animateItemPlacement(),
                 styledUrl = styledUrl,
-                onDismissedToEdit = { _styledUrl ->
-                    expandEditStyleModalBottomSheet(_styledUrl)
-                },
                 onDismissedToDelete = { _styledUrl ->
                     toast(context) {
                         getString(R.string.activity_main_component_createstyle_toast_deleting)

@@ -49,20 +49,21 @@ class MainViewModel @Inject constructor(
     private val styledUrlsValue get() = _styledUrls.value
     val styledUrls: Flow<List<StyledUrl>> = _styledUrls.asStateFlow()
 
+    suspend fun testEmit() = _styledUrls.emit(styledUrlsValue.apply { add(StyledUrl()) })
+
     /**
      * [StyledUrl] 리스트 firestore에서 조회
-     * 요청 성공시 [StyledUrl] 리스트를 [styledUrls]에 넘겨줌
      */
-    fun loadStyledUrlsWithDoneAction(uuid: String, doneAction: () -> Unit) = viewModelScope.launch {
-        loadStyledUrlsUseCase(uuid = uuid)
-            .onSuccess { styledUrls ->
-                _styledUrls.emit(styledUrls.toMutableList())
-                doneAction()
-            }
-            .onFailure { throwable ->
-                throwable.emit()
-            }
-    }
+    fun loadStyledUrls(uuid: String, doneAction: (List<StyledUrl>) -> Unit) =
+        viewModelScope.launch {
+            loadStyledUrlsUseCase(uuid = uuid)
+                .onSuccess { styledUrls ->
+                    doneAction(styledUrls)
+                }
+                .onFailure { throwable ->
+                    throwable.emit()
+                }
+        }
 
     /**
      * 요청 상황이 2가지임
@@ -122,6 +123,9 @@ class MainViewModel @Inject constructor(
                 }
         }
     }
+
+    suspend fun directEmitStyledUrls(styledUrls: List<StyledUrl>) =
+        _styledUrls.emit(styledUrls.toMutableList())
 
     fun deleteStyledUrl(uuid: String, styledUrl: StyledUrl) = viewModelScope.launch {
         deleteStyledUrlUseCase(uuid = uuid, styledUrl = styledUrl)

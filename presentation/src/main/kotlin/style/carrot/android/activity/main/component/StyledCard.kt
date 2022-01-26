@@ -54,9 +54,9 @@ import style.carrot.android.util.extension.toast
 fun StyledCard(
     modifier: Modifier,
     styledUrl: StyledUrl,
-    onDismissedToEdit: (styledUrl: StyledUrl) -> Unit,
     onDismissedToDelete: (styledUrl: StyledUrl) -> Unit,
 ) {
+    val context = LocalContext.current
     val shape = RoundedCornerShape(30.dp)
     val backgroundColor = Color(240, 240, 240)
     val dismissState = rememberDismissState(confirmStateChange = { dismissValue ->
@@ -65,7 +65,9 @@ fun StyledCard(
                 false
             }
             DismissValue.DismissedToEnd -> { // -> 방향 스와이프 (수정)
-                onDismissedToEdit(styledUrl)
+                toast(context) {
+                    getString(R.string.activity_main_component_styledcard_toast_support_in_progress)
+                }
                 false
             }
             DismissValue.DismissedToStart -> { // <- 방향 스와이프 (삭제)
@@ -166,7 +168,6 @@ private fun PreviewStyledCard() {
         StyledCard(
             modifier = Modifier,
             styledUrl = StyledUrl("carrot.style/test", "www.naver.com", "just carrot-style."),
-            onDismissedToEdit = {},
             onDismissedToDelete = {}
         )
     }

@@ -167,6 +167,7 @@ fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit, uuid
                                     sha = "",
                                     uuid = uuid
                                 )
+                                focusManager.clearFocus()
                                 hideModalBottomSheetAction()
                             } else {
                                 toast(context) {
@@ -184,6 +185,7 @@ fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit, uuid
                                 sha = vm.getStyledSha(newStyledUrl) ?: return@launch,
                                 uuid = uuid
                             )
+                            focusManager.clearFocus()
                             hideModalBottomSheetAction()
                         }
                     }

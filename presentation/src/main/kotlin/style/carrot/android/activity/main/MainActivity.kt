@@ -32,7 +32,6 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -66,6 +65,7 @@ import style.carrot.android.activity.main.component.CreateStyle
 import style.carrot.android.activity.main.component.EmptyStyled
 import style.carrot.android.activity.main.component.LazyStyledCard
 import style.carrot.android.activity.main.component.TermsOfServiceDialog
+import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.theme.CarrotStyleTheme
 import style.carrot.android.theme.SystemUiController
 import style.carrot.android.util.NetworkUtil
@@ -85,6 +85,7 @@ class MainActivity : ComponentActivity() {
     private var isReady = false
     private val vm: MainViewModel by viewModels()
     private val systemUiController by lazy { SystemUiController(window) }
+    private var styledUrls = emptyList<StyledUrl>()
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
@@ -108,7 +109,8 @@ class MainActivity : ComponentActivity() {
             return
         }
 
-        vm.loadStyledUrlsWithDoneAction(uuid = uuid) {
+        vm.loadStyledUrls(uuid = uuid) { styledUrls ->
+            this.styledUrls = styledUrls
             isReady = true
         }
         vm.exceptionFlow.collectWithLifecycle(lifecycleOwner = this, action = ::handleException)
@@ -174,6 +176,8 @@ class MainActivity : ComponentActivity() {
 
         LaunchedEffect(Unit) {
             systemUiController.setSystemBarsColor(backgroundColor)
+            vm.testEmit()
+            vm.directEmitStyledUrls(this@MainActivity.styledUrls)
 
             if (sharedPreferences[Key.TermsOfServiceAgree, "false"] == "false") {
                 termsOfServiceDialogVisible = true
@@ -183,12 +187,6 @@ class MainActivity : ComponentActivity() {
         BackHandler(enabled = modalBottomSheetState.isVisible) {
             coroutineScope.launch {
                 modalBottomSheetState.hide()
-            }
-        }
-
-        fun ModalBottomSheetState.expandFull() {
-            coroutineScope.launch {
-                animateTo(ModalBottomSheetValue.Expanded)
             }
         }
 
@@ -217,7 +215,9 @@ class MainActivity : ComponentActivity() {
                     .systemBarsPadding(),
                 floatingActionButton = {
                     FloatingActionButton(onClick = {
-                        modalBottomSheetState.expandFull()
+                        coroutineScope.launch {
+                            modalBottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                        }
                     }) {
                         Icon(
                             painter = painterResource(R.drawable.ic_round_add_24),
@@ -246,13 +246,7 @@ class MainActivity : ComponentActivity() {
                                 EmptyStyled()
                             }
                             else -> {
-                                LazyStyledCard(
-                                    uuid = uuid,
-                                    expandEditStyleModalBottomSheet = { styledUrl ->
-                                        vm.styledUrlForUpdate = styledUrl
-                                        modalBottomSheetState.expandFull()
-                                    }
-                                )
+                                LazyStyledCard(uuid = uuid)
                             }
                         }
                     }
