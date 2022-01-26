@@ -10,8 +10,13 @@
 package style.carrot.android.activity.main.component
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.LocalTextStyle
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -39,18 +44,7 @@ fun TermsOfServiceDialog(
                 dismissOnClickOutside = false
             ),
             onDismissRequest = { onDismissRequest() },
-            confirmButton = {
-                Text(
-                    modifier = Modifier.clickable { onConfirmButtonClick() },
-                    text = stringResource(R.string.activity_main_component_termsofservicedialog_btn_agree)
-                )
-            },
-            dismissButton = {
-                Text(
-                    modifier = Modifier.clickable { onDismissButtonClick() },
-                    text = stringResource(R.string.activity_main_component_termsofservicedialog_btn_disagree)
-                )
-            },
+            buttons = {},
             text = {
                 Column {
                     Text(text = stringResource(R.string.activity_main_component_termsofservicedialog_notice))
@@ -59,8 +53,18 @@ fun TermsOfServiceDialog(
                         modifier = Modifier.clickable {
                             Web.open(context = context, url = Web.TermsOfServiceUrl)
                         },
-                        text = stringResource(R.string.activity_main_component_termsofservicedialog_section_terms_of_service)
+                        text = stringResource(R.string.activity_main_component_termsofservicedialog_section_terms_of_service),
+                        style = LocalTextStyle.current.copy(color = MaterialTheme.colors.primary)
                     )
+                    HeightSpacer(height = 20.dp)
+                    Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+                        Button(onClick = { onDismissButtonClick() }) {
+                            Text(text = stringResource(R.string.activity_main_component_termsofservicedialog_btn_disagree))
+                        }
+                        Button(onClick = { onConfirmButtonClick() }) {
+                            Text(text = stringResource(R.string.activity_main_component_termsofservicedialog_btn_agree))
+                        }
+                    }
                 }
             }
         )

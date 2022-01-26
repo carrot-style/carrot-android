@@ -161,6 +161,7 @@ class MainActivity : ComponentActivity() {
             onDismissRequest = { termsOfServiceDialogVisible = false },
             onConfirmButtonClick = {
                 sharedPreferences[Key.TermsOfServiceAgree] = "true"
+                termsOfServiceDialogVisible = false
             },
             onDismissButtonClick = {
                 finish()
