@@ -20,6 +20,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.jisungbin.logeukes.logeukes
 import style.carrot.android.activity.main.MainViewModel
 import style.carrot.android.domain.model.StyledUrl
 
@@ -30,7 +31,7 @@ fun LazyStyledCard(
     expandEditStyleModalBottomSheet: (StyledUrl) -> Unit,
 ) {
     val vm: MainViewModel = viewModel()
-    println("D: $vm")
+    logeukes { "D: $vm" }
 
     LazyColumn( // TODO: fading edge
         modifier = Modifier.padding(top = 16.dp),

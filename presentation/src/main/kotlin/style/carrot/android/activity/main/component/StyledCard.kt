@@ -55,10 +55,10 @@ fun StyledCard(
     modifier: Modifier,
     styledUrl: StyledUrl,
     onEditClick: (styledUrl: StyledUrl) -> Unit,
-    onDeleteClick: (styledUrl: StyledUrl) -> Unit
+    onDeleteClick: (styledUrl: StyledUrl) -> Unit,
 ) {
     val shape = RoundedCornerShape(30.dp)
-    val backgroundColor = Color(242, 240, 240)
+    val backgroundColor = Color(240, 240, 240)
     val dismissState = rememberDismissState(confirmStateChange = { dismissValue ->
         when (dismissValue) {
             DismissValue.Default -> { // dismissThresholds 만족 안한 상태

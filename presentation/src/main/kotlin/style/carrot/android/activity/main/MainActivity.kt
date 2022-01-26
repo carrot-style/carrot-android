@@ -103,7 +103,7 @@ class MainActivity : ComponentActivity() {
             return
         }
 
-        println("A: $vm")
+        logeukes { "A: $vm" }
         vm.loadStyledUrlsWithDoneAction {
             isReady = true
         }
@@ -150,8 +150,9 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun MainContent() {
-        println("B: $vm")
         val styledUrls by vm.styledUrls.collectAsState(emptyList())
+        logeukes { "B: $vm" }
+        logeukes { styledUrls }
         val styledUrlStateList = remember { mutableStateListOf(*styledUrls.toTypedArray()) }
         val backgroundColor = MaterialTheme.colors.background
         val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -197,7 +198,12 @@ class MainActivity : ComponentActivity() {
                         .navigationBarsWithImePadding()
                         .height(450.dp)
                         .fillMaxWidth()
-                        .padding(30.dp)
+                        .padding(30.dp),
+                    hideModalBottomSheetAction = {
+                        coroutineScope.launch {
+                            modalBottomSheetState.hide()
+                        }
+                    }
                 )
             },
             sheetState = modalBottomSheetState,

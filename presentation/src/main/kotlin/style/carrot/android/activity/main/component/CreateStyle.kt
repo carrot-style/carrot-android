@@ -40,6 +40,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.jisungbin.logeukes.logeukes
 import kotlinx.coroutines.launch
 import style.carrot.android.R
 import style.carrot.android.activity.main.MainViewModel
@@ -58,9 +59,9 @@ private val DefaultStyleTextFieldValue = TextFieldValue(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CreateStyle(modifier: Modifier = Modifier) {
+fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit) {
     val vm: MainViewModel = viewModel()
-    println("C: $vm")
+    logeukes { "C: $vm" }
 
     var styledUrlField by remember { mutableStateOf(DefaultStyleTextFieldValue) }
     var fullUrlField by remember { mutableStateOf(TextFieldValue()) }
@@ -167,6 +168,7 @@ fun CreateStyle(modifier: Modifier = Modifier) {
                                     ),
                                     sha = ""
                                 )
+                                hideModalBottomSheetAction()
                             } else {
                                 toast(
                                     context,
@@ -183,6 +185,7 @@ fun CreateStyle(modifier: Modifier = Modifier) {
                                 ),
                                 sha = vm.getStyledSha(newStyledUrl) ?: return@launch
                             )
+                            hideModalBottomSheetAction()
                         }
                     }
                 }
@@ -197,6 +200,6 @@ fun CreateStyle(modifier: Modifier = Modifier) {
 @Composable
 private fun PreviewCreateStyle() {
     CarrotStyleTheme {
-        CreateStyle()
+        CreateStyle(modifier = Modifier, hideModalBottomSheetAction = {})
     }
 }
