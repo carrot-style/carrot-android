@@ -17,8 +17,6 @@ Carrot-style with android.
 
 ### Design Preview
 
-> ⚠️ The icon picture I obtained is a png, not a vector, so the [icon](https://github.com/carrot-style/carrot-android/blob/main/presentation/src/main/res/drawable/ic_splash_logo.png) quality is bad in the splash screen.
-
 - [Error screen](https://youtu.be/q3Hqfr9-cYw) (Material You)
 - Main screen (todo, not perfect yet)
 
