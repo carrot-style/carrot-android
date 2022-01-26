@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jisungbin.logeukes.logeukes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -48,7 +49,7 @@ class MainViewModel @Inject constructor(
      */
     private val _styledUrls = MutableStateFlow(mutableListOf<StyledUrl>())
     private val styledUrlsValue get() = _styledUrls.value
-    val styledUrls: Flow<List<StyledUrl>> = _styledUrls.asStateFlow()
+    val styledUrls: StateFlow<List<StyledUrl>> = _styledUrls.asStateFlow()
 
     /**
      * [StyledUrl] 리스트 firestore에서 조회
