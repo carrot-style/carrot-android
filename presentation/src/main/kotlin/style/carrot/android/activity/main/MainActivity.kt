@@ -111,6 +111,8 @@ class MainActivity : ComponentActivity() {
 
         vm.loadStyledUrls(uuid = uuid) { styledUrls ->
             this.styledUrls = styledUrls
+            logeukes { styledUrls }
+            logeukes { "finished" }
             isReady = true
         }
         vm.exceptionFlow.collectWithLifecycle(lifecycleOwner = this, action = ::handleException)
@@ -133,6 +135,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val localView = LocalView.current
+            // view.doOnPreDraw는 리턴값이 무조건 true라 안됨
             localView.viewTreeObserver.addOnPreDrawListener(
                 object : ViewTreeObserver.OnPreDrawListener {
                     override fun onPreDraw(): Boolean {
@@ -157,6 +160,8 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun MainContent() {
         val styledUrls by vm.styledUrls.collectAsState(emptyList())
+        logeukes { styledUrls }
+        logeukes { vm }
         val backgroundColor = MaterialTheme.colors.background
         val modalBottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val coroutineScope = rememberCoroutineScope()
@@ -178,6 +183,8 @@ class MainActivity : ComponentActivity() {
             systemUiController.setSystemBarsColor(backgroundColor)
             vm.testEmit()
             vm.directEmitStyledUrls(this@MainActivity.styledUrls)
+            logeukes { "A" }
+            logeukes { this@MainActivity.styledUrls }
 
             if (sharedPreferences[Key.TermsOfServiceAgree, "false"] == "false") {
                 termsOfServiceDialogVisible = true
