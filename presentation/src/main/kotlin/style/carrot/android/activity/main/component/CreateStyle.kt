@@ -77,6 +77,14 @@ fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit, uuid
     val focusManager = LocalFocusManager.current
     val coroutineScope = rememberCoroutineScope()
 
+    fun closeWithReset() {
+        styledUrlField = DefaultStyleTextFieldValue
+        fullUrlField = TextFieldValue()
+        memoField = TextFieldValue()
+        focusManager.clearFocus()
+        hideModalBottomSheetAction()
+    }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
@@ -174,8 +182,7 @@ fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit, uuid
                                     sha = "",
                                     uuid = uuid
                                 )
-                                focusManager.clearFocus()
-                                hideModalBottomSheetAction()
+                                closeWithReset()
                             } else {
                                 toast(context) {
                                     getString(R.string.activity_main_component_createstyle_toast_already_used_styled)
@@ -192,8 +199,7 @@ fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit, uuid
                                 sha = vm.getStyledSha(newStyledUrl) ?: return@launch,
                                 uuid = uuid
                             )
-                            focusManager.clearFocus()
-                            hideModalBottomSheetAction()
+                            closeWithReset()
                         }
                     }
                 }

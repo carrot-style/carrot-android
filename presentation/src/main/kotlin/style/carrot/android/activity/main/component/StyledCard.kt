@@ -152,7 +152,10 @@ private fun CarrotUrlCard(styledUrl: StyledUrl, backgroundColor: Color, shape: S
             modifier = Modifier.padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(text = styledUrl.styled, style = MaterialTheme.typography.h6)
+            Text(
+                text = styledUrl.styled.replaceLast(".html", ""),
+                style = MaterialTheme.typography.h6
+            )
             Text(
                 text = styledUrl.memo,
                 style = MaterialTheme.typography.body2
