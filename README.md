@@ -2,6 +2,9 @@
 
 Carrot-style with android.
 
+## Downlaod
+[Google Playstore](https://play.google.com/store/apps/details?id=style.carrot.android)
+
 ---
 
 ### Dev Skill
@@ -32,7 +35,3 @@ Carrot-style with android.
 - [ ] Edit/delete shorten link (currently, only delete is supported)
 - [x] Check duplicate link when shorten
 - [x] Auto add `http://`
-
-### Downlaod
-[Google Playstore](https://play.google.com/store/apps/details?id=style.carrot.android)
-
