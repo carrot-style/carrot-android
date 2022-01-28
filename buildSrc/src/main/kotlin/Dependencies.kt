@@ -69,6 +69,7 @@ object Versions {
         const val Arch = "1.1.1"
         const val JUnit = "4.13.2"
         const val Mockk = "1.12.2"
+        const val MockWebServer = "4.9.3"
     }
 }
 
@@ -134,6 +135,7 @@ object Dependencies {
         "junit:junit:${Versions.Test.JUnit}",
         "io.mockk:mockk:${Versions.Test.Mockk}",
         "android.arch.core:core-testing:${Versions.Test.Arch}",
+        "com.squareup.okhttp3:mockwebserver:${Versions.Test.MockWebServer}",
         "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.Essential.Coroutines}"
     )
 }

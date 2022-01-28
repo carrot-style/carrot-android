@@ -52,6 +52,5 @@ class StylingTest {
     fun `엄청 긴 주소를 요청했을 때 통과해야 함`(): Unit = runBlocking {
         val veryLongAddress = "www.${"url".repeat(100)}.com"
         val request = stylingUrlUseCase(path = "testlong.html", url = veryLongAddress, sha = "")
-
     }
 }
