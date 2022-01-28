@@ -170,7 +170,7 @@ private fun PreviewStyledCard() {
     CarrotStyleTheme {
         StyledCard(
             modifier = Modifier,
-            styledUrl = StyledUrl("carrot.style/test", "www.naver.com", "just carrot-style."),
+            styledUrl = StyledUrl("carrot.style/androidTest", "www.naver.com", "just carrot-style."),
             onDismissedToDelete = {}
         )
     }

@@ -26,7 +26,7 @@ import style.carrot.android.domain.model.StyledUrl
 import style.carrot.android.domain.repository.CarrotRepository
 import kotlin.coroutines.resume
 
-class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
+open class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
 
     private val firestore by lazy { Firebase.firestore }
     private val api = signedRetrofit.create(GithubRepoService::class.java)
@@ -43,7 +43,7 @@ class CarrotRepositoryImpl(signedRetrofit: Retrofit) : CarrotRepository {
                 }
         }
 
-    override suspend fun stylingUrl(path: String, url: String, sha: String) {
+    open override suspend fun stylingUrl(path: String, url: String, sha: String) {
         val githubFile = GithubFile(
             content = url.toRedirectContent().toBase64(),
             sha = sha

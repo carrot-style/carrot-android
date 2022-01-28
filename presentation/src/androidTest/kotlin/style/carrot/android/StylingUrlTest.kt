@@ -11,12 +11,13 @@ package style.carrot.android
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import style.carrot.android.data.repository.CarrotRepositoryImpl
-import style.carrot.android.di.module.RetrofitModule
 import style.carrot.android.domain.repository.CarrotRepository
 
 @ExperimentalCoroutinesApi
@@ -24,14 +25,17 @@ import style.carrot.android.domain.repository.CarrotRepository
 @RunWith(MockitoJUnitRunner::class)
 class StylingUrlTest {
 
-    private val repository: CarrotRepository =
-        CarrotRepositoryImpl(RetrofitModule.provideSignedRetrofit())
+    private lateinit var repository: CarrotRepository
+
+    @Before
+    fun mocking() {
+        repository = mock(CarrotRepositoryImpl::class.java)
+    }
 
     @Test
-    fun `엄청 긴 URL을 단축 요청 했을때 성공해야 함`() = runTest {
-        val path = "test.html"
+    fun androidTest_stylingRequest_return() = runTest {
+        val path = "androidTest.html"
         val url = "https://${"URL".repeat(100)}.com"
-        val request = repository.stylingUrl(path = path, url = url, sha = "")
-        `when`(request).thenThrow(Exception())
+        `when`(repository.stylingUrl(path = path, url = url, sha = "")).thenThrow(Exception())
     }
 }

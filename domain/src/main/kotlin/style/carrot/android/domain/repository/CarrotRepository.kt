@@ -11,7 +11,7 @@ package style.carrot.android.domain.repository
 
 import style.carrot.android.domain.model.StyledUrl
 
-interface CarrotRepository {
+open interface CarrotRepository {
     /**
      * @return 만약 파일이 있다면 해당 파일의 sha값을 리턴하고, 파일이 없다면 null을 리턴함
      */
@@ -22,7 +22,7 @@ interface CarrotRepository {
      * @param url 단축될 링크
      * @param sha 업데이트하는 값이라면 sha가 필요함, 만약 새로 생성이라면 "" 들어옴
      */
-    suspend fun stylingUrl(path: String, url: String, sha: String)
+    open suspend fun stylingUrl(path: String, url: String, sha: String)
 
     suspend fun loadStyledUrls(uuid: String): List<StyledUrl>
 
