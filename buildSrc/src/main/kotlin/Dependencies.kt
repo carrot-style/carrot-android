@@ -136,6 +136,9 @@ object Dependencies {
         "io.mockk:mockk:${Versions.Test.Mockk}",
         "android.arch.core:core-testing:${Versions.Test.Arch}",
         "com.squareup.okhttp3:mockwebserver:${Versions.Test.MockWebServer}",
-        "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.Essential.Coroutines}"
+        "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.Essential.Coroutines}",
+        "androidx.test:core:1.4.0",
+        "org.mockito:mockito-core:4.3.1",
+        "org.mockito.kotlin:mockito-kotlin:4.0.0"
     )
 }
