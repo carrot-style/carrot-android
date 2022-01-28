@@ -66,6 +66,7 @@ object Versions {
     }
 
     object Test {
+        const val Arch = "1.1.1"
         const val JUnit = "4.13.2"
         const val Mockk = "1.12.2"
     }
@@ -131,6 +132,8 @@ object Dependencies {
 
     val Test = listOf(
         "junit:junit:${Versions.Test.JUnit}",
-        "io.mockk:mockk:${Versions.Test.Mockk}"
+        "io.mockk:mockk:${Versions.Test.Mockk}",
+        "android.arch.core:core-testing:${Versions.Test.Arch}",
+        "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.Essential.Coroutines}"
     )
 }
