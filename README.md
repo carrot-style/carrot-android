@@ -2,7 +2,7 @@
 
 Carrot-style with android.
 
-## Downlaod
+## Download
 [Google Playstore](https://play.google.com/store/apps/details?id=style.carrot.android)
 
 ---
