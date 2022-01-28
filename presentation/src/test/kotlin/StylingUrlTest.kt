@@ -9,12 +9,12 @@
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import style.carrot.android.data.repository.CarrotRepositoryImpl
+import style.carrot.android.di.module.RetrofitModule
 import style.carrot.android.domain.repository.CarrotRepository
 
 @ExperimentalCoroutinesApi
@@ -22,15 +22,15 @@ import style.carrot.android.domain.repository.CarrotRepository
 @RunWith(MockitoJUnitRunner::class)
 class StylingUrlTest {
 
-    /*private val repository: CarrotRepository =
-        CarrotRepositoryImpl(RetrofitModule.provideSignedRetrofit())*/
+    private val repository: CarrotRepository =
+        CarrotRepositoryImpl(RetrofitModule.provideSignedRetrofit())
 
-    private lateinit var repository: CarrotRepository
+    /*private lateinit var repository: CarrotRepository
 
     @Before
     fun mocking() {
         repository = Mockito.mock(CarrotRepositoryImpl::class.java)
-    }
+    }*/
 
     @Test
     fun test_stylingRequest_return() = runTest {
