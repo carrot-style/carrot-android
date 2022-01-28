@@ -65,6 +65,7 @@ dependencies {
     Dependencies.Network.forEach(::implementation)
     Dependencies.Essential.forEach(::implementation)
 
+    Dependencies.Test.forEach(::testImplementation)
     Dependencies.Debug.forEach(::debugImplementation)
 
     kapts.forEach(::kapt)

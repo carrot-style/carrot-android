@@ -64,6 +64,11 @@ object Versions {
         const val Master = "17.0.0"
         const val Classpath = "0.10.4"
     }
+
+    object Test {
+        const val JUnit = "4.13.2"
+        const val Mockk = "1.12.2"
+    }
 }
 
 object Dependencies {
@@ -122,5 +127,10 @@ object Dependencies {
 
     val Debug = listOf(
         "com.squareup.leakcanary:leakcanary-android:${Versions.Util.LeakCanary}"
+    )
+
+    val Test = listOf(
+        "junit:junit:${Versions.Test.JUnit}",
+        "io.mockk:mockk:${Versions.Test.Mockk}"
     )
 }
