@@ -85,6 +85,9 @@ fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit, uuid
         hideModalBottomSheetAction()
     }
 
+    fun String.checkStyledUrl() =
+        startsWith(DefaultStyle) && length <= DefaultStyleLengthLimit && !contains(" ")
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
@@ -122,7 +125,7 @@ fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit, uuid
                 onValueChange = { styledUrlFieldValue ->
                     if (styledUrlFieldValue.text.isEmpty()) {
                         styledUrlField = DefaultStyleTextFieldValue
-                    } else if (styledUrlFieldValue.text.run { startsWith(DefaultStyle) && length <= DefaultStyleLengthLimit }) {
+                    } else if (styledUrlFieldValue.text.checkStyledUrl()) {
                         styledUrlField = styledUrlFieldValue
                     }
                 }
@@ -164,6 +167,13 @@ fun CreateStyle(modifier: Modifier, hideModalBottomSheetAction: () -> Unit, uuid
                     if (!fullUrl.isNiceUrl()) {
                         toast(context) {
                             getString(R.string.activity_main_component_styledcard_toast_check_url)
+                        }
+                        return@launch
+                    }
+
+                    if (newStyledUrl == ".html") {
+                        toast(context) {
+                            getString(R.string.activity_main_component_styledcard_toast_type_style)
                         }
                         return@launch
                     }

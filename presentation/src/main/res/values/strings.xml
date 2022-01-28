@@ -26,6 +26,7 @@
 
     <string name="activity_main_component_styledcard_toast_copied">Copied.</string>
     <string name="activity_main_component_styledcard_toast_check_url">I don\'t think it\'s a perfect URL. Check it again.</string>
+    <string name="activity_main_component_styledcard_toast_type_style">Type your style!</string>
     <string name="activity_main_component_styledcard_toast_support_in_progress">This feature support in progress.</string>
 
     <string name="activity_main_component_createstyle_btn_create">Create</string>
